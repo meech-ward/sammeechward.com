@@ -1,13 +1,20 @@
 /* This example requires Tailwind CSS v2.0+ */
 
+import Link from 'next/link'
 import limit from '../../helpers/limit'
 
 
 export default function Example({ post }) {
   return (
-    <div
-      className="flex flex-col overflow-hidden rounded-lg shadow-lg"
-    >
+    <div className='flex flex-col relative top-1 hover:top-0 transition-all duration-200'>
+
+    
+      <Link
+        href={post.href}
+        >
+          <a
+          className="flex-1 flex flex-col overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-all duration-200"
+          >
       <div className="flex-shrink-0">
         <img
           className="h-48 w-full object-cover"
@@ -22,14 +29,14 @@ export default function Example({ post }) {
               {post.category.name}
             </a> */}
           </p>
-          <a href={post.href} className="mt-2 block">
+          {/* <a href={post.href} className="mt-2 block"> */}
             <p className="text-xl font-semibold text-gray-900">
               {post.title}
             </p>
             <p className="mt-3 text-base text-gray-500">
               {limit(post.description, 100)}
             </p>
-          </a>
+          {/* </a> */}
         </div>
         {/* <div className="mt-6 flex items-center">
           <div className="flex-shrink-0">
@@ -56,6 +63,8 @@ export default function Example({ post }) {
           </div>
         </div> */}
       </div>
+      </a>
+      </Link>
     </div>
   )
 }

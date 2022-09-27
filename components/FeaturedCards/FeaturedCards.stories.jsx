@@ -63,5 +63,5 @@ const posts = [
 ]
 
 export const Primary = () => (
-  <FeaturedCards posts={posts} />
+  <FeaturedCards title={"Most Popular Shit"} description={"Get started by taking a look at what other people like"} posts={posts} />
 )
