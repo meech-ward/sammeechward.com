@@ -4,14 +4,21 @@ import FeaturedVideo from '../components/FeaturedVideo'
 
 import axios from 'axios'
 
+const description = `
+If you're in a position
+Where the goal is addition
+And one of the operand's ToPrimitive is string
+Then concatenation 
+Is Javascript's mission
+A language that understands how to vindictively sting`
+
 export default function Home({featuredEntities, featuredVideo}) {
   return (
     <>
 
       <Hero
         title={"Sam Meech-Ward"}
-        subTitle={'"Fart Noise"'}
-        description={"Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo. Elit sunt amet fugiat veniam occaecat fugiat aliqua."}
+        description={description}
         imageUrl={"/toilet.jpg"}
         buttons={[
           { title: "About", href: "/about" },
