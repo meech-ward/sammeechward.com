@@ -1,17 +1,18 @@
 import { getArticle } from '../../server/database'
+import serializeMDX from '../../helpers/serializeMDX'
 
 import Hero from '../../components/Hero'
 import Article from '../../components/Article'
 
-export default function Articles({ markdown, title, imageUrl, editUrl, description }) {
+export default function Articles({ markdown, title, imageUrl, editUrl, mdxSource, description }) {
   return (
     <>
       <Hero title={title} subTitle={""} description={""} imageUrl={imageUrl}></Hero>
       <div className="px-4 pt-8 pb-10 sm:px-6 lg:px-8 lg:pt-12 lg:pb-14">
-        <Article source={markdown} />
+        <Article mdxSource={mdxSource} />
       </div>
       {editUrl &&
-        <p className='text-center my-10'>Find an issue with this page?
+        <p className='text-center my-10'>Find an issue with this page?&nbsp;
           <a target="_blank" className='text-indigo-600 hover:text-indigo-500' href={editUrl}>Fix it on GitHub</a>
         </p>
       }
@@ -26,15 +27,16 @@ export async function getStaticPaths() {
   }
 }
 
-
 export async function getStaticProps(context) {
 
   const [slug] = context.params.slug
   const article = await getArticle(slug)
+  const mdxSource = await serializeMDX(article.markdown)
 
   return {
     props: {
-      ...article
+      ...article,
+      mdxSource
     }
   }
 }
