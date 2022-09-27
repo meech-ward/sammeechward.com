@@ -1,4 +1,4 @@
-import axios from 'axios'
+import { getArticles } from '../../server/database'
 import Cards from '../../components/Cards'
 
 export default function Articles({ articles }) {
@@ -12,14 +12,8 @@ export default function Articles({ articles }) {
 
 export async function getStaticProps() {
 
-  const url = new URL('build.json', process.env.MDX_ROOT_URL).href
-  const res = await axios.get(url)
-  const articles = res.data.articles.entities.map(article => ({
-    ...article,
-    href: `/articles/${article.slug}`,
-    imageUrl: article.imageUrl && new URL(article.imageUrl, process.env.MDX_ROOT_URL).href,
-  }))
-
+  const articles = await getArticles()
+  
   return {
     props: {
       articles

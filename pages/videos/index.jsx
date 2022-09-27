@@ -1,4 +1,5 @@
-import axios from 'axios'
+import { getVideos } from '../../server/database'
+
 import Cards from '../../components/Cards'
 
 export default function Videos({ videos }) {
@@ -12,13 +13,7 @@ export default function Videos({ videos }) {
 
 export async function getStaticProps() {
 
-  const url = new URL('build.json', process.env.MDX_ROOT_URL).href
-  const res = await axios.get(url)
-  const videos = res.data.videos.entities.map(article => ({
-    ...article,
-    href: `/videos/${article.slug}`,
-    imageUrl: article.imageUrl && new URL(article.imageUrl, process.env.MDX_ROOT_URL).href,
-  }))
+  const videos = await getVideos()
 
   return {
     props: {

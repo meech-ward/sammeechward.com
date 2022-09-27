@@ -72,3 +72,9 @@ export default function Page({ source, rootURL }) {
     </div>
   )
 }
+
+export function getServerSideProps(context) {
+
+  console.log({context})
+
+}

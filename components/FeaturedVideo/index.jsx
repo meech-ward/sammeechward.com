@@ -15,7 +15,7 @@ export default function FeaturedVideo({ videoId, title, description }) {
             {description}
           </p>
         </div>
-        <YouTube videoId={videoId} />
+        <YouTube className="mx-auto mt-12" videoId={videoId} />
       </div>
     </div>
   )

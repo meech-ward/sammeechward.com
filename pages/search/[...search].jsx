@@ -1,4 +1,4 @@
-import axios from 'axios'
+import { searchForEntities } from '../../server/database'
 import Cards from '../../components/Cards'
 
 export default function Articles({ search, entities }) {
@@ -12,32 +12,14 @@ export default function Articles({ search, entities }) {
 
 export async function getServerSideProps(context) {
 
-  const [search] = context.params.search
+  const [term] = context.params.search
 
-  const url = new URL('build.json', process.env.MDX_ROOT_URL).href
-  const res = await axios.get(url)
-  let all = []
-  for (const section in res.data) {
-    all.push(...res.data[section].entities.map(e => ({...e, type: section})))
-  }
-  all = all.flat()
-  all = all.filter(entity => (
-    entity.title.toLowerCase().includes(search.toLowerCase()) ||
-    entity.description.toLowerCase().includes(search.toLowerCase()) ||
-    entity.tags?.some(tag => tag.toLowerCase().includes(search.toLowerCase()))
-  ))
-  .map(entity => ({
-    ...entity,
-    href: `/${entity.type}/${entity.slug}`,
-    imageUrl: entity.imageUrl && new URL(entity.imageUrl, process.env.MDX_ROOT_URL).href,
-  }))
-  console.log(all)
-
+  const entities = await searchForEntities(term)
 
   return {
     props: {
       search,
-      entities: all
+      entities: entities
     }
   }
 }
