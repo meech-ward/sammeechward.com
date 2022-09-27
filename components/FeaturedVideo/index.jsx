@@ -6,7 +6,7 @@ export default function FeaturedVideo({ videoId, title, description }) {
       <div className="absolute inset-0">
         <div className="h-1/3 bg-gray-300 sm:h-2/3" />
       </div>
-      <div className="relative mx-auto max-w-7xl">
+      <div className="relative mx-auto max-w-7xl px-2">
         <div className="text-center">
           <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
             {title}
