@@ -3,9 +3,14 @@ import Header from '../components/Header'
 
 import { useRouter } from 'next/router'
 
-function MyApp({ Component, pageProps }) {
+import { useSession, signIn, signOut } from "next-auth/react"
+import { SessionProvider } from "next-auth/react"
 
+function MyHeader() {
   const router = useRouter()
+
+  
+  const { data: session } = useSession()
 
   const links = [
     {title: 'Articles', href: '/articles', selected: router.pathname.startsWith('/articles')},
@@ -20,10 +25,17 @@ function MyApp({ Component, pageProps }) {
   }
 
   return (
-    <>
-      <Header links={links} onSearch={onSearch}></Header>
+    <Header links={links} onSearch={onSearch} user={session?.user} signIn={signIn} signOut={signOut}></Header>
+  )
+}
+
+function MyApp({ Component, pageProps }) {
+
+  return (
+    <SessionProvider session={pageProps.session}>
+      <MyHeader />
       <Component {...pageProps} />
-    </>
+    </SessionProvider>
   )
 }
 

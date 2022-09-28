@@ -2,7 +2,7 @@ import Hero from '../components/Hero'
 import FeaturedCards from '../components/FeaturedCards'
 import FeaturedVideo from '../components/FeaturedVideo'
 
-import axios from 'axios'
+import { getVideos, getArticles } from '../server/database'
 
 const description = `
 If you're in a position
@@ -12,7 +12,7 @@ Then concatenation
 Is Javascript's mission
 A language that understands how to vindictively sting`
 
-export default function Home({featuredEntities, featuredVideo}) {
+export default function Home({ featuredEntities, featuredVideo }) {
   return (
     <>
 
@@ -35,18 +35,8 @@ export default function Home({featuredEntities, featuredVideo}) {
 
 export async function getStaticProps() {
 
-  const url = new URL('build.json', process.env.MDX_ROOT_URL).href
-  const res = await axios.get(url)
-  const articles = res.data.articles.entities.map(article => ({
-    ...article,
-    href: `/articles/${article.slug}`,
-    imageUrl: article.imageUrl && new URL(article.imageUrl, process.env.MDX_ROOT_URL).href,
-  }))
-  const videos = res.data.videos.entities.map(video => ({
-    ...video,
-    href: `/videos/${video.slug}`,
-    imageUrl: video.imageUrl && new URL(video.imageUrl, process.env.MDX_ROOT_URL).href,
-  }))
+  const articles = await getArticles()
+  const videos = await getVideos()
 
   const randomVideo = videos[0]
 
