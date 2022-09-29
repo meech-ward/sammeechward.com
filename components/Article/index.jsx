@@ -4,6 +4,8 @@ import 'highlight.js/styles/stackoverflow-dark.css'
 
 import YouTube from '../YouTube'
 
+import NextImage from 'next/future/image'
+
 const h1 = (props) => <h1 {...props} className={props.className ?? "" + " text-5xl mt-14 mb-10 font-semibold"} />
 const h2 = (props) => <h2 {...props} className={props.className ?? "" + " text-4xl mt-12 mb-8 font-semibold"} />
 const h3 = (props) => <h3 {...props} className={props.className ?? "" + " text-3xl mt-10 mb-6 font-semibold"} />
@@ -25,9 +27,13 @@ const Note = Instruction
 export default function Page({ mdxSource, rootURL }) {
 
   const img = ({ src, alt }) => src.startsWith('/') ? <img src={rootURL + src} alt={alt} /> : <img src={src} alt={alt} />
+  const Image = (props) => {
+    const { src } = props
+    return src.startsWith('/') ? <NextImage {...props} src={rootURL + src} /> : <img {...props} src={src} />
+  }
   const File = ({ name, children }) => <a className="text-indigo-600 hover:text-indigo-500" href={`${rootURL}/files/${name}`}>{children}</a>
 
-  const components = { h1, h2, h3, p, ul, ol, li, a, img, Instruction, Note, YouTube, File }
+  const components = { h1, h2, h3, p, ul, ol, li, a, img, Image, Instruction, Note, YouTube, File }
 
   return (
     <div className="max-w-3xl mx-auto">

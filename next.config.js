@@ -3,8 +3,9 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   images: {
-    domains: [],
+    domains: ["127.0.0.1", "localhost"],
   },
+  experimental: { images: { allowFutureImage: true } }
 }
 
 module.exports = nextConfig

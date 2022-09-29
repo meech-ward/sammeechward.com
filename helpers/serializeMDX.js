@@ -3,11 +3,13 @@ import rehypeHighlight from 'rehype-highlight'
 import langHttp from 'highlight.js/lib/languages/http'
 import langNginx from 'highlight.js/lib/languages/nginx'
 import langVim from 'highlight.js/lib/languages/vim'
+import langGit from 'highlight.js/lib/languages/shell'
 
 const languages = {
   http: langHttp,
   nginx: langNginx,
-  vim: langVim
+  vim: langVim,
+  git: langGit
 }
 
 export default async function serializeMDX(source) {

@@ -51,11 +51,7 @@ export async function searchForEntities(term) {
     entity.description.toLowerCase().includes(term.toLowerCase()) ||
     entity.tags?.some(tag => tag.toLowerCase().includes(term.toLowerCase()))
   ))
-  .map(entity => ({
-    ...entity,
-    href: `/${entity.type}/${entity.slug}`,
-    imageUrl: entity.imageUrl && new URL(entity.imageUrl, process.env.MDX_ROOT_URL).href,
-  }))
+  .map(entityDetails(entity.type))
 
   return all
 }

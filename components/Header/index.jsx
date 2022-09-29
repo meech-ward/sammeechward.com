@@ -116,7 +116,7 @@ export default function Header(props) {
                             <span className="sr-only">Open user menu</span>
                             <img
                               className="h-8 w-8 rounded-full"
-                              src={user.image}
+                              src={user?.image}
                               alt=""
                             />
                           </Menu.Button>
@@ -221,16 +221,16 @@ export default function Header(props) {
                     <div className="flex-shrink-0">
                       <img
                         className="h-10 w-10 rounded-full"
-                        src={user.image}
+                        src={user?.image}
                         alt=""
                       />
                     </div>
                     <div className="ml-3">
                       <div className="text-base font-medium text-white">
-                        {user.name}
+                        {user?.name}
                       </div>
                       <div className="text-sm font-medium text-gray-400">
-                        {user.email}
+                        {user?.email}
                       </div>
                     </div>
                     <button

@@ -3,6 +3,8 @@ import { getVideo } from '../../server/database'
 import Article from '../../components/Article'
 import YouTube from '../../components/YouTube'
 
+import serializeMDX from '../../helpers/serializeMDX'
+
 export default function Videos({ markdown, title, videoId, editUrl, mdxSource, imageUrl, description }) {
   return (
     <>
@@ -31,7 +33,7 @@ export async function getStaticProps(context) {
 
   const [slug] = context.params.slug
   const video = await getVideo(slug)
-  const mdxSource = await serializeMDX(article.markdown)
+  const mdxSource = await serializeMDX(video.markdown)
 
 
   return {

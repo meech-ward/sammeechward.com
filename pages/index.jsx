@@ -4,6 +4,8 @@ import FeaturedVideo from '../components/FeaturedVideo'
 
 import { getVideos, getArticles } from '../server/database'
 
+import toilet from '../public/toilet.jpg'
+
 const description = `
 If you're in a position
 Where the goal is addition
@@ -19,7 +21,7 @@ export default function Home({ featuredEntities, featuredVideo }) {
       <Hero
         title={"Sam Meech-Ward"}
         description={description}
-        imageUrl={"/toilet.jpg"}
+        imageUrl={toilet}
         buttons={[
           { title: "About", href: "/about" },
           { title: "Contact", href: "/contact" },
