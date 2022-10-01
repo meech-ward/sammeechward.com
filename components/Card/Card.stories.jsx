@@ -1,4 +1,5 @@
 import Card from './index'
+import Image from 'next/image'
 
 export default {
   title: 'Card',
@@ -7,74 +8,50 @@ export default {
 
 const posts = [
   {
-    id: 1,
-    title: 'Boost your conversion rate',
-    href: '#',
-    category: { name: 'Article', href: '#' },
-    description:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto accusantium praesentium eius, ut atque fuga culpa, similique sequi cum eos quis dolorum.',
-    date: 'Mar 16, 2020',
-    datetime: '2020-03-16',
-    image: { url: 'https://images.unsplash.com/photo-1496128858413-b36217c2ce36?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1679&q=80',width: 1679, height: 1000},
-    readingTime: '6 min',
-    author: {
-      name: 'Roel Aufderehar',
-      href: '#',
-      imageUrl:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+    id: 'ef40847f-36d0-4f11-8b33-db2209737b8a',
+    yt_id: 'VVU2YVRMdUlfajQtMHdpRFN6bWFQY3RRLmZWN1prWUlfZWZ3',
+    videoId: 'fV7ZkYI_efw',
+    title: 'Beginning iOS Development for Not Beginners',
+    date: '2020-06-06T23:15:56Z',
+    slug: 'beginning-ios-development-for-not-beginners',
+    image: {
+      name: 'beginning-ios-development-for-not-beginners.jpg',
+      alt: 'Beginning iOS Development for Not Beginners',
+      width: 1280,
+      height: 720,
+      url: 'http://127.0.0.1:8008/content/videos/videos/beginning-ios-development-for-not-beginners/images/beginning-ios-development-for-not-beginners.jpg'
     },
-  },
-  {
-    id: 2,
-    title: 'How to use search engine optimization to drive sales',
-    href: '#',
-    category: { name: 'Video', href: '#' },
-    description:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit facilis asperiores porro quaerat doloribus, eveniet dolore. Adipisci tempora aut inventore optio animi., tempore temporibus quo laudantium.',
-    date: 'Mar 10, 2020',
-    datetime: '2020-03-10',
-    image: { url: 'https://images.unsplash.com/photo-1547586696-ea22b4d4235d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1679&q=80',width: 1679, height: 1000},
-    readingTime: '4 min',
-    author: {
-      name: 'Brenna Goyette',
-      href: '#',
-      imageUrl:
-        'https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    },
-  },
-  {
-    id: 3,
-    title: 'Improve your customer experience',
-    href: '#',
-    category: { name: 'Case Study', href: '#' },
-    description:
-    'Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto accusantium praesentium eius, ut atque fuga culpa, similique sequi cum eos quis dolorum.Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto accusantium praesentium eius, ut atque fuga culpa, similique sequi cum eos quis dolorum.Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto accusantium praesentium eius, ut atque fuga culpa, similique sequi cum eos quis dolorum.Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto accusantium praesentium eius, ut atque fuga culpa, similique sequi cum eos quis dolorum.Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto accusantium praesentium eius, ut atque fuga culpa, similique sequi cum eos quis dolorum.Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto accusantium praesentium eius, ut atque fuga culpa, similique sequi cum eos quis dolorum.Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto accusantium praesentium eius, ut atque fuga culpa, similique sequi cum eos quis dolorum.',
-    date: 'Feb 12, 2020',
-    datetime: '2020-02-12',
-    image: { url: 'https://images.unsplash.com/photo-1492724441997-5dc865305da7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1679&q=80',width: 1679, height: 1000},
-    readingTime: '11 min',
-    author: {
-      name: 'Daniela Metz',
-      href: '#',
-      imageUrl:
-        'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    },
-  },
+    status: 'published',
+    description: "In this video, I'm going to show you how to get started making iOS apps by building a basic Rock, Paper, Scissors game.",
+    tags: [],
+    skipSize: 571,
+    dirPath: 'content/videos/videos/beginning-ios-development-for-not-beginners',
+    indexPath: 'content/videos/videos/beginning-ios-development-for-not-beginners/index.mdx',
+    imagesPath: 'content/videos/videos/beginning-ios-development-for-not-beginners/images',
+    hash: 'fcf4c5f61721004c0dddfa16436ccf6c24f3fc45',
+    type: 'videos',
+    href: '/videos/beginning-ios-development-for-not-beginners',
+    editUrl: 'http://127.0.0.1:8008/content/videos/videos/beginning-ios-development-for-not-beginners/index.mdx'
+  }
 ]
 
+
+
 export const Primary = () => (
-  <Card post={posts[0]} />
+  <div className="pt-8 pb-10 lg:pt-12 lg:pb-14 mx-auto max-w-7xl px-2 h-screen">
+  <Card ImageComponent={(Image)} post={posts[0]} />
+  </div>
 )
 
 
 export const Truncated = () => (
-  <Card post={posts[2]} />
+  <Card ImageComponent={(Image)} post={posts[2]} />
 )
 
 export const Many = () => (
   <>
   {posts.map(post => (
-    <Card key={post.id} post={post} />
+    <Card ImageComponent={(Image)} key={post.id} post={post} />
   ))}
   </>
 )

@@ -1,16 +1,4 @@
-/* This example requires Tailwind CSS v2.0+ */
-import { Fragment } from 'react'
-import { Popover, Transition } from '@headlessui/react'
-import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
-
 import Image from 'next/future/image'
-
-const navigation = [
-  { name: 'Product', href: '#' },
-  { name: 'Features', href: '#' },
-  { name: 'Marketplace', href: '#' },
-  { name: 'Company', href: '#' },
-]
 
 export default function Hero({ title, subTitle, description, imageUrl, imageWidth, imageHeight, buttons }) {
   const imageDimensions = {}
@@ -44,8 +32,8 @@ export default function Hero({ title, subTitle, description, imageUrl, imageWidt
                 <span className="block text-indigo-600 xl:inline">{subTitle}</span>
               </h1>
               <p className="mt-3 text-base text-gray-500 sm:mx-auto sm:mt-5 sm:max-w-xl sm:text-lg md:mt-5 md:text-xl lg:mx-0">
-                {description.split('\n').map(a => a.trim()).filter(a => a).map(line => (
-                  <p>{line}</p>
+                {description.split('\n').map(a => a.trim()).filter(a => a).map((line, index) => (
+                  <span className='block' key={index}>{line}</span>
                 ))}
               </p>
               {buttons && (

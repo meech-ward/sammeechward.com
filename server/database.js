@@ -38,21 +38,29 @@ export async function getArticle(slug) {
   }
 }
 
-export async function searchForEntities(term) {
+export async function allEntities() {
   const url = new URL('build.json', process.env.MDX_ROOT_URL).href
   const res = await axios.get(url)
   let all = []
   for (const section in res.data) {
     all.push(...res.data[section].entities.map(e => ({...e, type: section})))
   }
-  all = all.flat()
+  all = all
+  .flat()
+  .map(entity => entityDetails(entity.type, entity))
+
+  all.sort((a, b) => new Date(b.date) - new Date(a.date))
+
+  return all
+}
+
+export async function searchForEntities(term) {
+  let all = await allEntities()
   all = all.filter(entity => (
     entity.title.toLowerCase().includes(term.toLowerCase()) ||
     entity.description.toLowerCase().includes(term.toLowerCase()) ||
     entity.tags?.some(tag => tag.toLowerCase().includes(term.toLowerCase()))
   ))
-  .map(entityDetails(entity.type))
-
   return all
 }
 

@@ -13,8 +13,9 @@ function MyHeader() {
   const { data: session } = useSession()
 
   const links = [
-    {title: 'Articles', href: '/articles', selected: router.pathname.startsWith('/articles')},
-    {title: 'Videos', href: '/videos', selected: router.pathname.startsWith('/videos')},
+    // {title: 'Articles', href: '/articles', selected: router.pathname.startsWith('/articles')},
+    // {title: 'Videos', href: '/videos', selected: router.pathname.startsWith('/videos')},
+    {title: 'Videos/Articles', href: '/entities', selected: router.pathname.startsWith('/entities')},
     // {title: 'Learning Paths', href: '/learning-paths', selected: router.pathname.startsWith('/learning-paths')},
     // {title: 'Courses', href: '/courses', selected: router.pathname.startsWith('/courses')},
   ]

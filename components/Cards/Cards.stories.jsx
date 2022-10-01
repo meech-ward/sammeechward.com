@@ -1,4 +1,5 @@
 import Cards from './index'
+import Image from 'next/image'
 
 export default {
   title: 'Cards',
@@ -63,9 +64,13 @@ const posts = [
 ]
 
 export const Primary = () => (
-  <Cards posts={posts} />
+  <div className="pt-8 pb-10 lg:pt-12 lg:pb-14 mx-auto max-w-7xl px-2">
+  <Cards ImageComponent={Image} posts={posts} />
+  </div>
 )
 
 export const MOar = () => (
-  <Cards posts={[posts[0], posts[1], ...posts.map(p => ({...p, id: p.id+10})), ...posts.map(p => ({...p, id: p.id+20}))]} />
+  <div className="pt-8 pb-10 lg:pt-12 lg:pb-14 mx-auto max-w-7xl px-2">
+  <Cards ImageComponent={Image} posts={[posts[0], posts[1], ...posts.map(p => ({...p, id: p.id+10})), ...posts.map(p => ({...p, id: p.id+20}))]} />
+  </div>
 )

@@ -1,11 +1,26 @@
 import Link from 'next/link'
 import Image from 'next/future/image'
+
+import { PlayIcon, DocumentTextIcon } from '@heroicons/react/24/outline'
+
 import limit from '../../helpers/limit'
 
 import normalizeImageSize from '../../helpers/normalizeImageSize'
 
-export default function Example({ post }) {
-  const imageSize = normalizeImageSize({...post.image, maxHeight: 192 * 2})
+export default function Example({ post, ImageComponent = Image }) {
+  const imageSize = normalizeImageSize({ ...post.image, maxHeight: 192 * 2 })
+
+  const Icon = (() => {
+    switch (post.type) {
+      case 'videos':
+        return PlayIcon
+      case 'articles':
+        return DocumentTextIcon
+      default:
+        return null
+    }
+  })()
+
   return (
     <div className='flex flex-col relative top-1 hover:top-0 transition-all duration-200'>
 
@@ -18,7 +33,7 @@ export default function Example({ post }) {
         >
           <div className="flex-shrink-0">
             {post?.image?.url ?
-              <Image
+              <ImageComponent
                 className="h-48 w-full object-cover"
                 src={post.image.url}
                 alt={post.title}
@@ -46,21 +61,22 @@ export default function Example({ post }) {
               </p>
               {/* </a> */}
             </div>
-            {/* <div className="mt-6 flex items-center">
-          <div className="flex-shrink-0">
-            <a href={post.author.href}>
-              <span className="sr-only">{post.author.name}</span>
+            <div className="mt-2 flex items-center">
+              <div className="flex-shrink-0 text-gray-400">
+                <Icon className="block h-6 w-6" aria-hidden="true" />
+                {/* <a href={post.author?.href}>
+              <span className="sr-only">{post.author?.name}</span>
               <img
                 className="h-10 w-10 rounded-full"
-                src={post.author.imageUrl}
+                src={post.author?.imageUrl}
                 alt=""
               />
-            </a>
-          </div>
-          <div className="ml-3">
+            </a> */}
+              </div>
+              {/* <div className="ml-3">
             <p className="text-sm font-medium text-gray-900">
-              <a href={post.author.href} className="hover:underline">
-                {post.author.name}
+              <a href={post.author?.href} className="hover:underline">
+                {post.author?.name}
               </a>
             </p>
             <div className="flex space-x-1 text-sm text-gray-500">
@@ -68,8 +84,8 @@ export default function Example({ post }) {
               <span aria-hidden="true">&middot;</span>
               <span>{post.readingTime} read</span>
             </div>
-          </div>
-        </div> */}
+          </div> */}
+            </div>
           </div>
         </a>
       </Link>
