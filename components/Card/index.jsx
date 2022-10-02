@@ -63,7 +63,7 @@ export default function Example({ post, ImageComponent = Image }) {
             </div>
             <div className="mt-2 flex items-center">
               <div className="flex-shrink-0 text-gray-400">
-                <Icon className="block h-6 w-6" aria-hidden="true" />
+                {Icon && <Icon className="block h-6 w-6" aria-hidden="true" />}
                 {/* <a href={post.author?.href}>
               <span className="sr-only">{post.author?.name}</span>
               <img

@@ -3,7 +3,7 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   images: {
-    domains: ["127.0.0.1", "localhost"],
+    domains: ["127.0.0.1", "localhost", "yt3.ggpht.com", "github.com"],
   },
   experimental: { images: { allowFutureImage: true } }
 }

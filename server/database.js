@@ -38,10 +38,12 @@ export async function getArticle(slug) {
   }
 }
 
+let all 
 export async function allEntities() {
+  if (all) return all
   const url = new URL('build.json', process.env.MDX_ROOT_URL).href
   const res = await axios.get(url)
-  let all = []
+  all = []
   for (const section in res.data) {
     all.push(...res.data[section].entities.map(e => ({...e, type: section})))
   }
@@ -62,5 +64,13 @@ export async function searchForEntities(term) {
     entity.tags?.some(tag => tag.toLowerCase().includes(term.toLowerCase()))
   ))
   return all
+}
+
+export async function getFeaturedEntities() {
+  const url = new URL('data.json', process.env.MDX_ROOT_URL).href
+  const res = await axios.get(url)
+  const featured = res.data.featuredEntities
+  let all = await allEntities()
+  return all.filter(entity => featured.map(f => f.id).includes(entity.id))
 }
 

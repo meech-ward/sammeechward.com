@@ -2,7 +2,7 @@ import Hero from '../components/Hero'
 import FeaturedCards from '../components/FeaturedCards'
 import FeaturedVideo from '../components/FeaturedVideo'
 
-import { getVideos, getArticles } from '../server/database'
+import { getVideos, getFeaturedEntities } from '../server/database'
 
 import toilet from '../public/toilet.jpg'
 
@@ -37,16 +37,15 @@ export default function Home({ featuredEntities, featuredVideo }) {
 
 export async function getStaticProps() {
 
-  const articles = await getArticles()
   const videos = await getVideos()
 
-  const randomVideo = videos[0]
+  const featuredVideo = videos[0]
 
-  const featuredEntities = [videos[1], articles[1], videos[2]]
+  const featuredEntities = await getFeaturedEntities()
 
   return {
     props: {
-      featuredVideo: randomVideo,
+      featuredVideo: featuredVideo,
       featuredEntities
     }
   }

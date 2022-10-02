@@ -13,7 +13,6 @@ export default function Articles({ entities }) {
 export async function getStaticProps() {
 
   const entities = await allEntities()
-  console.log(entities)
   
   return {
     props: {
