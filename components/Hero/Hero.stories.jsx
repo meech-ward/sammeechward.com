@@ -1,10 +1,7 @@
 import Hero from './index'
 import toilet from '../../public/toilet.jpg'
 
-export default {
-  title: 'Hero',
-  component: Hero, 
-}
+
 
 export const Primary = () => (
   <Hero 
@@ -18,3 +15,8 @@ export const Primary = () => (
   ]}
   />
 )
+
+export default {
+  title: 'Hero',
+  component: Hero, 
+}

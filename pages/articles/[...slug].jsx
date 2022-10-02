@@ -17,7 +17,7 @@ export default function Articles({ markdown, title, image, editUrl, mdxSource, d
       </div>
       {editUrl &&
         <p className='text-center my-10'>Find an issue with this page?&nbsp;
-          <a target="_blank" className='text-indigo-600 hover:text-indigo-500' href={editUrl}>Fix it on GitHub</a>
+          <a  target="_blank" rel="noreferrer" className='text-indigo-600 hover:text-indigo-500' href={editUrl}>Fix it on GitHub</a>
         </p>
       }
     </>

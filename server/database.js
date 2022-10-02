@@ -49,7 +49,9 @@ export async function getArticle(slug) {
 
 let all 
 export async function allEntities() {
-  if (all) return all
+  if (all) {
+    return all
+  }
   const data = await getBuild()
   all = []
   for (const section in data) {
@@ -75,9 +77,11 @@ export async function searchForEntities(term) {
 }
 
 export async function getFeaturedEntities() {
-  const data = await getBuild()
-  const featured = data.featuredEntities
+  const url = new URL('data.json', process.env.MDX_ROOT_URL).href
+  const res = await axios.get(url)
+  const featured = res.data.featuredEntities
   let all = await allEntities()
   return all.filter(entity => featured.map(f => f.id).includes(entity.id))
 }
+
 

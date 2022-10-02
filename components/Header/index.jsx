@@ -150,7 +150,6 @@ export default function Header(props) {
                                   href="/settings"
                                   >
                                   <a
-                                  href="/settings"
                                     className={classNames(
                                       active ? 'bg-gray-100' : '',
                                       'block px-4 py-2 text-sm text-gray-700'
@@ -257,7 +256,7 @@ export default function Header(props) {
                         as="a"
                         href="/settings"
                       >
-                        Settingss
+                        Settings
                       </Disclosure.Button>
                     </Link>
                     <Disclosure.Button

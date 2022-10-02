@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react'
 
 import axios from 'axios'
 
-export default function Videos({ markdown, title, videoId, editUrl, mdxSource, imageUrl, description }) {
+export default function Videos({ markdown, slug, title, videoId, editUrl, mdxSource, imageUrl, description }) {
 
   const [comments, setComments] = useState([])
 
@@ -45,9 +45,17 @@ export default function Videos({ markdown, title, videoId, editUrl, mdxSource, i
 
         {editUrl &&
           <p className='text-center my-10'>Find an issue with this page?&nbsp;
-            <a target="_blank" className='text-indigo-600 hover:text-indigo-500' href={editUrl}>Fix it on GitHub</a>
+            <a  target="_blank" rel="noreferrer" className='text-indigo-600 hover:text-indigo-500' href={editUrl}>Fix it on GitHub</a>
           </p>
         }
+
+        {/* Share this on social media */}
+        <div className="max-w-6xl mx-auto">
+          <a href={`https://twitter.com/intent/tweet?text=${title}&url=https://www.sammeechward.com/${slug}`}  target="_blank" rel="noreferrer" className="text-indigo-600 hover:text-indigo-500">Share on Twitter</a>
+          <a href={`https://www.facebook.com/sharer/sharer.php?u=https://www.sammeechward.com/${slug}`}  target="_blank" rel="noreferrer" className="text-indigo-600 hover:text-indigo-500">Share on Facebook</a>
+          <a href={`https://www.linkedin.com/sharing/share-offsite/?url=https://www.sammeechward.com/${slug}`}  target="_blank" rel="noreferrer" className="text-indigo-600 hover:text-indigo-500">Share on LinkedIn</a>
+          <a href={`https://reddit.com/submit?url=https://www.sammeechward.com/${slug}`}  target="_blank" rel="noreferrer" className="text-indigo-600 hover:text-indigo-500">Share on Reddit</a>
+        </div>
       </div>
     </>
   )
