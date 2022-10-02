@@ -2,17 +2,26 @@ import axios from 'axios'
 
 import entityDetails from '../helpers/entityDetails'
 
-export async function getVideos() {
+let _build 
+async function getBuild() {
+  if (_build) {
+    return _build
+  }
   const url = new URL('build.json', process.env.MDX_ROOT_URL).href
   const res = await axios.get(url)
-  const videos = res.data.videos.entities.map(entityDetails('videos'))
+  _build = res.data
+  return res.data
+}
+
+export async function getVideos() {
+  const data = await getBuild()
+  const videos = data.videos.entities.map(entityDetails('videos'))
   return videos
 }
 
 export async function getArticles() {
-  const url = new URL('build.json', process.env.MDX_ROOT_URL).href
-  const res = await axios.get(url)
-  const articles = res.data.articles.entities.map(entityDetails('articles'))
+  const data = await getBuild()
+  const articles = data.articles.entities.map(entityDetails('articles'))
   return articles
 }
 
@@ -41,11 +50,10 @@ export async function getArticle(slug) {
 let all 
 export async function allEntities() {
   if (all) return all
-  const url = new URL('build.json', process.env.MDX_ROOT_URL).href
-  const res = await axios.get(url)
+  const data = await getBuild()
   all = []
-  for (const section in res.data) {
-    all.push(...res.data[section].entities.map(e => ({...e, type: section})))
+  for (const section in data) {
+    all.push(...data[section].entities.map(e => ({...e, type: section})))
   }
   all = all
   .flat()
@@ -67,9 +75,8 @@ export async function searchForEntities(term) {
 }
 
 export async function getFeaturedEntities() {
-  const url = new URL('data.json', process.env.MDX_ROOT_URL).href
-  const res = await axios.get(url)
-  const featured = res.data.featuredEntities
+  const data = await getBuild()
+  const featured = data.featuredEntities
   let all = await allEntities()
   return all.filter(entity => featured.map(f => f.id).includes(entity.id))
 }
