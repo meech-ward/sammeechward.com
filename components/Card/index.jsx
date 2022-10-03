@@ -7,7 +7,9 @@ import limit from '../../helpers/limit'
 
 import normalizeImageSize from '../../helpers/normalizeImageSize'
 
-export default function Example({ post, ImageComponent = Image }) {
+
+
+export default function Card({ post, ImageComponent = Image }) {
   const imageSize = normalizeImageSize({ ...post.image, maxHeight: 192 * 2 })
 
   const Icon = (() => {
