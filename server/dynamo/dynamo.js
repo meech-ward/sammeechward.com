@@ -92,24 +92,24 @@ export async function getItem({pk, sk, Key, IndexName}) {
   }
 }
 
-export async function queryItems({pk, sk, KeyConditionExpression, IndexName}) {
-  const params = {
-    TableName: tableName,
-    KeyConditionExpression: KeyConditionExpression || "pk = :pk AND begins_with(sk, :sk)",
-    ExpressionAttributeValues: {
-      ":pk": pk,
-      ":sk": sk
-    },
-    IndexName
-  }
+// export async function queryItems({pk, sk, KeyConditionExpression, IndexName}) {
+//   const params = {
+//     TableName: tableName,
+//     KeyConditionExpression: KeyConditionExpression || "pk = :pk AND begins_with(sk, :sk)",
+//     ExpressionAttributeValues: {
+//       ":pk": pk,
+//       ":sk": sk
+//     },
+//     IndexName
+//   }
   
-  try {
-    const data = await dynamodb.send(new QueryCommand(params))
-    return data.Items
-  } catch (error) {
-    console.log(error)
-  }
-}
+//   try {
+//     const data = await dynamodb.send(new QueryCommand(params))
+//     return data.Items
+//   } catch (error) {
+//     console.log(error)
+//   }
+// }
 
 export async function queryItems({ExpressionAttributeValues, KeyConditionExpression, IndexName}) {
   const params = {

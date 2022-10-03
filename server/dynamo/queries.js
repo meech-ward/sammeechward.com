@@ -1,6 +1,13 @@
 import { ulid } from 'ulid'
 import { putItem, getItem, queryItem, queryItems, updateItem } from './dynamo'
 
+function mapComment(comment) {
+  return {
+    ...comment,
+    id: comment.sk.split("#")[1]
+  }
+}
+
 export async function getUser({ email }) {
   const user = await queryItem({
     KeyConditionExpression: "GSI1PK = :pk AND GSI1SK = :sk",
@@ -61,7 +68,7 @@ export async function createComment({ articleId, text, user }) {
     await updateItem(updateParams)
   }
 
-  return Item
+  return mapComment(Item)
 }
 
 export async function getComments(articleId) {
@@ -73,8 +80,9 @@ export async function getComments(articleId) {
       ":comment": `COMMENT`
     },
   })
+  
 
-  return comments
+  return comments.map(mapComment)
 
   let params = {
     TableName: tableName,

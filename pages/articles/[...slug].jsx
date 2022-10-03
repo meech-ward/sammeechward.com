@@ -4,6 +4,8 @@ import serializeMDX from '../../helpers/serializeMDX'
 import Hero from '../../components/ArticleHero'
 import Article from '../../components/Article'
 
+import Image from 'next/future/image'
+
 import CommentForm from '../../components/CommentForm'
 
 import normalizeImageSize from '../../helpers/normalizeImageSize'
@@ -16,6 +18,10 @@ import { useEffect, useState } from 'react'
 
 export default function Articles({ markdown, id, title, image, editUrl, mdxSource, description }) {
 
+  const [initialCommentText, setInitialCommentText] = useState(null)
+  const [comments, setComments] = useState([])
+  const [postedComment, setPostedComment] = useState(false)
+  
   const { data: session } = useSession()
 
   const imageSize = normalizeImageSize({...image, maxHeight: 336 * 2})
@@ -26,17 +32,48 @@ export default function Articles({ markdown, id, title, image, editUrl, mdxSourc
       return
     }
     const res = await axios.post('/api/comments', {text, articleId: id})
-    console.log(res.data)
+    const comment = await mapComment(res.data.comment)
+    setPostedComment(true)
+    setComments([...comments, comment])
+
+    setInitialCommentText("")
+    window.localStorage.removeItem(`post-${id}-comment`)
   }
 
   const handleCommentTextChange = (text) => {
     window.localStorage.setItem(`post-${id}-comment`, text)
   }
 
-  const [initialCommentText, setInitialCommentText] = useState(null)
+
+  useEffect(() => {
+    if (!postedComment) {
+      return 
+    }
+    window.scrollTo({
+      top: document.body.scrollHeight,
+      behavior: 'smooth'
+    })
+  }, [comments])
+
+  async function mapComment(comment) {
+    const mdxSource = await serializeMDX(comment.text)
+    return {
+      ...comment,
+      mdxSource
+    }
+  }
+
+  
   useEffect(() => {
     const text = window.localStorage.getItem(`post-${id}-comment`)
     setInitialCommentText(text || "")
+
+    ;(async () => {
+      const res = await axios.get(`/api/comments?articleId=${id}`)
+      const comments = await Promise.all(res.data.comments.map(mapComment))
+      setComments(comments)
+    })()
+      
   }, [])
 
   return (
@@ -51,9 +88,32 @@ export default function Articles({ markdown, id, title, image, editUrl, mdxSourc
         </p>
       }
       <div className="max-w-3xl mx-auto mb-10">
+        <h2>Comments: </h2>
+        <div className="my-10">
       {initialCommentText != null &&
-       <CommentForm initialText={initialCommentText} onSubmit={handleCommentSubmission} onTextChange={handleCommentTextChange} />
+       <CommentForm  initialText={initialCommentText} onSubmit={handleCommentSubmission} onTextChange={handleCommentTextChange} />
       }
+      </div>
+        {comments.map(comment => (
+          <div key={comment.id} className="bg-white shadow overflow-hidden sm:rounded-lg mb-4">
+            <div className="px-4 py-5 sm:px-6">
+              <Image src={comment.image} width={40} height={40} className="rounded-full" />
+              <h3 className="text-lg leading-6 font-medium text-gray-900">
+                {comment.name}
+              </h3>
+              <p className="mt-1 max-w-2xl text-sm text-gray-500">
+                {comment.createdAt}
+              </p>
+            </div>
+            <div className="border-t border-gray-200">
+                <div className="bg-gray-50 px-4 py-5 ">
+                    <Article mdxSource={comment.mdxSource} />
+                  </div>
+            </div>
+          </div>
+        ))}
+
+      
       </div>
     </>
   )

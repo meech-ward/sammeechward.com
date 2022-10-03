@@ -2,7 +2,7 @@
 
 import { getSessionAndUser } from "../../../server/user"
 
-import { createComment } from "../../../server/dynamo/queries"
+import { createComment, getComments } from "../../../server/dynamo/queries"
 
 import _ from "lodash"
 
@@ -25,11 +25,9 @@ async function post(req, res) {
 }
 
 async function get(req, res) {
-  console.log(req.query)
-  console.log(req.params)
   const { articleId } = req.query
   if (!articleId) {  
-    res.status(400).json({ error: "Bad Request" })
+    res.status(404).json({ error: "No article id" })
     return
   }
 
