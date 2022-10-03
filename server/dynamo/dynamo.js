@@ -1,6 +1,6 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb"
 import { DynamoDBDocumentClient, DynamoDBDocument } from "@aws-sdk/lib-dynamodb";
-import { PutCommand } from "@aws-sdk/lib-dynamodb";
+import { PutCommand, GetCommand, ExecuteStatementCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 
 export const tableName = process.env.AWS_DYNAMO_TABLE_NAME
 const region = process.env.AWS_DYNAMO_REGION
@@ -46,3 +46,81 @@ export async function putItem(Item) {
   }
   const data = await dynamodbClient.send(new PutCommand(params));
 }
+
+// export async function getItem({}) {
+//   const query = `
+//   select * from "${tableName}"."GSI1"
+//   where GSI1PK='USER#sam@meech-ward.me'
+//   AND GSI1SK='?'`
+//   const params = {
+//     Statement: query,
+//     Parameters: [{ "S": `idk` }],
+//   }
+//   try {
+//   console.log("get item", params)
+//   const data = await dynamodbClient.send(new ExecuteStatementCommand(params))
+//   console.log("get item", data)
+//   return data.Items[0]
+// } catch (error) {
+//   console.log(error)
+// }
+// }
+
+export async function getItem({pk, sk, Key, IndexName}) {
+  const params = {
+    TableName: tableName,
+    Key: Key || { pk, sk },
+    IndexName
+  }
+  
+  try {
+    const data = await dynamodb.send(new GetCommand(params))
+    return data.Item
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export async function queryItems({pk, sk, KeyConditionExpression, IndexName}) {
+  const params = {
+    TableName: tableName,
+    KeyConditionExpression: KeyConditionExpression || "pk = :pk AND begins_with(sk, :sk)",
+    ExpressionAttributeValues: {
+      ":pk": pk,
+      ":sk": sk
+    },
+    IndexName
+  }
+  
+  try {
+    const data = await dynamodb.send(new QueryCommand(params))
+    return data.Items
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export async function queryItem({ExpressionAttributeValues, KeyConditionExpression, IndexName}) {
+  const params = {
+    TableName: tableName,
+    KeyConditionExpression,
+    ExpressionAttributeValues,
+    IndexName
+  }
+ 
+  const data = await dynamodb.send(new QueryCommand(params))
+  return data.Items[0]
+}
+
+
+  // const params = {
+  //   TableName: tableName,
+  //   Key: {
+  //     pk,
+  //     sk
+  //   }
+  // }
+
+//   const data = await dynamodbClient.send(new GetCommand(params));
+//   return data.Item
+// }

@@ -1,7 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 
 import { authOptions } from './auth/[...nextauth]'
-import { createUser } from "../../server/dynamo/queries"
+import { getUser } from "../../server/dynamo/queries"
 
 import { unstable_getServerSession } from "next-auth/next"
 
@@ -16,9 +16,13 @@ export default async function handler(req, res) {
     return
   }
 
-  const { username } = session.user
+  const { email } = session.user
+
+  const user = await getUser({ email })
+
+  console.log(user)
 
 
   // createUser("sam")
-  res.status(200).json({ user: session.user })
+  res.status(200).json({ session: session.user, user })
 }

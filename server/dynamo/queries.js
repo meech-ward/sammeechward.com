@@ -1,19 +1,17 @@
 import { ulid } from 'ulid'
-import { putItem } from './dynamo'
+import { putItem, getItem, queryItem } from './dynamo'
 
+export async function getUser({email}) {
+  const user = await queryItem({
+    KeyConditionExpression: "GSI1PK = :pk AND GSI1SK = :sk",
+    ExpressionAttributeValues: {
+      ":pk": `USER#${email}`,
+      ":sk": `USER#${email}`
+    },
+    IndexName: "GSI1"
+  })
 
-export async function createUser(username) {
-  const Item = {
-    username: username,
-    PK: "USER#" + username,
-    SK: "USER#" + username,
-    followerCount: 0,
-    followingCount: 0,
-    postCount: 0,
-    created: new Date().toISOString()
-  }
-  await putItem(Item)
-  return Item
+  return user
 }
 
 export async function createPost(username, description, imageName) {
@@ -50,7 +48,7 @@ export async function createPost(username, description, imageName) {
   return Item
 }
 
-export async function createComment(username, postId, text) {
+export async function createComment(userId, postId, text) {
   const Item = {
     PK: "POST#" + postId,
     SK: "COMMENT#" + ulid(),
