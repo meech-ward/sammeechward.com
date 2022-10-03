@@ -1,7 +1,7 @@
 import { ulid } from 'ulid'
-import { putItem, getItem, queryItem } from './dynamo'
+import { putItem, getItem, queryItem, queryItems, updateItem } from './dynamo'
 
-export async function getUser({email}) {
+export async function getUser({ email }) {
   const user = await queryItem({
     KeyConditionExpression: "GSI1PK = :pk AND GSI1SK = :sk",
     ExpressionAttributeValues: {
@@ -14,105 +14,68 @@ export async function getUser({email}) {
   return user
 }
 
-export async function createPost(username, description, imageName) {
+export async function createComment({ articleId, text, user }) {
+  const sk = "COMMENT#" + ulid()
   const Item = {
-    PK: "USER#" + username,
-    SK: "POST#" + ulid(),
-    description,
-    imageName,
-    created: new Date().toISOString(),
-    likeCount: 0,
-    commentCount: 0
-  }
-
-  let createParams = {
-    TableName: tableName,
-    Item: Item
-  }
-
-  let updateParams = {
-    TableName: tableName,
-    Key: {
-      PK: "USER#" + username,
-      SK: "USER#" + username,
-    },
-    UpdateExpression: "SET postCount = postCount+ :inc",
-    ExpressionAttributeValues: {
-        ":inc": 1
-    }
-  }
-
-  await dynamodb.put(createParams).promise()
-  await dynamodb.update(updateParams).promise()
-
-  return Item
-}
-
-export async function createComment(userId, postId, text) {
-  const Item = {
-    PK: "POST#" + postId,
-    SK: "COMMENT#" + ulid(),
-    username,
+    pk: "ENTITY#" + articleId,
+    sk,
+    GSI1PK: "USER#" + user.email,
+    GSI1SK: sk,
+    name: user.name,
+    email: user.email,
+    image: user.image,
     text,
     created: new Date().toISOString(),
   }
-  let params = {
-    TableName: tableName,
-    Item
-  }
+  await putItem(Item)
 
-  let updateParams = {
-    TableName: tableName,
-    Key: {
-      PK: "USER#" + username,
-      SK: "POST#" + postId,
-    },
-    UpdateExpression: "SET commentCount = commentCount+ :inc",
-    ExpressionAttributeValues: {
-        ":inc": 1
+  try {
+    let setCountParams = {
+      Key: {
+        pk: user.pk,
+        sk: user.sk,
+      },
+      UpdateExpression: "SET commentCount = :val",
+      ExpressionAttributeValues: {
+        ":val": 1
+      },
+      ConditionExpression: 'attribute_not_exists(commentCount)'
     }
+  
+    const data = await updateItem(setCountParams)
+  } catch (error) {
+    if (error.name !== "ConditionalCheckFailedException") {
+      throw error
+    }
+  
+    let updateParams = {
+      Key: {
+        pk: user.pk,
+        sk: user.sk,
+      },
+      UpdateExpression: "SET commentCount = commentCount+ :inc",
+      ExpressionAttributeValues: {
+        ":inc": 1
+      }
+    }
+    await updateItem(updateParams)
   }
-
-  await dynamodb.put(params).promise()
-  await dynamodb.update(updateParams).promise()
 
   return Item
 }
 
-export async function getPost(username, postId) {
-  let params = {
-    TableName: tableName,
-    Key: {
-      PK: "USER#" + username,
-      SK: "POST#" + postId
-    }
-  }
-  
-  const result = await dynamodb.get(params).promise()
-  return result
-}
+export async function getComments(articleId) {
 
-export async function getPosts(username) {
-  let params = {
-    TableName: tableName,
-    KeyConditions: {
-      PK: {
-        ComparisonOperator: 'EQ',
-        AttributeValueList: ["USER#" + username]
-      },
-      SK: {
-        ComparisonOperator: 'BEGINS_WITH', // [IN, NULL, BETWEEN, LT, NOT_CONTAINS, EQ, GT, NOT_NULL, NE, LE, BEGINS_WITH, GE, CONTAINS]
-        AttributeValueList: ["POST#"]
-      }
+  const comments = await queryItems({
+    KeyConditionExpression: "pk = :pk AND begins_with(sk, :comment)",
+    ExpressionAttributeValues: {
+      ":pk": "ENTITY#" + articleId,
+      ":comment": `COMMENT`
     },
-    ScanIndexForward: false
-  }
+  })
 
-  const result = await dynamodb.query(params).promise()
-  return result
-}
+  return comments
 
-export async function getComments(postId) {
   let params = {
     TableName: tableName,
     KeyConditions: {

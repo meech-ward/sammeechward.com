@@ -1,6 +1,6 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb"
 import { DynamoDBDocumentClient, DynamoDBDocument } from "@aws-sdk/lib-dynamodb";
-import { PutCommand, GetCommand, ExecuteStatementCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
+import { PutCommand, UpdateCommand, GetCommand, ExecuteStatementCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 
 export const tableName = process.env.AWS_DYNAMO_TABLE_NAME
 const region = process.env.AWS_DYNAMO_REGION
@@ -45,6 +45,17 @@ export async function putItem(Item) {
     Item
   }
   const data = await dynamodbClient.send(new PutCommand(params));
+  return data
+}
+
+
+export async function updateItem(updateParams) {
+  const params = {
+    TableName: tableName,
+    ...updateParams
+  }
+  const data = await dynamodbClient.send(new UpdateCommand(params));
+  return data
 }
 
 // export async function getItem({}) {
@@ -100,7 +111,7 @@ export async function queryItems({pk, sk, KeyConditionExpression, IndexName}) {
   }
 }
 
-export async function queryItem({ExpressionAttributeValues, KeyConditionExpression, IndexName}) {
+export async function queryItems({ExpressionAttributeValues, KeyConditionExpression, IndexName}) {
   const params = {
     TableName: tableName,
     KeyConditionExpression,
@@ -109,9 +120,12 @@ export async function queryItem({ExpressionAttributeValues, KeyConditionExpressi
   }
  
   const data = await dynamodb.send(new QueryCommand(params))
-  return data.Items[0]
+  return data.Items
 }
-
+export async function queryItem({ExpressionAttributeValues, KeyConditionExpression, IndexName}) {
+  const items = await queryItems({ExpressionAttributeValues, KeyConditionExpression, IndexName})
+  return items[0]
+}
 
   // const params = {
   //   TableName: tableName,

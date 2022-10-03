@@ -26,8 +26,7 @@ export const authOptions = {
     indexName: "GSI1",
     indexPartitionKey: "GSI1PK",
     indexSortKey: "GSI1SK"
-  }),
-  secret: process.env.SECRET,
+  })
 }
 
 export default NextAuth(authOptions)
