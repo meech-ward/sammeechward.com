@@ -14,9 +14,9 @@ export default function Card({ post, ImageComponent = Image }) {
 
   const Icon = (() => {
     switch (post.type) {
-      case 'videos':
+      case 'video':
         return PlayIcon
-      case 'articles':
+      case 'article':
         return DocumentTextIcon
       default:
         return null
