@@ -3,15 +3,10 @@ import CommentMarkdown from '../CommentMarkdown'
 
 import TimeAgo from 'javascript-time-ago'
 
-// English.
-import en from 'javascript-time-ago/locale/en'
-
-TimeAgo.addDefaultLocale(en)
-
 // Create formatter (English).
 const timeAgo = new TimeAgo('en-US')
 
-export default function Example({ImageComponent = Image, comments}) {
+export default function Comments({ImageComponent = Image, comments}) {
   return (
     <div>
       <ul role="list" className="divide-y divide-gray-200">

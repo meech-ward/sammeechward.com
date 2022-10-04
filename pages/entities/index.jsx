@@ -57,7 +57,6 @@ export default function Articles(props) {
 export async function getStaticProps() {
 
   const {posts, count, lastEvaluatedKey} = await getAllPosts()
-  console.log(lastEvaluatedKey)
   return {
     props: {
       entities: posts,

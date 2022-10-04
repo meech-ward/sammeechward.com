@@ -40,9 +40,6 @@ export async function getStaticProps() {
   const featuredEntities = await getFeaturedPosts()
   const featuredVideo = await getMostRecentVideo()
 
-  console.log(featuredEntities)
-  console.log(featuredVideo)
-
   return {
     props: {
       featuredVideo: featuredVideo,

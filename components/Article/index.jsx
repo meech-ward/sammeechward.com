@@ -36,7 +36,7 @@ export default function Page({ mdxSource, rootURL }) {
   const components = { h1, h2, h3, p, ul, ol, li, a, img, Image, Instruction, Note, YouTube, File }
 
   return (
-    <div className="max-w-3xl mx-auto">
+    <div className="max-w-3xl mx-auto break-words">
       {mdxSource &&
         <MDXRemote {...mdxSource} components={components} />
       }

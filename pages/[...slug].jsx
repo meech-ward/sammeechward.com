@@ -1,4 +1,5 @@
-import { getArticle, getEntity } from '../server/database'
+import { getPost as getPostMarkdown } from '../server/markdownFiles'
+import { getPost as getPostFromDynamo } from '../server/dynamo/queries'
 import serializeMDX from '../helpers/serializeMDX'
 
 import Hero from '../components/ArticleHero'
@@ -18,9 +19,10 @@ import axios from 'axios'
 import { useEffect, useState } from 'react'
 
 
-export default function Entities({ markdown, id, title, image, editUrl, mdxSource, description, type, videoId }) {
+export default function Entities({ markdown, totalComments, totalLikes, slug, title, image, editUrl, mdxSource, description, type, videoId }) {
 
   const [comments, setComments] = useState([])
+  const [youtubeComments, setYoutubeComments] = useState([])
   const [postedComment, setPostedComment] = useState(false)
 
   const imageSize = normalizeImageSize({ ...image, maxHeight: 336 * 2 })
@@ -38,9 +40,19 @@ export default function Entities({ markdown, id, title, image, editUrl, mdxSourc
 
   useEffect(() => {
     ; (async () => {
-      const res = await axios.get(`/api/comments?articleId=${id}`)
+      const res = await axios.get(`/api/comments?post=${slug}`)
       const comments = await Promise.all(res.data.comments.map(mapComment))
       setComments(comments)
+    })()
+
+    ; (async () => {
+      if (!videoId) {
+        return
+      }
+      const res = await axios.get(`/api/videos/${videoId}/comments`)
+      console.log(res.data.comments)
+      const comments = await Promise.all(res.data.comments.map(mapComment))
+      setYoutubeComments(comments)
     })()
 
   }, [])
@@ -58,11 +70,9 @@ export default function Entities({ markdown, id, title, image, editUrl, mdxSourc
     setPostedComment(true)
   }
 
-  console.log({type})
-
   return (
-    <div className={type === "videos" ? "px-4 pt-8 pb-10 sm:px-6 lg:px-8 lg:pt-12 lg:pb-14" : ""}>
-      {type === "videos" ?
+    <div className={type === "video" ? "px-4 pt-8 pb-10 sm:px-6 lg:px-8 lg:pt-12 lg:pb-14" : ""}>
+      {type === "video" ?
         <>
           <YouTube className={"max-w-6xl mx-auto"} videoId={videoId} />
           <h1 className='max-w-6xl mx-auto text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl md:text-5xl'>{title}</h1>
@@ -85,12 +95,17 @@ export default function Entities({ markdown, id, title, image, editUrl, mdxSourc
       {/* Comments */}
       <div className="max-w-3xl mx-auto mb-10">
         <hr />
-        <h2 className="my-6">3 Comments</h2>
+        <h2 className="my-6">{totalComments} Comments</h2>
+        <h2 className="my-6">{totalLikes} Likes</h2>
         <div className="my-6">
-          <EntityCommentForm onPostedComment={handlePostedComment} entityId={id} />
+          <EntityCommentForm onPostedComment={handlePostedComment} entitySlug={slug} />
         </div>
 
+
         <Comments comments={comments} />
+        <hr />
+        <h2 className="mt-10 mb-3">{totalComments} Youtube Comments: </h2>
+        <Comments comments={youtubeComments} />
       </div>
     </div>
   )
@@ -107,16 +122,18 @@ export async function getStaticProps(context) {
 
   const [slug] = context.params.slug
   try {
-    const article = await getEntity(slug)
-    const mdxSource = await serializeMDX(article.markdown)
+    const dbPost = await getPostFromDynamo(slug)
+    const post = await getPostMarkdown(dbPost)
+    const mdxSource = await serializeMDX(post.markdown)
 
     return {
       props: {
-        ...article,
+        ...post,
         mdxSource
       }
     }
   } catch (error) {
+    console.log(error)
     return {
       notFound: true,
     }

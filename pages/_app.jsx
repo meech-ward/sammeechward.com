@@ -6,6 +6,10 @@ import { useRouter } from 'next/router'
 import { useSession, signIn, signOut } from "next-auth/react"
 import { SessionProvider } from "next-auth/react"
 
+import TimeAgo from 'javascript-time-ago'
+import en from 'javascript-time-ago/locale/en'
+TimeAgo.addDefaultLocale(en)
+
 function MyHeader() {
   const router = useRouter()
 
@@ -21,7 +25,6 @@ function MyHeader() {
   ]
 
   const onSearch = term => {
-    console.log(term)
     router.push(`/search/${term}`)
   }
 

@@ -20,7 +20,7 @@ export default function CommentMarkdown({ mdxSource }) {
   const components = { h1, h2, h3, p, ul, ol, li, a }
 
   return (
-    <div className="max-w-3xl mx-auto">
+    <div className="max-w-3xl mx-auto break-words">
       {mdxSource &&
         <MDXRemote {...mdxSource} components={components} />
       }

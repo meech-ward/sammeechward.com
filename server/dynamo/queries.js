@@ -21,7 +21,7 @@ function mapComment(comment) {
 }
 
 export async function getUser({ email }) {
-  const user = await mainTable.queryItem({
+  const {Item} = await mainTable.queryItem({
     KeyConditionExpression: "GSI1PK = :pk AND GSI1SK = :sk",
     ExpressionAttributeValues: {
       ":pk": `USER#${email}`,
@@ -30,13 +30,13 @@ export async function getUser({ email }) {
     IndexName: "GSI1"
   })
 
-  return user
+  return Item
 }
 
-export async function createComment({ articleId, text, user }) {
+export async function createComment({ entitySlug, text, user }) {
   const sk = "COMMENT#" + ulid()
   const Item = {
-    pk: "ENTITY#" + articleId,
+    pk: "ENTITY#" + entitySlug,
     sk,
     GSI1PK: "USER#" + user.email,
     GSI1SK: sk,
@@ -83,18 +83,18 @@ export async function createComment({ articleId, text, user }) {
   return mapComment(Item)
 }
 
-export async function getComments(articleId) {
+export async function getComments({slug}) {
 
-  const comments = await mainTable.queryItems({
+  const {Items} = await mainTable.queryItems({
     KeyConditionExpression: "pk = :pk AND begins_with(sk, :comment)",
     ExpressionAttributeValues: {
-      ":pk": "ENTITY#" + articleId,
+      ":pk": "ENTITY#" + slug,
       ":comment": `COMMENT`
     },
   })
   
 
-  return comments.map(mapComment)
+  return Items.map(mapComment)
 
   let params = {
     TableName: tableName,
@@ -144,6 +144,18 @@ function promisify(fn) {
   })
 }
 
+export async function getPost(slug) {
+
+  const data = await postsTable.queryItem({
+    KeyConditionExpression: "pk = :pk",
+    ExpressionAttributeValues: {
+      ":pk": `ENTITY#${slug}`
+    }
+  })
+
+  return entityDetails(data.Item)
+}
+
 export async function getAllPosts(lastEvaluatedKey, limit = 30) {
   const params = {
     ProjectionExpression: "dirPath, imagesPath, indexPath, slug, tags, image, #tp, href, title, description, #dt",
@@ -157,14 +169,13 @@ export async function getAllPosts(lastEvaluatedKey, limit = 30) {
     ScanIndexForward: false,
   }
   if (lastEvaluatedKey) {
-    console.log({lastEvaluatedKey})
     try {
       const key = await promisify(jwt.verify)(lastEvaluatedKey, process.env.REQUEST_SECRET)
       delete key.iat
       params.ExclusiveStartKey = key
-      console.log({ExclusiveStartKey: key})
+
     } catch (error) {
-      console.log({error})
+
 
     }
     
@@ -176,7 +187,7 @@ export async function getAllPosts(lastEvaluatedKey, limit = 30) {
 }
 
 export async function getFeaturedPosts() {
-  const items =  await postsTable.queryItems({
+  const {Items} =  await postsTable.queryItems({
     KeyConditionExpression: "pk = :pk AND begins_with(sk, :sk)",
     ExpressionAttributeValues: {
       ":pk": "SETTING#featured",
@@ -184,15 +195,15 @@ export async function getFeaturedPosts() {
     },
   })
 
-  return items.map(entityDetails)
+  return Items.map(entityDetails)
 }
 
 export async function getMostRecentVideo() {
-  const video = await postsTable.getItem({
+  const {Item} = await postsTable.getItem({
     Key: {
       pk: "SETTING#most-recent-video",
       sk: "SETTING#most-recent-video"
     }
   })
-  return entityDetails(video)
+  return entityDetails(Item)
 }

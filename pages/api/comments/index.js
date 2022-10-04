@@ -13,25 +13,25 @@ async function post(req, res) {
     return
   }
 
-  const { articleId, text } = req.body
-  if (!articleId || !text) {  
+  const { entitySlug, text } = req.body
+  if (!entitySlug || !text) {  
     res.status(400).json({ error: "Bad Request" })
     return
   }
 
-  const comment = await createComment({articleId, text: _.escape(text), user})
+  const comment = await createComment({entitySlug, text: _.escape(text), user})
 
   res.status(201).json({ comment })
 }
 
 async function get(req, res) {
-  const { articleId } = req.query
-  if (!articleId) {  
-    res.status(404).json({ error: "No article id" })
+  const { post } = req.query
+  if (!post) {  
+    res.status(404).json({ error: "No post id" })
     return
   }
 
-  const comments = await getComments(articleId)
+  const comments = await getComments({slug: post})
 
   res.status(200).json({ comments })
 }

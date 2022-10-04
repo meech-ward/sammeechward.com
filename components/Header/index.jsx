@@ -11,15 +11,9 @@ function classNames(...classes) {
 
 export default function Header(props) {
   const { links, user, signIn, signOut } = props
-  console.log({ user })
 
-  useEffect(() => {
-
-    console.log({ user })
-  })
   const onSearch = (e) => {
     e.preventDefault()
-    console.log(e.target.search.value)
     props.onSearch(e.target.search.value)
   }
   return (

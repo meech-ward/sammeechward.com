@@ -6,14 +6,14 @@ import { useSession, signIn, signOut } from "next-auth/react"
 import axios from 'axios'
 
 
-export default function EntityCommentForm({onPostedComment, entityId}) {
+export default function EntityCommentForm({onPostedComment, entitySlug}) {
 
   const [initialCommentText, setInitialCommentText] = useState(null)
 
   const { data: session } = useSession()
 
   useEffect(() => {
-    const text = window.localStorage.getItem(`post-${entityId}-comment`)
+    const text = window.localStorage.getItem(`post-${entitySlug}-comment`)
     setInitialCommentText(text || "")
   }, [])
 
@@ -22,15 +22,15 @@ export default function EntityCommentForm({onPostedComment, entityId}) {
       signIn()
       return
     }
-    const res = await axios.post('/api/comments', { text, articleId: entityId })
+    const res = await axios.post('/api/comments', { text, entitySlug: entitySlug })
     const comment = res.data.comment
     onPostedComment(comment)
 
-    window.localStorage.removeItem(`post-${entityId}-comment`)
+    window.localStorage.removeItem(`post-${entitySlug}-comment`)
   }
 
   const handleCommentTextChange = (text) => {
-    window.localStorage.setItem(`post-${entityId}-comment`, text)
+    window.localStorage.setItem(`post-${entitySlug}-comment`, text)
   }
 
   return (

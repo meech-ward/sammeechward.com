@@ -17,9 +17,16 @@ export async function getComments(videoId) {
     id: item.id
   }))
   .map(comment => ({
-    ...comment,
-    text: comment.textDisplay,
-    profileImageUrl: comment.authorProfileImageUrl,
-    displayName: comment.authorDisplayName,
+    image: comment.authorProfileImageUrl,
+    created: comment.publishedAt,
+    text: comment.textOriginal,
+    name: comment.authorDisplayName,
+    id: comment.id,
+    likeCount: comment.likeCount,
+    videoId: comment.videoId,
   }))
 }
+
+
+
+

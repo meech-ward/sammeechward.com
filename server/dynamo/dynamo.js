@@ -14,7 +14,6 @@ export function makeTable(tableName, region, accessKeyId, secretAccessKey) {
   }
   const ddbClient = new DynamoDBClient(ddbConfig)
 
-
   const marshallOptions = {
     // Whether to automatically convert empty strings, blobs, and sets to `null`.
     convertEmptyValues: true, // false, by default.
@@ -68,12 +67,8 @@ export function makeTable(tableName, region, accessKeyId, secretAccessKey) {
       IndexName
     }
 
-    try {
-      const data = await dynamodb.send(new GetCommand(params))
-      return data.Item
-    } catch (error) {
-      console.log(error)
-    }
+    const data = await dynamodb.send(new GetCommand(params))
+    return data
   }
 
   exports.queryItems = queryItems
@@ -101,7 +96,6 @@ export function makeTable(tableName, region, accessKeyId, secretAccessKey) {
     }
 
     const data = await dynamodbClient.send(new ScanCommand(params));
-    console.log(data)
     return data.Items
   }
 

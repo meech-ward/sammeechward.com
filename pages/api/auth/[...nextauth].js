@@ -2,8 +2,8 @@ import NextAuth from "next-auth"
 import GithubProvider from "next-auth/providers/github"
 import GoogleProvider from "next-auth/providers/google"
 import { DynamoDBAdapter } from "@next-auth/dynamodb-adapter"
-import { dynamodb, tableName } from "../../../server/dynamo/mainTable"
-
+import mainTable from "../../../server/dynamo/mainTable"
+const { dynamodb, tableName } = mainTable
 
 // https://docs.github.com/en/developers/apps/building-oauth-apps/creating-an-oauth-app
 export const authOptions = {
