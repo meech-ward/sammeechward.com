@@ -1,9 +1,8 @@
 import fp from 'lodash/fp'
 
-const entityDetails = fp.curry(function (type, entity) {
+const entityDetails = function (entity) {
   return {
     ...entity,
-    type,
     href: `/${entity.slug}`,
     image: {
       ...entity.image,
@@ -11,6 +10,6 @@ const entityDetails = fp.curry(function (type, entity) {
     },
     editUrl: new URL(entity.indexPath, process.env.MDX_REPO_URL).href,
   }
-})
+}
 
 export default entityDetails

@@ -2,7 +2,7 @@ import Hero from '../components/Hero'
 import FeaturedCards from '../components/FeaturedCards'
 import FeaturedVideo from '../components/FeaturedVideo'
 
-import { getVideos, getFeaturedEntities } from '../server/database'
+import { getFeaturedPosts, getMostRecentVideo } from '../server/dynamo/queries'
 
 import toilet from '../public/toilet.jpg'
 
@@ -37,11 +37,11 @@ export default function Home({ featuredEntities, featuredVideo }) {
 
 export async function getStaticProps() {
 
-  const videos = await getVideos()
+  const featuredEntities = await getFeaturedPosts()
+  const featuredVideo = await getMostRecentVideo()
 
-  const featuredVideo = videos[0]
-
-  const featuredEntities = await getFeaturedEntities()
+  console.log(featuredEntities)
+  console.log(featuredVideo)
 
   return {
     props: {

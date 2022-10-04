@@ -2,7 +2,7 @@ import NextAuth from "next-auth"
 import GithubProvider from "next-auth/providers/github"
 import GoogleProvider from "next-auth/providers/google"
 import { DynamoDBAdapter } from "@next-auth/dynamodb-adapter"
-import { dynamodb, tableName } from "../../../server/dynamo/dynamo"
+import { dynamodb, tableName } from "../../../server/dynamo/mainTable"
 
 
 // https://docs.github.com/en/developers/apps/building-oauth-apps/creating-an-oauth-app

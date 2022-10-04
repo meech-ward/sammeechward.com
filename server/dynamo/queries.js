@@ -1,5 +1,10 @@
 import { ulid } from 'ulid'
-import { putItem, getItem, queryItem, queryItems, updateItem } from './dynamo'
+import mainTable from './mainTable'
+import postsTable from './postsTable'
+
+import entityDetails from '../../helpers/entityDetails'
+
+import jwt from 'jsonwebtoken'
 
 function mapComment(comment) {
   const obj = {
@@ -16,7 +21,7 @@ function mapComment(comment) {
 }
 
 export async function getUser({ email }) {
-  const user = await queryItem({
+  const user = await mainTable.queryItem({
     KeyConditionExpression: "GSI1PK = :pk AND GSI1SK = :sk",
     ExpressionAttributeValues: {
       ":pk": `USER#${email}`,
@@ -41,7 +46,7 @@ export async function createComment({ articleId, text, user }) {
     text,
     created: new Date().toISOString(),
   }
-  await putItem(Item)
+  await mainTable.putItem(Item)
 
   try {
     let setCountParams = {
@@ -56,7 +61,7 @@ export async function createComment({ articleId, text, user }) {
       ConditionExpression: 'attribute_not_exists(commentCount)'
     }
   
-    const data = await updateItem(setCountParams)
+    const data = await mainTable.updateItem(setCountParams)
   } catch (error) {
     if (error.name !== "ConditionalCheckFailedException") {
       throw error
@@ -72,7 +77,7 @@ export async function createComment({ articleId, text, user }) {
         ":inc": 1
       }
     }
-    await updateItem(updateParams)
+    await mainTable.updateItem(updateParams)
   }
 
   return mapComment(Item)
@@ -80,7 +85,7 @@ export async function createComment({ articleId, text, user }) {
 
 export async function getComments(articleId) {
 
-  const comments = await queryItems({
+  const comments = await mainTable.queryItems({
     KeyConditionExpression: "pk = :pk AND begins_with(sk, :comment)",
     ExpressionAttributeValues: {
       ":pk": "ENTITY#" + articleId,
@@ -108,4 +113,86 @@ export async function getComments(articleId) {
 
   const result = await dynamodb.query(params).promise()
   return result
+}
+
+
+// export async function getAllPosts() {
+//   const params = {
+//     ProjectionExpression: "dirPath, imagesPath, indexPath, slug, tags, image, #tp, href, title, description, #dt",
+//     ExpressionAttributeNames: { "#tp": "type", "#dt": "date" },
+//     FilterExpression: "begins_with(pk, :pk)",
+//     ExpressionAttributeValues: {
+//       ":pk": "ENTITY#"
+//     },
+//     Limit: 20,
+//     // ExclusiveStartKey
+//   }
+
+//   const posts = await postsTable.scan(params)
+//   return posts.map(entityDetails).sort((a, b) => new Date(b.date) - new Date(a.date))
+// }
+
+function promisify(fn) {
+  return (...args) => new Promise((resolve, reject) => {
+    fn(...args, (err, data) => {
+      if (err) {
+        reject(err)
+      } else {
+        resolve(data)
+      }
+    })
+  })
+}
+
+export async function getAllPosts(lastEvaluatedKey, limit = 30) {
+  const params = {
+    ProjectionExpression: "dirPath, imagesPath, indexPath, slug, tags, image, #tp, href, title, description, #dt",
+    ExpressionAttributeNames: { "#tp": "type", "#dt": "date" },
+    KeyConditionExpression: "GSI1PK = :pk",
+    ExpressionAttributeValues: {
+      ":pk": `ENTITY#POST`
+    },
+    IndexName: "GSI1",
+    Limit: limit,
+    ScanIndexForward: false,
+  }
+  if (lastEvaluatedKey) {
+    console.log({lastEvaluatedKey})
+    try {
+      const key = await promisify(jwt.verify)(lastEvaluatedKey, process.env.REQUEST_SECRET)
+      delete key.iat
+      params.ExclusiveStartKey = key
+      console.log({ExclusiveStartKey: key})
+    } catch (error) {
+      console.log({error})
+
+    }
+    
+  }
+  const { Items, ScannedCount, LastEvaluatedKey} = await postsTable.queryItems(params)
+
+  const nextKey = LastEvaluatedKey && jwt.sign(LastEvaluatedKey, process.env.REQUEST_SECRET)
+  return { posts: Items.map(entityDetails), count: ScannedCount, lastEvaluatedKey: nextKey }
+}
+
+export async function getFeaturedPosts() {
+  const items =  await postsTable.queryItems({
+    KeyConditionExpression: "pk = :pk AND begins_with(sk, :sk)",
+    ExpressionAttributeValues: {
+      ":pk": "SETTING#featured",
+      ":sk": "SETTING"
+    },
+  })
+
+  return items.map(entityDetails)
+}
+
+export async function getMostRecentVideo() {
+  const video = await postsTable.getItem({
+    Key: {
+      pk: "SETTING#most-recent-video",
+      sk: "SETTING#most-recent-video"
+    }
+  })
+  return entityDetails(video)
 }
