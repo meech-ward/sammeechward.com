@@ -22,6 +22,7 @@ export default function CommentForm({onSubmit, onTextChange, initialText}) {
   const handleSubmit = (e) => {
     e.preventDefault()
     onSubmit(text)
+    setText("")
   }
   const [text, setText] = useState(initialText || '')
   const [mdxSource, setMdxSource] = useState(null) 

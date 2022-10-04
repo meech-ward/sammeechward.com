@@ -2,10 +2,17 @@ import { ulid } from 'ulid'
 import { putItem, getItem, queryItem, queryItems, updateItem } from './dynamo'
 
 function mapComment(comment) {
-  return {
+  const obj = {
     ...comment,
     id: comment.sk.split("#")[1]
   }
+
+  delete obj.pk
+  delete obj.sk
+  delete obj.GSI1PK
+  delete obj.GSI1SK
+
+  return obj
 }
 
 export async function getUser({ email }) {

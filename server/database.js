@@ -47,6 +47,18 @@ export async function getArticle(slug) {
   }
 }
 
+export async function getEntity(slug) {
+  const entities = await allEntities()
+  const entity = entities.find(entity => entity.slug === slug)
+  const url = new URL(entity.indexPath, process.env.MDX_ROOT_URL).href
+  const res = await axios.get(url)
+  return {
+    ...entity,
+    markdown: res.data, 
+  }
+}
+
+
 let all 
 export async function allEntities() {
   if (all) {

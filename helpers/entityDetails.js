@@ -4,7 +4,7 @@ const entityDetails = fp.curry(function (type, entity) {
   return {
     ...entity,
     type,
-    href: `/${type}/${entity.slug}`,
+    href: `/${entity.slug}`,
     image: {
       ...entity.image,
       url: entity.image.url && new URL(entity.image.url, process.env.MDX_ROOT_URL).href,
