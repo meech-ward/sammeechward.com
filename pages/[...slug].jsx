@@ -19,9 +19,11 @@ import axios from 'axios'
 import { useEffect, useState } from 'react'
 
 
-export default function Entities({ markdown, totalComments, totalLikes, slug, title, image, editUrl, mdxSource, description, type, videoId }) {
+export default function Entities({ markdown, commentCount, likeCount, slug, title, image, editUrl, mdxSource, description, type, videoId }) {
 
   const [comments, setComments] = useState([])
+  const [totalComments, setTotalComments] = useState(commentCount)
+  const [totalLikes, setTotalLikes] = useState(likeCount)
   const [youtubeComments, setYoutubeComments] = useState([])
   const [postedComment, setPostedComment] = useState(false)
 
@@ -67,6 +69,7 @@ export default function Entities({ markdown, totalComments, totalLikes, slug, ti
 
   const handlePostedComment = async (comment) => {
     setComments([...comments, await mapComment(comment)])
+    setTotalComments(totalComments + 1)
     setPostedComment(true)
   }
 
@@ -104,7 +107,7 @@ export default function Entities({ markdown, totalComments, totalLikes, slug, ti
 
         <Comments comments={comments} />
         <hr />
-        <h2 className="mt-10 mb-3">{totalComments} Youtube Comments: </h2>
+        <h2 className="mt-10 mb-3">{commentCount} Youtube Comments: </h2>
         <Comments comments={youtubeComments} />
       </div>
     </div>

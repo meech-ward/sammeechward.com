@@ -21,7 +21,7 @@ function mapComment(comment) {
 }
 
 export async function getUser({ email }) {
-  const {Item} = await mainTable.queryItem({
+  const { Item } = await mainTable.queryItem({
     KeyConditionExpression: "GSI1PK = :pk AND GSI1SK = :sk",
     ExpressionAttributeValues: {
       ":pk": `USER#${email}`,
@@ -31,6 +31,62 @@ export async function getUser({ email }) {
   })
 
   return Item
+}
+
+async function updateUserCommentCount(user) {
+  try {
+    let setCountParams = {
+      Key: {
+        pk: user.pk,
+        sk: user.sk,
+      },
+      UpdateExpression: "SET commentCount = :val",
+      ExpressionAttributeValues: {
+        ":val": 1
+      },
+      ConditionExpression: 'attribute_not_exists(commentCount)'
+    }
+
+    const data = await mainTable.updateItem(setCountParams)
+  } catch (error) {
+    if (error.name !== "ConditionalCheckFailedException") {
+      throw error
+    }
+
+    let updateParams = {
+      Key: {
+        pk: user.pk,
+        sk: user.sk,
+      },
+      UpdateExpression: "SET commentCount = commentCount+ :inc",
+      ExpressionAttributeValues: {
+        ":inc": 1
+      }
+    }
+    await mainTable.updateItem(updateParams)
+  }
+}
+
+async function updatePostCommentCount(entitySlug) {
+  
+    let {Item} = await postsTable.queryItem({
+      KeyConditionExpression: "pk = :pk",
+      ExpressionAttributeValues: {
+        ":pk": `ENTITY#${entitySlug}`
+      }
+    })
+    let updateParams = {
+      Key: {
+        pk: Item.pk,
+        sk: Item.sk
+      },
+      UpdateExpression: "SET commentCount = commentCount+ :inc",
+      ExpressionAttributeValues: {
+        ":inc": 1
+      }
+    }
+    
+    await postsTable.updateItem(updateParams)
 }
 
 export async function createComment({ entitySlug, text, user }) {
@@ -48,51 +104,22 @@ export async function createComment({ entitySlug, text, user }) {
   }
   await mainTable.putItem(Item)
 
-  try {
-    let setCountParams = {
-      Key: {
-        pk: user.pk,
-        sk: user.sk,
-      },
-      UpdateExpression: "SET commentCount = :val",
-      ExpressionAttributeValues: {
-        ":val": 1
-      },
-      ConditionExpression: 'attribute_not_exists(commentCount)'
-    }
+  await updateUserCommentCount(user)
+  await updatePostCommentCount(entitySlug)
   
-    const data = await mainTable.updateItem(setCountParams)
-  } catch (error) {
-    if (error.name !== "ConditionalCheckFailedException") {
-      throw error
-    }
-  
-    let updateParams = {
-      Key: {
-        pk: user.pk,
-        sk: user.sk,
-      },
-      UpdateExpression: "SET commentCount = commentCount+ :inc",
-      ExpressionAttributeValues: {
-        ":inc": 1
-      }
-    }
-    await mainTable.updateItem(updateParams)
-  }
-
   return mapComment(Item)
 }
 
-export async function getComments({slug}) {
+export async function getComments({ slug }) {
 
-  const {Items} = await mainTable.queryItems({
+  const { Items } = await mainTable.queryItems({
     KeyConditionExpression: "pk = :pk AND begins_with(sk, :comment)",
     ExpressionAttributeValues: {
       ":pk": "ENTITY#" + slug,
       ":comment": `COMMENT`
     },
   })
-  
+
 
   return Items.map(mapComment)
 
@@ -178,16 +205,16 @@ export async function getAllPosts(lastEvaluatedKey, limit = 30) {
 
 
     }
-    
+
   }
-  const { Items, ScannedCount, LastEvaluatedKey} = await postsTable.queryItems(params)
+  const { Items, ScannedCount, LastEvaluatedKey } = await postsTable.queryItems(params)
 
   const nextKey = LastEvaluatedKey && jwt.sign(LastEvaluatedKey, process.env.REQUEST_SECRET)
   return { posts: Items.map(entityDetails), count: ScannedCount, lastEvaluatedKey: nextKey }
 }
 
 export async function getFeaturedPosts() {
-  const {Items} =  await postsTable.queryItems({
+  const { Items } = await postsTable.queryItems({
     KeyConditionExpression: "pk = :pk AND begins_with(sk, :sk)",
     ExpressionAttributeValues: {
       ":pk": "SETTING#featured",
@@ -199,7 +226,7 @@ export async function getFeaturedPosts() {
 }
 
 export async function getMostRecentVideo() {
-  const {Item} = await postsTable.getItem({
+  const { Item } = await postsTable.getItem({
     Key: {
       pk: "SETTING#most-recent-video",
       sk: "SETTING#most-recent-video"
