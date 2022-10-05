@@ -19,8 +19,7 @@ import axios from 'axios'
 import { useEffect, useState } from 'react'
 
 
-export default function Entities({ markdown, commentCount, likeCount, slug, title, image, editUrl, mdxSource, description, type, videoId }) {
-
+export default function Entities({ markdown, rootURL, rootImagesUrl, commentCount, likeCount, slug, title, image, editUrl, mdxSource, description, type, videoId }) {
   const [comments, setComments] = useState([])
   const [totalComments, setTotalComments] = useState(commentCount)
   const [totalLikes, setTotalLikes] = useState(likeCount)
@@ -73,19 +72,21 @@ export default function Entities({ markdown, commentCount, likeCount, slug, titl
     setPostedComment(true)
   }
 
+  const Contents = <Article mdxSource={mdxSource} rootURL={rootURL} rootImagesUrl={rootImagesUrl} />
+
   return (
     <div className={type === "video" ? "px-4 pt-8 pb-10 sm:px-6 lg:px-8 lg:pt-12 lg:pb-14" : ""}>
       {type === "video" ?
         <>
           <YouTube className={"max-w-6xl mx-auto"} videoId={videoId} />
           <h1 className='max-w-6xl mx-auto text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl md:text-5xl'>{title}</h1>
-          <Article mdxSource={mdxSource} />
+          {Contents}
         </>
         :
         <>
           <Hero title={title} subTitle={""} description={""} image={{ ...image, ...imageSize }}></Hero>
           <div className="px-4 pt-8 pb-10 sm:px-6 lg:px-8 lg:pt-12 lg:pb-14">
-            <Article mdxSource={mdxSource} />
+          {Contents}
           </div>
         </>
       }

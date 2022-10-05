@@ -22,10 +22,17 @@ export default function Home({ featuredEntities, featuredVideo }) {
         title={"Sam Meech-Ward"}
         description={description}
         imageUrl={toilet}
-        buttons={[
-          { title: "About", href: "/about" },
-          { title: "Contact", href: "/contact" },
-        ]}
+        icons={{
+          github: "https://github.com/meech-ward",
+          instagram: "https://www.instagram.com/meech_ward",
+          twitter: "https://twitter.com/Meech_Ward",
+          youtube: "https://www.youtube.com/channel/UC6aTLuI_j4-0wiDSzmaPctQ",
+          linkedin: "https://www.linkedin.com/in/sam-meech-ward-a485ab1a/",
+        }}
+        // buttons={[
+        //   { title: "About", href: "/about" },
+        //   { title: "Contact", href: "/contact" },
+        // ]}
       />
 
       <FeaturedCards title={"Most Popular Shit"} description={"Get started by taking a look at what other people like"} posts={featuredEntities} />

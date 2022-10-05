@@ -1,5 +1,6 @@
-import { searchForEntities } from '../../server/database'
 import Cards from '../../components/Cards'
+import { algoliasearch } from 'algoliasearch';
+import entityDetails from '../../helpers/entityDetails';
 
 export default function Articles({ term, entities }) {
   return (
@@ -14,12 +15,24 @@ export async function getServerSideProps(context) {
 
   const [term] = context.params.search
 
-  const entities = await searchForEntities(term)
+  const searchClient = algoliasearch(process.env.ALGOLIA_SEARCH_APP_ID, process.env.ALGOLIA_SEARCH_API_KEY);
+
+  const {results} = await searchClient.search({
+    requests: [
+      {
+        indexName: process.env.ALGOLIA_SEARCH_POSTS_INDEX_NAME,
+        query: term,
+        hitsPerPage: 50,
+      },
+    ],
+  })
+
+  console.log(results[0].hits)
 
   return {
     props: {
       term,
-      entities: entities
+      entities: results[0].hits.map(entityDetails)
     }
   }
 }

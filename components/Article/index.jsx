@@ -24,12 +24,13 @@ function Instruction({ children }) {
 }
 const Note = Instruction
 
-export default function Page({ mdxSource, rootURL }) {
+export default function Page({ mdxSource, rootURL, rootImagesUrl }) {
 
-  const img = ({ src, alt }) => src.startsWith('/') ? <img src={rootURL + src} alt={alt} /> : <img src={src} alt={alt} />
+
+  const img = ({ src, alt }) => src.startsWith('/images') ? <img src={new URL(src.replace('/images/', 'images/'), rootImagesUrl).href} alt={alt} /> : <img src={src} alt={alt} />
   const Image = (props) => {
     const { src } = props
-    return src.startsWith('/') ? <NextImage {...props} src={rootURL + src} /> : <img {...props} src={src} />
+    return src.startsWith('/images') ? <NextImage {...props} src={new URL(src.replace('/images/', 'images/'), rootImagesUrl).href} /> : <img {...props} src={src} />
   }
   const File = ({ name, children }) => <a className="text-indigo-600 hover:text-indigo-500" href={`${rootURL}/files/${name}`}>{children}</a>
 

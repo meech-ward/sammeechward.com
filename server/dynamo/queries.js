@@ -20,6 +20,34 @@ function mapComment(comment) {
   return obj
 }
 
+function mapPost(post) {
+  const obj = {
+    ...post,
+    id: post.slug
+  }
+
+  delete obj.pk
+  delete obj.sk
+  delete obj.GSI1PK
+  delete obj.GSI1SK
+
+  return obj
+}
+
+function mapFeatured(post) {
+  const obj = {
+    ...post,
+    id: post.sk.split("#")[1]
+  }
+
+  delete obj.pk
+  delete obj.sk
+  delete obj.GSI1PK
+  delete obj.GSI1SK
+
+  return obj
+}
+
 export async function getUser({ email }) {
   const { Item } = await mainTable.queryItem({
     KeyConditionExpression: "GSI1PK = :pk AND GSI1SK = :sk",
@@ -180,7 +208,7 @@ export async function getPost(slug) {
     }
   })
 
-  return entityDetails(data.Item)
+  return mapPost(entityDetails(data.Item))
 }
 
 export async function getAllPosts(lastEvaluatedKey, limit = 30) {
@@ -210,7 +238,7 @@ export async function getAllPosts(lastEvaluatedKey, limit = 30) {
   const { Items, ScannedCount, LastEvaluatedKey } = await postsTable.queryItems(params)
 
   const nextKey = LastEvaluatedKey && jwt.sign(LastEvaluatedKey, process.env.REQUEST_SECRET)
-  return { posts: Items.map(entityDetails), count: ScannedCount, lastEvaluatedKey: nextKey }
+  return { posts: Items.map(entityDetails).map(mapPost), count: ScannedCount, lastEvaluatedKey: nextKey }
 }
 
 export async function getFeaturedPosts() {
@@ -222,7 +250,7 @@ export async function getFeaturedPosts() {
     },
   })
 
-  return Items.map(entityDetails)
+  return Items.map(entityDetails).map(mapFeatured)
 }
 
 export async function getMostRecentVideo() {
@@ -232,5 +260,5 @@ export async function getMostRecentVideo() {
       sk: "SETTING#most-recent-video"
     }
   })
-  return entityDetails(Item)
+  return mapPost(entityDetails(Item))
 }
