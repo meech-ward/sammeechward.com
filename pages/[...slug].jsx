@@ -46,15 +46,15 @@ export default function Entities({ markdown, rootURL, rootImagesUrl, commentCoun
       setComments(comments)
     })()
 
-    ; (async () => {
-      if (!videoId) {
-        return
-      }
-      const res = await axios.get(`/api/videos/${videoId}/comments`)
-      console.log(res.data.comments)
-      const comments = await Promise.all(res.data.comments.map(mapComment))
-      setYoutubeComments(comments)
-    })()
+      ; (async () => {
+        if (!videoId) {
+          return
+        }
+        const res = await axios.get(`/api/videos/${videoId}/comments`)
+        console.log("youtube comments", res.data.comments)
+        // const comments = await Promise.all(res.data.comments.map(mapComment))
+        // setYoutubeComments(comments)
+      })()
 
   }, [])
 
@@ -72,22 +72,28 @@ export default function Entities({ markdown, rootURL, rootImagesUrl, commentCoun
     setPostedComment(true)
   }
 
-  const Contents = <Article mdxSource={mdxSource} rootURL={rootURL} rootImagesUrl={rootImagesUrl} />
-
+  const Contents = ({children}) => (
+    <div className="px-4 pt-8 pb-10 sm:px-6 lg:px-8 lg:pt-12 lg:pb-14">
+      {children}
+      <Article mdxSource={mdxSource} rootURL={rootURL} rootImagesUrl={rootImagesUrl} />
+    </div>
+  )
+  const isVideo = type === "video"
   return (
-    <div className={type === "video" ? "px-4 pt-8 pb-10 sm:px-6 lg:px-8 lg:pt-12 lg:pb-14" : ""}>
-      {type === "video" ?
+    <>
+      {isVideo ?
         <>
-          <YouTube className={"max-w-6xl mx-auto"} videoId={videoId} />
-          <h1 className='max-w-6xl mx-auto text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl md:text-5xl'>{title}</h1>
-          {Contents}
+          <div className="sm:px-6 lg:px-8 sm:pt-6 lg:pt-12">
+            <YouTube className={"max-w-6xl mx-auto"} videoId={videoId} />
+          </div>
+            <h1 className='mx-2 sm:mx-6 xl:max-w-6xl xl:mx-auto text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl md:text-5xl'>{title}</h1>
+            <Contents>
+            </Contents>
         </>
         :
         <>
           <Hero title={title} subTitle={""} description={""} image={{ ...image, ...imageSize }}></Hero>
-          <div className="px-4 pt-8 pb-10 sm:px-6 lg:px-8 lg:pt-12 lg:pb-14">
-          {Contents}
-          </div>
+          <Contents />
         </>
       }
       {editUrl &&
@@ -97,7 +103,8 @@ export default function Entities({ markdown, rootURL, rootImagesUrl, commentCoun
       }
 
       {/* Comments */}
-      <div className="max-w-3xl mx-auto mb-10">
+      
+      <div className="mx-4 mb-5 sm:mx-8 sm:mb-5 max-w-3xl md:mx-auto sm:mb-10">
         <hr />
         <h2 className="my-6">{totalComments} Comments</h2>
         <h2 className="my-6">{totalLikes} Likes</h2>
@@ -106,12 +113,17 @@ export default function Entities({ markdown, rootURL, rootImagesUrl, commentCoun
         </div>
 
 
-        <Comments comments={comments} />
-        <hr />
-        <h2 className="mt-10 mb-3">{commentCount} Youtube Comments: </h2>
-        <Comments comments={youtubeComments} />
-      </div>
-    </div>
+        
+          <Comments comments={comments} />
+          {isVideo && !!youtubeComments.length && 
+            <>
+              <hr />
+              <h2 className="mt-10 mb-3">{commentCount} Youtube Comments: </h2>
+              <Comments comments={youtubeComments} />
+            </>
+          }
+        </div>
+    </>
   )
 }
 
@@ -130,6 +142,7 @@ export async function getStaticProps(context) {
     const post = await getPostMarkdown(dbPost)
     const mdxSource = await serializeMDX(post.markdown)
 
+    console.log({dbPost})
     return {
       props: {
         ...post,
