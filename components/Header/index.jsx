@@ -125,7 +125,7 @@ export default function Header(props) {
                           leaveTo="transform opacity-0 scale-95"
                         >
                           <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                            <Menu.Item>
+                            {/* <Menu.Item>
                               {({ active }) => (
                                 <a
                                   href="#"
@@ -153,7 +153,7 @@ export default function Header(props) {
                                   </a>
                                 </Link>
                               )}
-                            </Menu.Item>
+                            </Menu.Item> */}
                             <Menu.Item>
                               {({ active }) => (
                                 <a
@@ -235,7 +235,7 @@ export default function Header(props) {
                     </button>
                   </div>
                   <div className="mt-3 space-y-1 px-2">
-                    <Disclosure.Button
+                    {/* <Disclosure.Button
                       as="a"
                       href="#"
                       className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
@@ -252,7 +252,7 @@ export default function Header(props) {
                       >
                         Settings
                       </Disclosure.Button>
-                    </Link>
+                    </Link> */}
                     <Disclosure.Button
                       as="a"
                       href="#"
