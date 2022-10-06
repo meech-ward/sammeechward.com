@@ -16,7 +16,7 @@ import normalizeImageSize from '../helpers/normalizeImageSize'
 
 import axios from 'axios'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 
 export default function Entities({ markdown, rootURL, rootImagesUrl, commentCount, likeCount, slug, title, image, editUrl, mdxSource, description, type, videoId }) {
@@ -27,16 +27,19 @@ export default function Entities({ markdown, rootURL, rootImagesUrl, commentCoun
   const [totalYoutubeComments, setTotalYoutubeComments] = useState(0)
   const [postedComment, setPostedComment] = useState(false)
 
+  const commentsRef = useRef()
+
   const imageSize = normalizeImageSize({ ...image, maxHeight: 336 * 2 })
 
   useEffect(() => {
     if (!postedComment) {
       return
     }
-    window.scrollTo({
-      top: document.body.scrollHeight,
-      behavior: 'smooth'
-    })
+    // window.scrollTo({
+    //   top: document.body.scrollHeight,
+    //   behavior: 'smooth'
+    // })
+    commentsRef.current.scrollIntoView({ behavior: 'smooth' })
   }, [comments])
 
 
@@ -122,9 +125,7 @@ export default function Entities({ markdown, rootURL, rootImagesUrl, commentCoun
           <EntityCommentForm onPostedComment={handlePostedComment} entitySlug={slug} />
         </div>
 
-
-
-        <Comments comments={comments} />
+        <Comments ref={commentsRef} comments={comments} />
         {isVideo && !!youtubeComments.length &&
           <>
             <hr />

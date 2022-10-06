@@ -3,6 +3,8 @@ import CommentMarkdown from '../CommentMarkdown'
 
 import TimeAgo from 'javascript-time-ago'
 
+import { forwardRef } from 'react'
+
 // Create formatter (English).
 const timeAgo = new TimeAgo('en-US')
 
@@ -33,9 +35,9 @@ function Comment({ comment, ImageComponent }) {
   )
 }
 
-export default function Comments({ ImageComponent = Image, comments }) {
+export default forwardRef(function Comments({ ImageComponent = Image, comments}, ref) {
   return (
-    <div>
+    <div ref={ref}>
       <ul role="list" className="divide-y divide-gray-200">
         {comments.map(comment => (
           <li key={comment.id} className="py-4">
@@ -54,4 +56,4 @@ export default function Comments({ ImageComponent = Image, comments }) {
       </ul>
     </div>
   )
-}
+})
