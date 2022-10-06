@@ -1,3 +1,4 @@
+import Head from 'next/head'
 import { getPost as getPostMarkdown } from '../server/markdownFiles'
 import { getPost as getPostFromDynamo } from '../server/dynamo/queries'
 import serializeMDX from '../helpers/serializeMDX'
@@ -94,6 +95,9 @@ export default function Entities({ markdown, rootURL, rootImagesUrl, commentCoun
   const isVideo = type === "video"
   return (
     <>
+      <Head>
+        <title>{title}</title>
+      </Head>
       {isVideo ?
         <>
           <div className="sm:px-6 lg:px-8 sm:pt-6 lg:pt-12">

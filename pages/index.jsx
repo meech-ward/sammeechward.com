@@ -1,3 +1,4 @@
+import Head from 'next/head'
 import Hero from '../components/Hero'
 import FeaturedCards from '../components/FeaturedCards'
 import FeaturedVideo from '../components/FeaturedVideo'
@@ -17,6 +18,9 @@ A language that understands how to vindictively sting`
 export default function Home({ featuredEntities, featuredVideo }) {
   return (
     <>
+      <Head>
+        <title>saM</title>
+      </Head>
 
       <Hero
         title={"Sam Meech-Ward"}
@@ -36,7 +40,7 @@ export default function Home({ featuredEntities, featuredVideo }) {
       />
 
       <FeaturedVideo title={"Latest Upload"} description={featuredVideo.title + " " + featuredVideo.description} videoId={featuredVideo.videoId} />
-      
+
       <FeaturedCards title={"Most Popular"} description={"Take a look at what other people like"} posts={featuredEntities} />
 
     </>
