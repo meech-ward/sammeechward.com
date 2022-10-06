@@ -5,26 +5,43 @@ const youtube = google.youtube({
   auth: process.env.YOUTUBE_API_KEY,
 })
 
+export async function getCommentsAndReplies(videoId) {
+
+}
+
+function mapCommentItem(comment) {
+  const snippet = comment.snippet
+  return {
+    ...snippet,
+    id: comment.id,
+    image: snippet.authorProfileImageUrl,
+    created: snippet.publishedAt,
+    text: snippet.textOriginal,
+    name: snippet.authorDisplayName,
+    likeCount: snippet.likeCount,
+    videoId: snippet.videoId,
+  }
+}
+
+function mapCommentResult(item) {
+  const replies = item.replies?.comments?.map(mapCommentItem) || []
+  return {
+    ...mapCommentItem(item.snippet.topLevelComment),
+    replies
+  }
+}
+
 export async function getComments(videoId) {
   const res = await youtube.commentThreads.list({
-    part: ['snippet'],
+    part: ['snippet', 'replies'],
     videoId,
     maxResults: 100,
   })
-  return res.data.items
-  .map(item => ({
-    ...item.snippet.topLevelComment.snippet,
-    id: item.id
-  }))
-  .map(comment => ({
-    image: comment.authorProfileImageUrl,
-    created: comment.publishedAt,
-    text: comment.textOriginal,
-    name: comment.authorDisplayName,
-    id: comment.id,
-    likeCount: comment.likeCount,
-    videoId: comment.videoId,
-  }))
+  console.log(res.data.items.map(a => a.replies).filter(a => a).map(a => a.comments[0]))
+  const commentsAndReplies = res.data.items.map(mapCommentResult)
+  const totalCommentsAndReplies = commentsAndReplies.map(a => 1 + a.replies?.length).reduce((a, b) => a + b, 0)
+
+  return { commentsAndReplies, totalCommentsAndReplies }
 }
 
 
