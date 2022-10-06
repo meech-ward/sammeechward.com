@@ -34,6 +34,7 @@
     "next-auth": "^4.12.0",
     "next-mdx-enhanced": "^5.0.0",
     "next-mdx-remote": "^4.1.0",
+    "nextjs-google-analytics": "^2.1.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-instantsearch-hooks": "^6.36.0",
