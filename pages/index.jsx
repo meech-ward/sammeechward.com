@@ -37,7 +37,7 @@ export default function Home({ featuredEntities, featuredVideo }) {
 
       <FeaturedVideo title={"Latest Upload"} description={featuredVideo.title + " " + featuredVideo.description} videoId={featuredVideo.videoId} />
       
-      <FeaturedCards title={"Most Popular Shit"} description={"Get started by taking a look at what other people like"} posts={featuredEntities} />
+      <FeaturedCards title={"Most Popular"} description={"Take a look at what other people like"} posts={featuredEntities} />
 
     </>
   )

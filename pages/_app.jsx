@@ -22,7 +22,7 @@ function MyHeader() {
   const links = [
     // {title: 'Articles', href: '/articles', selected: router.pathname.startsWith('/articles')},
     // {title: 'Videos', href: '/videos', selected: router.pathname.startsWith('/videos')},
-    {title: 'My Shit', href: '/posts', selected: router.pathname.startsWith('/posts')},
+    {title: 'Posts', href: '/posts', selected: router.pathname.startsWith('/posts')},
     // {title: 'Learning Paths', href: '/learning-paths', selected: router.pathname.startsWith('/learning-paths')},
     // {title: 'Courses', href: '/courses', selected: router.pathname.startsWith('/courses')},
   ]
