@@ -1,4 +1,12 @@
 //robots.txt
 
 User-agent: *
-Disallow: /
+Disallow: /settings/
+Disallow: /profile/
+Disallow: /search/
+
+# Allow all crawlers
+User-agent: *
+Allow: /
+
+Sitemap: https://sammeechward.com/sitemap.xml
