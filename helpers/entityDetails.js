@@ -10,7 +10,7 @@ const entityDetails = function (entity) {
       url: entity.image.url && new URL(entity.image.url, process.env.MDX_ROOT_URL).href,
     },
     editUrl: new URL(entity.indexPath, process.env.MDX_REPO_URL).href,
-    rootImagesUrl: new URL(entity.imagesPath, process.env.MDX_REPO_URL).href,
+    rootImagesUrl: new URL(entity.imagesPath, process.env.MDX_ROOT_URL).href,
     rootUrl: process.env.MDX_ROOT_URL,
   }
 }
