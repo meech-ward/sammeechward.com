@@ -24,7 +24,7 @@ function mapCommentItem(comment) {
 }
 
 function mapCommentResult(item) {
-  const replies = item.replies?.comments?.map(mapCommentItem) || []
+  const replies = item.replies?.comments?.reverse().map(mapCommentItem) || []
   return {
     ...mapCommentItem(item.snippet.topLevelComment),
     replies
