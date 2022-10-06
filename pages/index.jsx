@@ -29,10 +29,10 @@ export default function Home({ featuredEntities, featuredVideo }) {
           youtube: "https://www.youtube.com/channel/UC6aTLuI_j4-0wiDSzmaPctQ",
           linkedin: "https://www.linkedin.com/in/sam-meech-ward-a485ab1a/",
         }}
-        // buttons={[
-        //   { title: "About", href: "/about" },
-        //   { title: "Contact", href: "/contact" },
-        // ]}
+        buttons={[
+          { title: "Videos and Articles", href: "/posts" },
+          // { title: "Contact", href: "/contact" },
+        ]}
       />
 
       <FeaturedVideo title={"Latest Upload"} description={featuredVideo.title + " " + featuredVideo.description} videoId={featuredVideo.videoId} />
