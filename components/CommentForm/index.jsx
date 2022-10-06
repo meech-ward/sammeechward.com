@@ -19,10 +19,11 @@ function classNames(...classes) {
 }
 
 export default function CommentForm({onSubmit, onTextChange, initialText}) {
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    onSubmit(text)
-    setText("")
+    if (await onSubmit(text)) {
+      setText("")
+    }
   }
   const [text, setText] = useState(initialText || '')
   const [mdxSource, setMdxSource] = useState(null) 
