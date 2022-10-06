@@ -43,7 +43,7 @@ export default function Articles(props) {
         <title>saM: Posts</title>
       </Head>
       <div className="pt-8 pb-10 lg:pt-12 lg:pb-14 mx-auto max-w-7xl px-2">
-        <h1 className='text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl md:text-6xl'>My Shit</h1>
+        <h1 className='text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl md:text-6xl'>Videos, Articles, and Tutorials</h1>
         <Cards posts={entities} ImageComponent={ImageComponent} />
         {lastEvaluatedKey &&
           <div className="pt-8 pb-10 lg:pt-12 lg:pb-14 mx-auto max-w-7xl px-2">
