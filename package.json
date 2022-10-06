@@ -2,7 +2,6 @@
   "name": "sammeechward.com",
   "version": "0.1.0",
   "private": true,
-  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -43,6 +42,7 @@
     "react-instantsearch-hooks": "^6.36.0",
     "react-instantsearch-hooks-web": "^6.36.0",
     "rehype-highlight": "^5.0.2",
+    "sql.js": "^1.8.0",
     "storybook-addon-next": "^1.6.9",
     "ulid": "^2.3.0"
   },
