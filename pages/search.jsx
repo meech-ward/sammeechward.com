@@ -22,7 +22,6 @@ export default function Articles() {
           setEntities(entities)
         })()
     }
-    console.log("search term", term)
   }, [query])
 
   return (
@@ -51,7 +50,6 @@ async function getSearchResults(term) {
     ],
   })
 
-  console.log(results)
   return results[0].hits.map(entityDetails)
 }
 
