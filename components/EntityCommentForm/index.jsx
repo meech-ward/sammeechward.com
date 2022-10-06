@@ -20,13 +20,14 @@ export default function EntityCommentForm({onPostedComment, entitySlug}) {
   const handleCommentSubmission = async (text) => {
     if (!session) {
       signIn()
-      return
+      return false
     }
     const res = await axios.post('/api/comments', { text, entitySlug: entitySlug })
     const comment = res.data.comment
     onPostedComment(comment)
 
     window.localStorage.removeItem(`post-${entitySlug}-comment`)
+    return true
   }
 
   const handleCommentTextChange = (text) => {
