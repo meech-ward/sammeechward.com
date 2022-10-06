@@ -4,6 +4,7 @@ import { MDXRemote } from 'next-mdx-remote'
 import 'highlight.js/styles/stackoverflow-dark.css'
 
 import YouTube from '../YouTube'
+import InteractiveParallelism from '../ArticleComponents/InteractiveParallelism'
 
 import NextImage from 'next/future/image'
 const h1 = (props) => <h1 {...props} className={props.className ?? "" + " sm:text-5xl text-4xl sm:mt-14 mt-10 sm:mb-10 mb-8 font-semibold"} />
@@ -38,7 +39,7 @@ export default function Page({ mdxSource, rootURL, rootImagesUrl }) {
   }
   const File = ({ name, children }) => <a className="text-indigo-600 hover:text-indigo-500" href={`${rootURL}/files/${name}`}>{children}</a>
 
-  const components = { h1, h2, h3, p, ul, ol, li, a, img, Image, Note, YouTube, File }
+  const components = { h1, h2, h3, p, ul, ol, li, a, img, Image, Note, YouTube, File, InteractiveParallelism }
 
   return (
     <div className="max-w-3xl mx-auto break-words">
