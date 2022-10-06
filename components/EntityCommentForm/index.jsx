@@ -31,7 +31,6 @@ export default function EntityCommentForm({onPostedComment, entitySlug}) {
   }
 
   const handleCommentTextChange = (text) => {
-    console.log("text change", text)
     window.localStorage.setItem(`post-${entitySlug}-comment`, text)
   }
 
