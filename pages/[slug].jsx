@@ -147,7 +147,7 @@ export async function getStaticPaths() {
 
 export async function getStaticProps(context) {
 
-  const [slug] = context.params.slug
+  const slug = context.params.slug
   try {
     const dbPost = await getPostFromDynamo(slug)
     const post = await getPostMarkdown(dbPost)

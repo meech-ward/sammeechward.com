@@ -1,4 +1,4 @@
-import { getAllPosts } from '../../server/dynamo/queries'
+import { getPosts } from '../../server/dynamo/queries'
 import Cards from '../../components/Cards'
 
 import { useState } from 'react'
@@ -56,7 +56,7 @@ export default function Articles(props) {
 
 export async function getStaticProps() {
 
-  const {posts, count, lastEvaluatedKey} = await getAllPosts()
+  const {posts, count, lastEvaluatedKey} = await getPosts()
   return {
     props: {
       entities: posts,

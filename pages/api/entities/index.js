@@ -2,7 +2,7 @@
 
 import { getSessionAndUser } from "../../../server/user"
 
-import { getAllPosts } from "../../../server/dynamo/queries"
+import { getPosts } from "../../../server/dynamo/queries"
 
 import _ from "lodash"
 
@@ -18,7 +18,7 @@ async function post(req, res) {
 async function get(req, res) {
   const { lastEvaluatedKey, limit } = req.query
   
-  const result = await getAllPosts(lastEvaluatedKey, +limit ?? 30)
+  const result = await getPosts(lastEvaluatedKey, +limit ?? 30)
 
   res.status(200).json(result)
 }

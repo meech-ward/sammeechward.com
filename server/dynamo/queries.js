@@ -171,7 +171,7 @@ export async function getComments({ slug }) {
 }
 
 
-// export async function getAllPosts() {
+// export async function getPosts() {
 //   const params = {
 //     ProjectionExpression: "dirPath, imagesPath, indexPath, slug, tags, image, #tp, href, title, description, #dt",
 //     ExpressionAttributeNames: { "#tp": "type", "#dt": "date" },
@@ -211,7 +211,7 @@ export async function getPost(slug) {
   return mapPost(entityDetails(data.Item))
 }
 
-export async function getAllPosts(lastEvaluatedKey, limit = 30) {
+export async function getPosts(lastEvaluatedKey, limit = 30) {
   const params = {
     ProjectionExpression: "dirPath, imagesPath, indexPath, slug, tags, image, #tp, href, title, description, #dt",
     ExpressionAttributeNames: { "#tp": "type", "#dt": "date" },
@@ -239,6 +239,22 @@ export async function getAllPosts(lastEvaluatedKey, limit = 30) {
 
   const nextKey = LastEvaluatedKey && jwt.sign(LastEvaluatedKey, process.env.REQUEST_SECRET)
   return { posts: Items.map(entityDetails).map(mapPost), count: ScannedCount, lastEvaluatedKey: nextKey }
+}
+
+export async function getAllPosts({ProjectionExpression, ExpressionAttributeNames}) {
+  const params = {
+    ProjectionExpression,
+    ExpressionAttributeNames,
+    KeyConditionExpression: "GSI1PK = :pk",
+    ExpressionAttributeValues: {
+      ":pk": `ENTITY#POST`
+    },
+    IndexName: "GSI1",
+    ScanIndexForward: false,
+  }
+
+  const { Items } = await postsTable.queryItems(params)
+  return Items
 }
 
 export async function getFeaturedPosts() {
