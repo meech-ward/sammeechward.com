@@ -1,6 +1,6 @@
-import Cards from '../../components/Cards'
+import Cards from '../components/Cards'
 import { algoliasearch } from 'algoliasearch';
-import entityDetails from '../../helpers/entityDetails'
+import entityDetails from '../helpers/entityDetails'
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
@@ -13,7 +13,7 @@ export default function Articles() {
   const {query} = useRouter()
 
   useEffect(() => {
-    const term = query.search
+    const term = query.q
     if (term) {
       setTerm(term)
       ;(async () => {

@@ -28,7 +28,7 @@ function MyHeader() {
   ]
 
   const onSearch = term => {
-    router.push(`/search/${term}`)
+    router.push(`/search?q=${term}`)
   }
 
   return (
