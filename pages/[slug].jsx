@@ -86,9 +86,10 @@ export default function Entities({ markdown, rootURL, rootImagesUrl, commentCoun
     setPostedComment(true)
   }
 
-  const Contents = ({ children }) => (
-    <div className="px-4 pt-8 pb-10 sm:px-6 lg:px-8 lg:pt-12 lg:pb-14">
-      {children}
+  const contentMaxWidth = "max-w-5xl"
+
+  const Contents = () => (
+    <div className={`${contentMaxWidth} mx-auto px-4 pt-4 pb-6 sm:pt-8 sm:pb-10 sm:px-6 lg:px-8 lg:pt-12 lg:pb-14`}>
       <Article mdxSource={mdxSource} rootURL={rootURL} rootImagesUrl={rootImagesUrl} />
     </div>
   )
@@ -101,11 +102,10 @@ export default function Entities({ markdown, rootURL, rootImagesUrl, commentCoun
       {isVideo ?
         <>
           <div className="sm:px-6 lg:px-8 sm:pt-6 lg:pt-12">
-            <YouTube className={"max-w-6xl mx-auto"} videoId={videoId} />
+            <YouTube className={"max-w-7xl mx-auto"} videoId={videoId} />
           </div>
-          <h1 className='mx-2 sm:mx-6 xl:max-w-6xl xl:mx-auto text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl md:text-5xl'>{title}</h1>
-          <Contents>
-          </Contents>
+          <h1 className='mx-2 sm:mx-6 xl:max-w-7xl xl:mx-auto text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl md:text-5xl'>{title}</h1>
+          <Contents></Contents>
         </>
         :
         <>
@@ -121,10 +121,10 @@ export default function Entities({ markdown, rootURL, rootImagesUrl, commentCoun
 
       {/* Comments */}
 
-      <div className="mx-4 mb-5 sm:mx-8 sm:mb-5 max-w-3xl md:mx-auto sm:mb-10">
+      <div className={`${contentMaxWidth} mx-auto px-4 pt-4 pb-6 sm:pt-8 sm:pb-10 sm:px-6 lg:px-8 lg:pt-12 lg:pb-14`}>
         <hr />
-        <h2 className="my-6">{totalComments} Comments</h2>
-        <h2 className="my-6">{totalLikes} Likes</h2>
+        {/* <h2 className="my-6">{totalComments} Comments</h2> */}
+        {/* <h2 className="my-6">{totalLikes} Likes</h2> */}
         <div className="my-6">
           <EntityCommentForm onPostedComment={handlePostedComment} entitySlug={slug} />
         </div>
@@ -133,7 +133,8 @@ export default function Entities({ markdown, rootURL, rootImagesUrl, commentCoun
         {isVideo && !!youtubeComments.length &&
           <>
             <hr />
-            <h2 className="mt-10 mb-3">{totalYoutubeComments >= 100 ? "100+" : totalYoutubeComments} Youtube Comments: </h2>
+            {/* <h2 className="mt-10 mb-3">{totalYoutubeComments >= 100 ? "100+" : totalYoutubeComments} Youtube Comments: </h2> */}
+            <h2 className="mt-10 mb-3">Youtube Comments: </h2>
             <Comments comments={youtubeComments} />
           </>
         }
