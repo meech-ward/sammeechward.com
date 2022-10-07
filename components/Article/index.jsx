@@ -42,7 +42,7 @@ export default function Page({ mdxSource, rootURL, rootImagesUrl }) {
   const components = { h1, h2, h3, p, ul, ol, li, a, img, Image, Note, YouTube, File, InteractiveParallelism, SQLJoinsEditor }
 
   return (
-    <div className="max-w-3xl mx-auto break-words">
+    <div className="break-words">
       {mdxSource &&
         <MDXRemote {...mdxSource} components={components} />
       }
