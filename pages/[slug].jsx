@@ -1,7 +1,9 @@
 import Head from 'next/head'
 import { getPost as getPostMarkdown } from '../server/markdownFiles'
 import { getPost as getPostFromDynamo } from '../server/dynamo/queries'
+
 import mapComment from '../helpers/mapComment'
+import serializeMDX from '../helpers/serializeMDX'
 
 import Hero from '../components/ArticleHero'
 import Article from '../components/Article'
