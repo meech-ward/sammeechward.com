@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import { getPost as getPostMarkdown } from '../server/markdownFiles'
 import { getPost as getPostFromDynamo } from '../server/dynamo/queries'
-import serializeMDX from '../helpers/serializeMDX'
+import mapComment from '../helpers/mapComment'
 
 import Hero from '../components/ArticleHero'
 import Article from '../components/Article'
@@ -64,21 +64,7 @@ export default function Entities({ markdown, rootURL, rootImagesUrl, commentCoun
 
   }, [])
 
-  async function mapComment(comment) {
-    let mdxSource = ""
-    try {
-      mdxSource = await (serializeMDX(comment.text).catch(() => serializeMDX("```\n" + comment.text + "\n```")))
-      if (comment.replies) {
-        comment.replies = await Promise.all(comment.replies.map(mapComment))
-      }
-    } catch (e) {
-      // console.log("serializeMDX error:", e) 
-    }
-    return {
-      ...comment,
-      mdxSource
-    }
-  }
+
 
   const handlePostedComment = async (comment) => {
     setComments([...comments, await mapComment(comment)])
