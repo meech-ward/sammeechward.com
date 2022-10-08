@@ -6,10 +6,12 @@ import entityDetails from '../../helpers/entityDetails'
 
 import jwt from 'jsonwebtoken'
 
-function mapComment(comment) {
-  const obj = {
-    ...comment,
-    id: comment.sk.split("#")[1]
+
+function sanitizeDynamoObject(obj) {
+  obj = {...obj}
+
+  if (!obj.id) {
+    obj.id = obj.pk.split('#')[1]
   }
 
   delete obj.pk
@@ -18,6 +20,15 @@ function mapComment(comment) {
   delete obj.GSI1SK
 
   return obj
+}
+
+function mapComment(comment) {
+  const obj = {
+    ...comment,
+    id: comment.sk.split("#")[1]
+  }
+
+  return sanitizeDynamoObject(obj)
 }
 
 function mapPost(post) {
@@ -26,12 +37,7 @@ function mapPost(post) {
     id: post.slug
   }
 
-  delete obj.pk
-  delete obj.sk
-  delete obj.GSI1PK
-  delete obj.GSI1SK
-
-  return obj
+  return sanitizeDynamoObject(obj)
 }
 
 function mapFeatured(post) {
@@ -40,13 +46,24 @@ function mapFeatured(post) {
     id: post.sk.split("#")[1]
   }
 
-  delete obj.pk
-  delete obj.sk
-  delete obj.GSI1PK
-  delete obj.GSI1SK
-
-  return obj
+  return sanitizeDynamoObject(obj)
 }
+
+function promisify(fn) {
+  return (...args) => new Promise((resolve, reject) => {
+    fn(...args, (err, data) => {
+      if (err) {
+        reject(err)
+      } else {
+        resolve(data)
+      }
+    })
+  })
+}
+
+/*
+  User
+*/
 
 export async function getUser({ email }) {
   const { Item } = await mainTable.queryItem({
@@ -58,7 +75,7 @@ export async function getUser({ email }) {
     IndexName: "GSI1"
   })
 
-  return Item
+  return sanitizeDynamoObject(Item)
 }
 
 async function updateUserCommentCount(user) {
@@ -148,55 +165,7 @@ export async function getComments({ slug }) {
     },
   })
 
-
   return Items.map(mapComment)
-
-  let params = {
-    TableName: tableName,
-    KeyConditions: {
-      PK: {
-        ComparisonOperator: 'EQ',
-        AttributeValueList: ["POST#" + postId]
-      },
-      SK: {
-        ComparisonOperator: 'BEGINS_WITH', // [IN, NULL, BETWEEN, LT, NOT_CONTAINS, EQ, GT, NOT_NULL, NE, LE, BEGINS_WITH, GE, CONTAINS]
-        AttributeValueList: ["COMMENT#"]
-      }
-    },
-    ScanIndexForward: false
-  }
-
-  const result = await dynamodb.query(params).promise()
-  return result
-}
-
-
-// export async function getPosts() {
-//   const params = {
-//     ProjectionExpression: "dirPath, imagesPath, indexPath, slug, tags, image, #tp, href, title, description, #dt",
-//     ExpressionAttributeNames: { "#tp": "type", "#dt": "date" },
-//     FilterExpression: "begins_with(pk, :pk)",
-//     ExpressionAttributeValues: {
-//       ":pk": "ENTITY#"
-//     },
-//     Limit: 20,
-//     // ExclusiveStartKey
-//   }
-
-//   const posts = await postsTable.scan(params)
-//   return posts.map(entityDetails).sort((a, b) => new Date(b.date) - new Date(a.date))
-// }
-
-function promisify(fn) {
-  return (...args) => new Promise((resolve, reject) => {
-    fn(...args, (err, data) => {
-      if (err) {
-        reject(err)
-      } else {
-        resolve(data)
-      }
-    })
-  })
 }
 
 export async function getPost(slug) {
@@ -228,12 +197,8 @@ export async function getPosts(lastEvaluatedKey, limit = 30) {
       const key = await promisify(jwt.verify)(lastEvaluatedKey, process.env.REQUEST_SECRET)
       delete key.iat
       params.ExclusiveStartKey = key
-
     } catch (error) {
-
-
     }
-
   }
   const { Items, ScannedCount, LastEvaluatedKey } = await postsTable.queryItems(params)
 
@@ -254,7 +219,7 @@ export async function getAllPosts({ProjectionExpression, ExpressionAttributeName
   }
 
   const { Items } = await postsTable.queryItems(params)
-  return Items
+  return sanitizeDynamoObject(Items)
 }
 
 export async function getFeaturedPosts() {
@@ -277,4 +242,21 @@ export async function getMostRecentVideo() {
     }
   })
   return mapPost(entityDetails(Item))
+}
+
+export async function admin_getAllComments() {
+  const { Items } = await mainTable.queryItems({
+    KeyConditionExpression: "GSI2PK = :pk AND begins_with(GSI2SK, :comment)",
+    ExpressionAttributeValues: {
+      ":pk": "COMMENT",
+      ":comment": `COMMENT`
+    },
+    IndexName: "GSI2",
+    ScanIndexForward: false,
+  })
+
+  return Items.map(item => mapComment({
+    ...item,
+    post: item.pk.replace("ENTITY#", "")
+  }))
 }

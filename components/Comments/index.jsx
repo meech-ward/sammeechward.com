@@ -4,6 +4,7 @@ import CommentMarkdown from '../CommentMarkdown'
 import TimeAgo from 'javascript-time-ago'
 
 import { forwardRef } from 'react'
+import Link from 'next/link'
 
 // Create formatter (English).
 const timeAgo = new TimeAgo('en-US')
@@ -30,12 +31,17 @@ function Comment({ comment, ImageComponent }) {
         <div className="text-sm text-gray-500">
           <CommentMarkdown mdxSource={comment.mdxSource} />
         </div>
+        {comment.post &&
+          <Link href={`/${comment.post}`}>
+            <a className="text-sm text-gray-500 underline">{comment.post}</a>
+          </Link>
+        }
       </div>
     </div>
   )
 }
 
-export default forwardRef(function Comments({ ImageComponent = Image, comments}, ref) {
+export default forwardRef(function Comments({ ImageComponent = Image, comments }, ref) {
   return (
     <div ref={ref}>
       <ul role="list" className="divide-y divide-gray-200">
