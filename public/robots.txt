@@ -2,6 +2,7 @@
 
 User-agent: *
 Disallow: /settings/
+Disallow: /admin/
 Disallow: /profile/
 Disallow: /search/
 
