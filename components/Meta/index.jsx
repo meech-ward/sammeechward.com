@@ -7,9 +7,9 @@ export default function Meta({ title, description, image, imageWidth, imageHeigh
     <meta name="description" content={description} />
 
     {/*<!-- Google / Search Engine Tags -->*/}
-    <meta itemprop="name" content={title} />
-    <meta itemprop="description" content={description} />
-    <meta itemprop="image" content={image} />
+    <meta itemProp="name" content={title} />
+    <meta itemProp="description" content={description} />
+    <meta itemProp="image" content={image} />
 
     {/*<!-- Facebook Meta Tags -->*/}
     <meta property="og:title" content={title} />
