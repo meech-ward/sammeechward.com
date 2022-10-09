@@ -91,7 +91,7 @@ export default function Entities({ markdown, rootURL, rootImagesUrl, commentCoun
         <Meta 
           title={title}
           description={description}
-          image={`https://www.sammeechward.com/_next/image${encodeURIComponent(image.url)}&w=1200&q=75`}
+          image={`https://www.sammeechward.com/_next/image?url=${encodeURIComponent(image.url)}&w=1200&q=75`}
           imageWidth={image.width}
           imageHeight={image.height}
           url={`https://sammeechward.com/${slug}`}
