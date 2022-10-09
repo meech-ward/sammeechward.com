@@ -47,7 +47,7 @@ export default function Articles(props) {
         <Meta 
           title="saM"
           description={"Videos, Articles, and Tutorials"}
-          image={`https://www.sammeechward.com/${toilet.src}&w=700&q=75`}
+          image={`https://www.sammeechward.com/_next/image?url=https://www.sammeechward.com${toilet.src}&w=700&q=75`}
           imageWidth={toilet.width}
           imageHeight={toilet.height}
           url="https://sammeechward.com/posts"

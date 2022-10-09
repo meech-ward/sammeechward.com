@@ -27,7 +27,7 @@ export default function Home({ featuredEntities, featuredVideo }) {
         <Meta 
           title="saM"
           description={description}
-          image={`https://www.sammeechward.com/${toilet.src}&w=700&q=75`}
+          image={`https://www.sammeechward.com/_next/image?url=https://www.sammeechward.com${toilet.src}&w=700&q=75`}
           imageWidth={toilet.width}
           imageHeight={toilet.height}
           url
