@@ -1,6 +1,9 @@
 import Head from 'next/head'
+import Meta from '../../components/Meta'
 import { getPosts } from '../../server/dynamo/queries'
 import Cards from '../../components/Cards'
+
+import toilet from '../../public/toilet.jpg'
 
 import { useState } from 'react'
 
@@ -41,6 +44,14 @@ export default function Articles(props) {
     <>
       <Head>
         <title>saM: Posts</title>
+        <Meta 
+          title="saM"
+          description={"Videos, Articles, and Tutorials"}
+          image={`https://www.sammeechward.com/_next/image?url=https://www.sammeechward.com${toilet.src}&w=700&q=75`}
+          imageWidth={toilet.width}
+          imageHeight={toilet.height}
+          url="https://sammeechward.com/posts"
+        />
       </Head>
       <div className="pt-8 pb-10 lg:pt-12 lg:pb-14 mx-auto max-w-7xl px-2">
         <h1 className='text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl md:text-6xl'>Videos, Articles, and Tutorials</h1>

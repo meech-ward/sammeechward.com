@@ -5,6 +5,8 @@ import FeaturedVideo from '../components/FeaturedVideo'
 
 import { getFeaturedPosts, getMostRecentVideo } from '../server/dynamo/queries'
 
+import Meta from '../components/Meta'
+
 import toilet from '../public/toilet.jpg'
 
 const description = `
@@ -15,11 +17,21 @@ Then concatenation
 Is Javascript's mission
 A language that understands how to vindictively sting`
 
+
 export default function Home({ featuredEntities, featuredVideo }) {
+  console.log(toilet)
   return (
     <>
       <Head>
         <title>saM</title>
+        <Meta 
+          title="saM"
+          description={description}
+          image={`https://www.sammeechward.com/_next/image?url=https://www.sammeechward.com${toilet.src}&w=700&q=75`}
+          imageWidth={toilet.width}
+          imageHeight={toilet.height}
+          url
+        />
       </Head>
 
       <Hero

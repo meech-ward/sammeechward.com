@@ -1,4 +1,5 @@
 import Head from 'next/head'
+import Meta from '../components/Meta'
 import { getPost as getPostMarkdown } from '../server/markdownFiles'
 import { getPost as getPostFromDynamo } from '../server/dynamo/queries'
 
@@ -82,10 +83,19 @@ export default function Entities({ markdown, rootURL, rootImagesUrl, commentCoun
     </div>
   )
   const isVideo = type === "video"
+  console.log(image)
   return (
     <>
       <Head>
         <title>{title}</title>
+        <Meta 
+          title={title}
+          description={description}
+          image={`https://www.sammeechward.com/_next/image?url=${encodeURIComponent(image.url)}&w=1200&q=75`}
+          imageWidth={image.width}
+          imageHeight={image.height}
+          url={`https://sammeechward.com/${slug}`}
+        />
       </Head>
       {isVideo ?
         <>
