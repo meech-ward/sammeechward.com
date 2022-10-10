@@ -1,7 +1,7 @@
 
 import normalizeImageSize from '../../helpers/normalizeImageSize'
 export default function Meta({ title, description, image, imageWidth, imageHeight, url }) {
-
+  // console.log({ title, description, image, imageWidth, imageHeight, url })
   const imageSize = normalizeImageSize({ width: imageWidth, height: imageHeight, maxWidth: 1200 })
   return (<>
     <meta name="description" content={description} />

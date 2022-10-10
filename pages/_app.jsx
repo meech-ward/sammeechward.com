@@ -8,8 +8,8 @@ import { GoogleAnalytics } from "nextjs-google-analytics";
 
 import TimeAgo from 'javascript-time-ago'
 import en from 'javascript-time-ago/locale/en'
-TimeAgo.addDefaultLocale(en)
-
+TimeAgo.setDefaultLocale(en.locale)
+TimeAgo.addLocale(en)
 
 
 function MyApp({ Component, pageProps }) {

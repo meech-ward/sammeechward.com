@@ -18,7 +18,10 @@ async function post(req, res) {
 async function get(req, res) {
   const { lastEvaluatedKey, limit } = req.query
   
-  const result = await getPosts(lastEvaluatedKey, +limit ?? 30)
+  const result = await getPosts({
+    lastEvaluatedKey, 
+    limit: +limit ?? 30
+  })
 
   res.status(200).json(result)
 }

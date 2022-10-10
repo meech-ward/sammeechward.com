@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Meta from '../components/Meta'
 import { getPost as getPostMarkdown } from '../server/markdownFiles'
-import { getPost as getPostFromDynamo } from '../server/dynamo/queries'
+import { getPost as getPostFromDynamo, getPosts as getPostsFromDynamo } from '../server/dynamo/queries'
 
 import mapComment from '../helpers/mapComment'
 import serializeMDX from '../helpers/serializeMDX'
@@ -39,10 +39,6 @@ export default function Entities({ markdown, rootURL, rootImagesUrl, commentCoun
     if (!postedComment) {
       return
     }
-    // window.scrollTo({
-    //   top: document.body.scrollHeight,
-    //   behavior: 'smooth'
-    // })
     commentsRef.current.scrollIntoView({ behavior: 'smooth' })
   }, [comments])
 
@@ -83,7 +79,6 @@ export default function Entities({ markdown, rootURL, rootImagesUrl, commentCoun
     </div>
   )
   const isVideo = type === "video"
-  console.log(image)
   return (
     <>
       <Head>
@@ -142,8 +137,13 @@ export default function Entities({ markdown, rootURL, rootImagesUrl, commentCoun
 }
 
 export async function getStaticPaths() {
+  const { posts } = await getPostsFromDynamo({limit: 100})
   return {
-    paths: [],
+    paths: posts.map(({ slug }) => ({
+      params: {
+        slug,
+      },
+    })),
     fallback: 'blocking',
   }
 }
@@ -163,7 +163,7 @@ export async function getStaticProps(context) {
       }
     }
   } catch (error) {
-    console.log(error)
+    console.error(error)
     return {
       notFound: true,
     }
