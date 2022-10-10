@@ -83,7 +83,6 @@ export default function Entities({ markdown, rootURL, rootImagesUrl, commentCoun
     </div>
   )
   const isVideo = type === "video"
-  console.log(image)
   return (
     <>
       <Head>
@@ -163,7 +162,7 @@ export async function getStaticProps(context) {
       }
     }
   } catch (error) {
-    console.log(error)
+    console.error(error)
     return {
       notFound: true,
     }

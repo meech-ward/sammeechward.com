@@ -19,7 +19,6 @@ A language that understands how to vindictively sting`
 
 
 export default function Home({ featuredEntities, featuredVideo }) {
-  console.log(toilet)
   return (
     <>
       <Head>
@@ -31,7 +30,7 @@ export default function Home({ featuredEntities, featuredVideo }) {
           image={`https://www.sammeechward.com${toilet.src}`}
           imageWidth={toilet.width}
           imageHeight={toilet.height}
-          url
+          url='https://sammeechward.com'
         />
       </Head>
 

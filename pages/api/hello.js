@@ -20,8 +20,6 @@ export default async function handler(req, res) {
 
   const user = await getUser({ email })
 
-  console.log(user)
-
 
   // createUser("sam")
   res.status(200).json({ session: session.user, user })
