@@ -79,12 +79,12 @@ export async function getUser({ email }) {
 }
 
 async function updateUserCommentCount(user) {
+  // console.log({user})
+  const pk = `USER#${user.id}`
+  const sk = `USER#${user.id}`
   try {
     let setCountParams = {
-      Key: {
-        pk: user.pk,
-        sk: user.sk,
-      },
+      Key: {pk, sk},
       UpdateExpression: "SET commentCount = :val",
       ExpressionAttributeValues: {
         ":val": 1
@@ -94,15 +94,13 @@ async function updateUserCommentCount(user) {
 
     const data = await mainTable.updateItem(setCountParams)
   } catch (error) {
+    console.log({error})
     if (error.name !== "ConditionalCheckFailedException") {
       throw error
     }
 
     let updateParams = {
-      Key: {
-        pk: user.pk,
-        sk: user.sk,
-      },
+      Key: {pk, sk},
       UpdateExpression: "SET commentCount = commentCount+ :inc",
       ExpressionAttributeValues: {
         ":inc": 1
