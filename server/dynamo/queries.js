@@ -178,7 +178,7 @@ export async function getPost(slug) {
   return mapPost(entityDetails(data.Item))
 }
 
-export async function getPosts(lastEvaluatedKey, limit = 30) {
+export async function getPosts({lastEvaluatedKey, limit = 30} = {}) {
   const params = {
     ProjectionExpression: "dirPath, imagesPath, indexPath, slug, tags, image, #tp, href, title, description, #dt",
     ExpressionAttributeNames: { "#tp": "type", "#dt": "date" },
