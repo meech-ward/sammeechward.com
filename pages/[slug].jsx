@@ -137,7 +137,7 @@ export default function Entities({ markdown, rootURL, rootImagesUrl, commentCoun
 }
 
 export async function getStaticPaths() {
-  const { posts } = await getPostsFromDynamo({limit: 30})
+  const { posts } = await getPostsFromDynamo({limit: 100})
   return {
     paths: posts.map(({ slug }) => ({
       params: {
