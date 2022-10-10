@@ -38,7 +38,7 @@ export async function getComments(videoId) {
     maxResults: 100,
   })
 
-  const commentsAndReplies = res.data.items.map(mapCommentResult)
+  const commentsAndReplies = res.data.items.reverse().map(mapCommentResult)
   const totalCommentsAndReplies = commentsAndReplies.map(a => 1 + a.replies?.length).reduce((a, b) => a + b, 0)
 
   return { commentsAndReplies, totalCommentsAndReplies }
