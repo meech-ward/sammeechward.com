@@ -58,9 +58,9 @@ export default function Card({ post, ImageComponent = Image }) {
               <p className="text-xl font-semibold text-gray-900">
                 {post.title}
               </p>
-              <p className="mt-3 text-base text-gray-500">
+              {post.description && <p className="mt-3 text-base text-gray-500">
                 {limit(post.description, 100)}
-              </p>
+              </p>}
               {/* </a> */}
             </div>
             <div className="mt-2 flex items-center">
