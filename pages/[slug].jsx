@@ -23,7 +23,7 @@ import axios from 'axios'
 import { useEffect, useRef, useState } from 'react'
 
 
-export default function Entities({ markdown, rootURL, rootImagesUrl, commentCount, likeCount, slug, title, image, editUrl, mdxSource, description, type, videoId }) {
+export default function Entities({ dirUrl, commentCount, likeCount, slug, title, image, editUrl, mdxSource, description, type, videoId }) {
   const [comments, setComments] = useState([])
   const [totalComments, setTotalComments] = useState(commentCount)
   const [totalLikes, setTotalLikes] = useState(likeCount)
@@ -75,7 +75,7 @@ export default function Entities({ markdown, rootURL, rootImagesUrl, commentCoun
 
   const Contents = () => (
     <div className={`${contentMaxWidth} mx-auto px-4 pt-4 pb-6 sm:pt-8 sm:pb-10 sm:px-6 lg:px-8 lg:pt-12 lg:pb-14`}>
-      <Article mdxSource={mdxSource} rootURL={rootURL} rootImagesUrl={rootImagesUrl} />
+      <Article mdxSource={mdxSource} dirUrl={dirUrl} />
     </div>
   )
   const isVideo = type === "video"
@@ -155,6 +155,8 @@ export async function getStaticProps(context) {
     const dbPost = await getPostFromDynamo(slug)
     const post = await getPostMarkdown(dbPost)
     const mdxSource = await serializeMDX(post.markdown)
+
+    // console.log({dbPost, post})
 
     return {
       props: {

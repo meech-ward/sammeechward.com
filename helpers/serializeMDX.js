@@ -4,12 +4,15 @@ import langHttp from 'highlight.js/lib/languages/http'
 import langNginx from 'highlight.js/lib/languages/nginx'
 import langVim from 'highlight.js/lib/languages/vim'
 import langGit from 'highlight.js/lib/languages/shell'
+import langGraphQL from 'highlight.js/lib/languages/graphql'
 
 const languages = {
   http: langHttp,
   nginx: langNginx,
   vim: langVim,
-  git: langGit
+  git: langGit,
+  graphql: langGraphQL,
+  prisma: langGraphQL
 }
 
 export default async function serializeMDX(source) {
