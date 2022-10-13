@@ -1,6 +1,5 @@
 import NextImage from 'next/future/image'
 
-import {cloneElement} from 'react'
 import { MDXRemote } from 'next-mdx-remote'
 
 import 'highlight.js/styles/stackoverflow-dark.css'
@@ -8,6 +7,8 @@ import 'highlight.js/styles/stackoverflow-dark.css'
 import YouTube from '../YouTube'
 import InteractiveParallelism from '../ArticleComponents/InteractiveParallelism'
 import SQLJoinsEditor from '../ArticleComponents/SQLJoinsEditor'
+
+import { Note, Warning, Instruction } from '../ArticleComponents/Blocks'
 
 const h1 = (props) => <h1 {...props} className={props.className ?? "" + " sm:text-5xl text-4xl sm:mt-14 mt-10 sm:mb-10 mb-8 font-semibold"} />
 const h2 = (props) => <h2 {...props} className={props.className ?? "" + " sm:text-4xl text-3xl sm:mt-12 mt-8 sm:mb-8 mb-6 font-semibold"} />
@@ -18,28 +19,44 @@ const ol = (props) => <ol {...props} className={props.className ?? "" + " sm:tex
 const li = (props) => <li {...props} className={props.className ?? "" + " sm:mb-4 mb-2"} />
 const a = (props) => <a {...props} className={props.className ?? "" + " text-indigo-600 hover:text-indigo-500 font-light"} />
 
-function Note({children}) {
-  const newChildren = cloneElement(children, {
-    className: ``
-  })
-  return (
-    <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 sm:my-8 my-4">
-      <p className="font-bold m-0 p-0">Note</p>
-      {newChildren}
-    </div>
-  )
+function urlForLocalFile({path, dirUrl}) {
+  if (path.startsWith('/images')) {
+    return new URL(path.replace('/images/', 'images/'), dirUrl+"/").href
+  }
+  if (path.startsWith('/files')) {
+    return new URL(path.replace('/files/', 'files/'), dirUrl+"/").href
+  }
+  if (path.startsWith('/assets')) {
+    return new URL(path.replace('/assets/', 'assets/'), dirUrl+"/").href
+  }
+  return url
 }
 
-export default function Page({ mdxSource, rootURL, rootImagesUrl }) {
+export default function Page({ mdxSource, dirUrl }) {
 
-  const img = ({ src, alt }) => src.startsWith('/images') ? <img src={new URL(src.replace('/images/', 'images/'), rootImagesUrl).href} alt={alt} /> : <img src={src} alt={alt} />
-  const Image = (props) => {
-    const { src } = props
-    return src.startsWith('/images') ? <NextImage {...props} src={new URL(src.replace('/images/', 'images/'), rootImagesUrl).href} /> : <img {...props} src={src} />
+  const img = ({ src, props }) => (src.startsWith('/images') || src.startsWith("/assets")) ? <img src={urlForLocalFile({path: props.src, dirUrl})} {...props} /> : <img src={src} {...props} />
+  const Image = ({src, ...props}) => {
+    return (src.startsWith('/images') || src.startsWith("/assets")) ? <NextImage {...props} src={urlForLocalFile({path: src, dirUrl})} /> : <img {...props} src={src} />
   }
-  const File = ({ name, children }) => <a className="text-indigo-600 hover:text-indigo-500" href={`${rootURL}/files/${name}`}>{children}</a>
+  const File = ({ path, children }) => <a className="text-indigo-600 hover:text-indigo-500" href={urlForLocalFile({path, dirUrl})}>{children}</a>
 
-  const components = { h1, h2, h3, p, ul, ol, li, a, img, Image, Note, YouTube, File, InteractiveParallelism, SQLJoinsEditor }
+  const AutoPlayVideo = ({ path, children }) => {
+    // auto play video without sound or controls
+    return (
+      <div className="relative w-full h-0" style={{paddingBottom: "56.25%"}}>
+        <video {...children} className="absolute top-0 left-0 w-full h-full" autoPlay muted loop playsInline>
+          <source src={urlForLocalFile({path, dirUrl})} type="video/mp4" />
+        </video>
+      </div>
+    )
+  }
+
+  const components = { 
+    h1, h2, h3, p, ul, ol, li, a, img, 
+    Image, Note, Warning, Instruction,
+    YouTube, File, AutoPlayVideo,
+    InteractiveParallelism, SQLJoinsEditor 
+  }
 
   return (
     <div className="break-words">
