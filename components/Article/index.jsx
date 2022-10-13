@@ -1,5 +1,7 @@
 import NextImage from 'next/future/image'
 
+import { useEffect, useState } from 'react'
+
 import { MDXRemote } from 'next-mdx-remote'
 
 import 'highlight.js/styles/stackoverflow-dark.css'
@@ -7,6 +9,9 @@ import 'highlight.js/styles/stackoverflow-dark.css'
 import YouTube from '../YouTube'
 import InteractiveParallelism from '../ArticleComponents/InteractiveParallelism'
 import SQLJoinsEditor from '../ArticleComponents/SQLJoinsEditor'
+
+import Cards from '../Cards'
+import Card from '../Card'
 
 import { Note, Warning, Instruction } from '../ArticleComponents/Blocks'
 
@@ -32,7 +37,20 @@ function urlForLocalFile({path, dirUrl}) {
   return url
 }
 
-export default function Page({ mdxSource, dirUrl }) {
+
+
+export default function Page({ mdxSource, dirUrl, getPostBySlug, ImageComponent = NextImage, ...props }) {
+
+  function PostCard({slug}) {
+    const [post, setPost] = useState(null)
+    useEffect(() => {
+      getPostBySlug(slug)
+        .then(setPost)
+    }, [slug])
+    if (!post) return null
+    // return <Cards posts={[post]} />
+    return <div className='mb-10 max-w-sm mx-auto'><Card  ImageComponent={ImageComponent} post={post}></Card></div>
+  }
 
   const img = ({ src, props }) => (src.startsWith('/images') || src.startsWith("/assets")) ? <img src={urlForLocalFile({path: props.src, dirUrl})} {...props} /> : <img src={src} {...props} />
   const Image = ({src, ...props}) => {
@@ -54,6 +72,7 @@ export default function Page({ mdxSource, dirUrl }) {
   const components = { 
     h1, h2, h3, p, ul, ol, li, a, img, 
     Image, Note, Warning, Instruction,
+    PostCard,
     YouTube, File, AutoPlayVideo,
     InteractiveParallelism, SQLJoinsEditor 
   }

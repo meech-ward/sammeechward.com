@@ -75,7 +75,7 @@ export default function Entities({ dirUrl, commentCount, likeCount, slug, title,
 
   const Contents = () => (
     <div className={`${contentMaxWidth} mx-auto px-4 pt-4 pb-6 sm:pt-8 sm:pb-10 sm:px-6 lg:px-8 lg:pt-12 lg:pb-14`}>
-      <Article mdxSource={mdxSource} dirUrl={dirUrl} />
+      <Article mdxSource={mdxSource} dirUrl={dirUrl} getPostBySlug={slug => axios.get("/api/entities/"+slug).then(res => res.data.post)} />
     </div>
   )
   const isVideo = type === "video"
