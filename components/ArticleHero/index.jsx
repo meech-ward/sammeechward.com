@@ -43,6 +43,7 @@ export default function Hero({ title, image }) {
           // height={500}
           // width={500}
           alt=""
+          priority
         />
       </div>
     </div>

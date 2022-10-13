@@ -1,6 +1,6 @@
 import NextImage from 'next/future/image'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Children } from 'react'
 
 import { MDXRemote } from 'next-mdx-remote'
 
@@ -9,11 +9,12 @@ import 'highlight.js/styles/stackoverflow-dark.css'
 import YouTube from '../YouTube'
 import InteractiveParallelism from '../ArticleComponents/InteractiveParallelism'
 import SQLJoinsEditor from '../ArticleComponents/SQLJoinsEditor'
+import TabsWithSections from '../TabsWithSections'
 
 import Cards from '../Cards'
 import Card from '../Card'
 
-import { Note, Warning, Instruction } from '../ArticleComponents/Blocks'
+import { Note, Warning, Instruction, Error } from '../ArticleComponents/Blocks'
 
 const h1 = (props) => <h1 {...props} className={props.className ?? "" + " sm:text-5xl text-4xl sm:mt-14 mt-10 sm:mb-10 mb-8 font-semibold"} />
 const h2 = (props) => <h2 {...props} className={props.className ?? "" + " sm:text-4xl text-3xl sm:mt-12 mt-8 sm:mb-8 mb-6 font-semibold"} />
@@ -52,6 +53,20 @@ export default function Page({ mdxSource, dirUrl, getPostBySlug, ImageComponent 
     return <div className='mb-10 max-w-sm mx-auto'><Card  ImageComponent={ImageComponent} post={post}></Card></div>
   }
 
+  function Tabs({children}) {
+    const tabs = Children.map(children, (child) => ({...child.props}))
+    console.log("tabs children", tabs)
+    tabs[0].current = true
+    return (
+      <TabsWithSections tabs={tabs} />
+    )
+  }
+
+  function Tab({children, name}) {
+    console.log("tab", children)
+    return <div>Tab: name</div>
+  }
+
   const img = ({ src, props }) => (src.startsWith('/images') || src.startsWith("/assets")) ? <img src={urlForLocalFile({path: props.src, dirUrl})} {...props} /> : <img src={src} {...props} />
   const Image = ({src, ...props}) => {
     return (src.startsWith('/images') || src.startsWith("/assets")) ? <NextImage {...props} src={urlForLocalFile({path: src, dirUrl})} /> : <img {...props} src={src} />
@@ -71,8 +86,9 @@ export default function Page({ mdxSource, dirUrl, getPostBySlug, ImageComponent 
 
   const components = { 
     h1, h2, h3, p, ul, ol, li, a, img, 
-    Image, Note, Warning, Instruction,
-    PostCard,
+    Image, Note, Warning, Instruction, Error,
+    Tabs, Tab,
+    PostCard, 
     YouTube, File, AutoPlayVideo,
     InteractiveParallelism, SQLJoinsEditor 
   }

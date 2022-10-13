@@ -43,10 +43,17 @@ export function Warning({children}) {
   )
 }
 
+export function Error({children}) {
+  return (
+    <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 sm:my-8 my-4">
+      {mapChildren({children})}
+    </div>
+  )
+}
+
 export function Instruction({children}) {
   return (
     <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 sm:my-8 my-4">
-      <p className="font-bold m-0 p-0">Instruction</p>
       {mapChildren({children})}
     </div>
   )

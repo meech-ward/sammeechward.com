@@ -107,8 +107,6 @@ export default function Post({ dirUrl, commentCount, likeCount, slug, title, ima
 
   const contentMaxWidth = "max-w-5xl"
 
-
-
   const Contents = () => (
     <div className={`${contentMaxWidth} mx-auto px-4 pt-4 pb-6 sm:pt-8 sm:pb-10 sm:px-6 lg:px-8 lg:pt-12 lg:pb-14`}>
       <Article mdxSource={mdxSource} dirUrl={dirUrl} getPostBySlug={getPostBySlug} />
