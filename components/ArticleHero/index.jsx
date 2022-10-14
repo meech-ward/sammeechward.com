@@ -26,7 +26,7 @@ export default function Hero({ title, image }) {
           </div>
 
 
-          <div className={`mx-auto  max-w-7xl px-2 px-4 sm:px-6 lg:px-8 ${mt}`}>
+          <div className={`mx-auto  max-w-7xl px-4 sm:px-6 lg:px-8 ${mt}`}>
             <div className="sm:text-center lg:text-left">
               <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl md:text-6xl">
                 <span className="block xl:inline">{title}</span>
