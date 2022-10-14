@@ -11,6 +11,8 @@ import Article from '../components/Article'
 
 import Image from 'next/future/image'
 
+import Card from '../components/Card'
+
 import YouTube from '../components/YouTube'
 
 import EntityCommentForm from '../components/EntityCommentForm'
@@ -23,13 +25,19 @@ import axios from 'axios'
 import { useEffect, useRef, useState } from 'react'
 
 
-export default function Entities({ markdown, rootURL, rootImagesUrl, commentCount, likeCount, slug, title, image, editUrl, mdxSource, description, type, videoId }) {
+function getPostBySlug(slug) {
+  return axios.get("/api/entities/" + slug).then(res => res.data.post)
+}
+
+export default function Post({ dirUrl, commentCount, likeCount, slug, title, image, editUrl, mdxSource, description, type, videoId, nextPostSlug, previousPostSlug }) {
   const [comments, setComments] = useState([])
   const [totalComments, setTotalComments] = useState(commentCount)
   const [totalLikes, setTotalLikes] = useState(likeCount)
   const [youtubeComments, setYoutubeComments] = useState([])
   const [totalYoutubeComments, setTotalYoutubeComments] = useState(0)
   const [postedComment, setPostedComment] = useState(false)
+  const [nextPost, setNextPost] = useState(null)
+  const [previousPost, setPreviousPost] = useState(null)
 
   const commentsRef = useRef()
 
@@ -49,19 +57,45 @@ export default function Entities({ markdown, rootURL, rootImagesUrl, commentCoun
       const comments = await Promise.all(res.data.comments.map(mapComment))
       setComments(comments)
     })()
+  }, [slug])
 
-      ; (async () => {
-        if (!videoId) {
-          return
-        }
-        const res = await axios.get(`/api/videos/${videoId}/comments`)
-        const { commentsAndReplies, totalCommentsAndReplies } = res.data
-        const comments = await Promise.all(commentsAndReplies.map(mapComment))
-        setYoutubeComments(comments)
-        setTotalYoutubeComments(totalCommentsAndReplies)
-      })()
+  useEffect(() => {
+    console.log({ nextPostSlug })
+    if (!nextPostSlug) {
+      setNextPost(null)
+      return
+    }
+    ; (async () => {
+      const post = await getPostBySlug(nextPostSlug)
+      setNextPost(post)
+    })()
+  }, [nextPostSlug])
 
-  }, [])
+  useEffect(() => {
+    console.log({ previousPostSlug })
+    if (!previousPostSlug) {
+      setPreviousPost(null)
+      return
+    }
+    ; (async () => {
+      const post = await getPostBySlug(previousPostSlug)
+      setPreviousPost(post)
+    })()
+
+  }, [previousPostSlug])
+
+  useEffect(() => {
+    ; (async () => {
+      if (!videoId) {
+        return
+      }
+      const res = await axios.get(`/api/videos/${videoId}/comments`)
+      const { commentsAndReplies, totalCommentsAndReplies } = res.data
+      const comments = await Promise.all(commentsAndReplies.map(mapComment))
+      setYoutubeComments(comments)
+      setTotalYoutubeComments(totalCommentsAndReplies)
+    })()
+  }, [videoId])
 
 
 
@@ -75,7 +109,7 @@ export default function Entities({ markdown, rootURL, rootImagesUrl, commentCoun
 
   const Contents = () => (
     <div className={`${contentMaxWidth} mx-auto px-4 pt-4 pb-6 sm:pt-8 sm:pb-10 sm:px-6 lg:px-8 lg:pt-12 lg:pb-14`}>
-      <Article mdxSource={mdxSource} rootURL={rootURL} rootImagesUrl={rootImagesUrl} />
+      <Article mdxSource={mdxSource} dirUrl={dirUrl} getPostBySlug={getPostBySlug} />
     </div>
   )
   const isVideo = type === "video"
@@ -83,7 +117,7 @@ export default function Entities({ markdown, rootURL, rootImagesUrl, commentCoun
     <>
       <Head>
         <title>{title}</title>
-        <Meta 
+        <Meta
           title={title}
           description={description}
           image={`https://www.sammeechward.com/_next/image?url=${encodeURIComponent(image.url)}&w=1200&q=75`}
@@ -106,11 +140,20 @@ export default function Entities({ markdown, rootURL, rootImagesUrl, commentCoun
           <Contents />
         </>
       }
+
+
       {editUrl &&
-        <p className='text-center my-10'>Find an issue with this page?&nbsp;
+        <p className='text-center mb-10'>Find an issue with this page?&nbsp;
           <a target="_blank" rel="noreferrer" className='text-indigo-600 hover:text-indigo-500' href={editUrl}>Fix it on GitHub</a>
         </p>
       }
+
+      {/* Next Cards */}
+
+      <div className={`${contentMaxWidth} px-4 sm:px-6 lg:px-8 mx-auto flex flex-col sm:flex-row justify-between`}>
+        {previousPost && <div className='flex-1 max-w-sm'><Card post={{...previousPost, description: null}}></Card></div>}
+        <div className='flex-1 max-w-sm'>{nextPost && <Card post={{...nextPost, description: null}}></Card>}</div>
+      </div>
 
       {/* Comments */}
 
@@ -137,7 +180,7 @@ export default function Entities({ markdown, rootURL, rootImagesUrl, commentCoun
 }
 
 export async function getStaticPaths() {
-  const { posts } = await getPostsFromDynamo({limit: 100})
+  const { posts } = await getPostsFromDynamo({ limit: 100 })
   return {
     paths: posts.map(({ slug }) => ({
       params: {
@@ -155,6 +198,8 @@ export async function getStaticProps(context) {
     const dbPost = await getPostFromDynamo(slug)
     const post = await getPostMarkdown(dbPost)
     const mdxSource = await serializeMDX(post.markdown)
+
+    // console.log({dbPost, post})
 
     return {
       props: {

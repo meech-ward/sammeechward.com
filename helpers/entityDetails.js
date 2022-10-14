@@ -11,6 +11,8 @@ const entityDetails = function (entity) {
     },
     editUrl: new URL(entity.indexPath, process.env.NEXT_PUBLIC_MDX_REPO_URL).href,
     rootImagesUrl: new URL(entity.imagesPath, process.env.NEXT_PUBLIC_MDX_ROOT_URL).href,
+    indexUrl: new URL(entity.indexPath, process.env.NEXT_PUBLIC_MDX_ROOT_URL).href,
+    dirUrl: new URL(entity.dirPath, process.env.NEXT_PUBLIC_MDX_ROOT_URL).href,
     rootUrl: process.env.NEXT_PUBLIC_MDX_ROOT_URL,
   }
 }

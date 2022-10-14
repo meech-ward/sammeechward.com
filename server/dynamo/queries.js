@@ -94,7 +94,7 @@ async function updateUserCommentCount(user) {
 
     const data = await mainTable.updateItem(setCountParams)
   } catch (error) {
-    console.log({error})
+    console.error({error})
     if (error.name !== "ConditionalCheckFailedException") {
       throw error
     }

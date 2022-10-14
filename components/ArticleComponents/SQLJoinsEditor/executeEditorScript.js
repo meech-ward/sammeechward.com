@@ -43,7 +43,6 @@ export default function executeEditorScript({db, editorName, sql}) {
     output = db.exec(sql);
   } catch (e) {
     alert("There was an error with your query.");
-    console.log(e)
   }
 
   let totalRows 

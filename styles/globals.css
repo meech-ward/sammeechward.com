@@ -32,15 +32,15 @@ body {
   font-weight: 400;
 }
 
-p > code::before {
+code:not([class])::before {
   content: "`";
 }
 
-p > code::after {
+code:not([class])::after {
   content: "`";
 }
 
-p > code {
+code:not([class]) {
   color: #c400ec;
   font-size: .9em;
   white-space: pre-wrap;
