@@ -167,24 +167,26 @@ export async function getComments({ slug }) {
 }
 
 export async function getPost(slug) {
-
   const data = await postsTable.queryItem({
     KeyConditionExpression: "pk = :pk",
     ExpressionAttributeValues: {
       ":pk": `ENTITY#${slug}`
     }
   })
-
+  if (!data.Item) {
+    console.log("no post with slug", slug)
+    return null
+  }
   return mapPost(entityDetails(data.Item))
 }
 
-export async function getPosts({lastEvaluatedKey, limit = 30} = {}) {
+async function getEntities({type, lastEvaluatedKey, limit = 30}) {
   const params = {
     ProjectionExpression: "dirPath, imagesPath, indexPath, slug, tags, image, #tp, href, title, description, #dt",
     ExpressionAttributeNames: { "#tp": "type", "#dt": "date" },
     KeyConditionExpression: "GSI1PK = :pk",
     ExpressionAttributeValues: {
-      ":pk": `ENTITY#POST`
+      ":pk": `ENTITY#${type}`
     },
     IndexName: "GSI1",
     Limit: limit,
@@ -200,8 +202,16 @@ export async function getPosts({lastEvaluatedKey, limit = 30} = {}) {
   }
   const { Items, ScannedCount, LastEvaluatedKey } = await postsTable.queryItems(params)
 
-  const nextKey = LastEvaluatedKey && jwt.sign(LastEvaluatedKey, process.env.REQUEST_SECRET)
+  const nextKey = LastEvaluatedKey ? jwt.sign(LastEvaluatedKey, process.env.REQUEST_SECRET) : null
   return { posts: Items.map(entityDetails).map(mapPost), count: ScannedCount, lastEvaluatedKey: nextKey }
+}
+
+export async function getPosts({lastEvaluatedKey, limit = 30} = {}) {
+  return getEntities({type: "POST", lastEvaluatedKey, limit})
+}
+
+export async function getPlaylists({lastEvaluatedKey, limit = 30} = {}) {
+  return getEntities({type: "PLAYLIST", lastEvaluatedKey, limit})
 }
 
 export async function getAllPosts({ProjectionExpression, ExpressionAttributeNames}) {
