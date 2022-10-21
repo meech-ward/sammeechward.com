@@ -180,9 +180,31 @@ export async function getPost(slug) {
   return mapPost(entityDetails(data.Item))
 }
 
+
+export async function getPlaylist({slug}) {
+  const playlist = await getPost(slug)
+  const children = await getPlaylistChildren({slug})
+  playlist.children = playlist.children.map(child => children.find(c => c.slug === child))
+  console.log(playlist.children)
+  return playlist
+}
+
+export async function getPlaylistChildren({ slug }) {
+
+  const { Items } = await postsTable.queryItems({
+    KeyConditionExpression: "pk = :pk",
+    ExpressionAttributeValues: {
+      ":pk": "PLAYLIST#" + slug
+    },
+  })
+
+  return Items.map(entityDetails).map(mapPost)
+}
+
+
 async function getEntities({type, lastEvaluatedKey, limit = 30}) {
   const params = {
-    ProjectionExpression: "dirPath, imagesPath, indexPath, slug, tags, image, #tp, href, title, description, #dt",
+    ProjectionExpression: "dirPath, imagesPath, indexPath, slug, tags, image, #tp, href, title, description, #dt, children",
     ExpressionAttributeNames: { "#tp": "type", "#dt": "date" },
     KeyConditionExpression: "GSI1PK = :pk",
     ExpressionAttributeValues: {

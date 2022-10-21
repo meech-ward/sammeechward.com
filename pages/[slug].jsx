@@ -23,6 +23,13 @@ import normalizeImageSize from '../helpers/normalizeImageSize'
 import axios from 'axios'
 
 import { useEffect, useRef, useState } from 'react'
+import SideBar from '../components/Sidebar'
+
+import { useRouter } from 'next/router'
+
+import {
+  PlayIcon,
+} from '@heroicons/react/24/outline'
 
 
 function getPostBySlug(slug) {
@@ -38,8 +45,13 @@ export default function Post({ dirUrl, commentCount, likeCount, slug, title, ima
   const [postedComment, setPostedComment] = useState(false)
   const [nextPost, setNextPost] = useState(null)
   const [previousPost, setPreviousPost] = useState(null)
+  const [playlist, setPlaylist] = useState(null)
 
   const commentsRef = useRef()
+
+  const router = useRouter()
+
+  console.log(router)
 
   const imageSize = normalizeImageSize({ ...image, maxHeight: 336 * 2 })
 
@@ -97,6 +109,17 @@ export default function Post({ dirUrl, commentCount, likeCount, slug, title, ima
     })()
   }, [videoId])
 
+  useEffect(() => {
+    const playlistSlug = router.query?.playlist
+    if (!playlistSlug || playlistSlug === playlist?.slug) {
+      return
+    }
+    ; (async () => {
+      const res = await axios.get(`/api/playlists/${playlistSlug}`)
+      setPlaylist(res.data.playlist)
+    })()
+  }, [router.query])
+
 
 
   const handlePostedComment = async (comment) => {
@@ -112,20 +135,8 @@ export default function Post({ dirUrl, commentCount, likeCount, slug, title, ima
       <Article mdxSource={mdxSource} dirUrl={dirUrl} getPostBySlug={getPostBySlug} />
     </div>
   )
-  const isVideo = type === "video"
-  return (
+  const PageContent = () => (
     <>
-      <Head>
-        <title>{title}</title>
-        <Meta
-          title={title}
-          description={description}
-          image={`https://www.sammeechward.com/_next/image?url=${encodeURIComponent(image.url)}&w=1200&q=75`}
-          imageWidth={image.width}
-          imageHeight={image.height}
-          url={`https://sammeechward.com/${slug}`}
-        />
-      </Head>
       {isVideo ?
         <>
           <div className="sm:px-6 lg:px-8 sm:pt-6 lg:pt-12">
@@ -151,8 +162,8 @@ export default function Post({ dirUrl, commentCount, likeCount, slug, title, ima
       {/* Next Cards */}
 
       <div className={`${contentMaxWidth} px-4 sm:px-6 lg:px-8 mx-auto flex flex-col sm:flex-row justify-between`}>
-        {previousPost && <div className='flex-1 max-w-sm'><Card post={{...previousPost, description: null}}></Card></div>}
-        <div className='flex-1 max-w-sm'>{nextPost && <Card post={{...nextPost, description: null}}></Card>}</div>
+        {previousPost && <div className='flex-1 max-w-sm'><Card post={{ ...previousPost, description: null }}></Card></div>}
+        <div className='flex-1 max-w-sm'>{nextPost && <Card post={{ ...nextPost, description: null }}></Card>}</div>
       </div>
 
       {/* Comments */}
@@ -175,6 +186,29 @@ export default function Post({ dirUrl, commentCount, likeCount, slug, title, ima
           </>
         }
       </div>
+    </>
+  )
+  const isVideo = type === "video"
+  return (
+    <>
+      <Head>
+        <title>{title}</title>
+        <Meta
+          title={title}
+          description={description}
+          image={`https://www.sammeechward.com/_next/image?url=${encodeURIComponent(image.url)}&w=1200&q=75`}
+          imageWidth={image.width}
+          imageHeight={image.height}
+          url={`https://sammeechward.com/${slug}`}
+        />
+      </Head>
+      {router.query?.playlist ? (
+        <SideBar navigation={!playlist ? [] : playlist.children.map(child => ({ name: child.title, href: `/${child.slug}?playlist=${playlist.slug}`, icon: PlayIcon, current: child.slug === slug }))}>
+          {PageContent()}
+        </SideBar>
+      ) : (
+        PageContent()
+      )}
     </>
   )
 }
@@ -200,6 +234,8 @@ export async function getStaticProps(context) {
     const mdxSource = await serializeMDX(post.markdown)
 
     // console.log({dbPost, post})
+
+    console.log(context.params)
 
     return {
       props: {

@@ -88,6 +88,17 @@ export function makeTable(tableName, region, accessKeyId, secretAccessKey) {
     return { ...data, Item: data.Items[0] }
   }
 
+  exports.batchGetItems = batchGetItems
+  async function batchGetItems({ RequestItems }) {
+    const params = {
+      RequestItems: {
+        [tableName]: RequestItems
+      }
+    }
+    const data = await dynamodbClient.send(new BatchGetCommand(params));
+    return data
+  }
+
   exports.scan = scan
   async function scan(props) {
     const params = {

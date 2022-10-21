@@ -22,6 +22,11 @@ import normalizeImageSize from '../../helpers/normalizeImageSize'
 import axios from 'axios'
 
 import { useEffect, useRef, useState } from 'react'
+import SideBar from '../../components/Sidebar'
+
+import {
+  PlayIcon,
+} from '@heroicons/react/24/outline'
 
 
 function getPostBySlug(slug) {
@@ -41,7 +46,7 @@ function makeImageComponent({ src, width, height, alt, loader }) {
 
 const ImageComponent = makeImageComponent({})
 
-export default function Post({ dirUrl, commentCount, likeCount, slug, title, image, editUrl, mdxSource, description, type, children, nextPostSlug, previousPostSlug }) {
+export default function Post({ dirUrl, commentCount, likeCount, slug, title, image, editUrl, mdxSource, description, type, children, nextPostSlug, previousPostSlug, params }) {
   const [comments, setComments] = useState([])
   const [totalComments, setTotalComments] = useState(commentCount)
   const [totalLikes, setTotalLikes] = useState(likeCount)
@@ -109,20 +114,9 @@ export default function Post({ dirUrl, commentCount, likeCount, slug, title, ima
       <Article mdxSource={mdxSource} dirUrl={dirUrl} getPostBySlug={getPostBySlug} />
     </div>
   )
-  return (
-    <>
-      <Head>
-        <title>{title}</title>
-        <Meta
-          title={title}
-          description={description}
-          image={`https://www.sammeechward.com/_next/image?url=${encodeURIComponent(image.url)}&w=1200&q=75`}
-          imageWidth={image.width}
-          imageHeight={image.height}
-          url={`https://sammeechward.com/${slug}`}
-        />
-      </Head>
 
+  const PageContent = () => (
+    <>
       <>
         <Hero title={title} subTitle={""} description={""} image={{ ...image, ...imageSize }}></Hero>
         <Contents />
@@ -161,6 +155,27 @@ export default function Post({ dirUrl, commentCount, likeCount, slug, title, ima
       </div>
     </>
   )
+
+  return (
+    <>
+      <Head>
+        <title>{title}</title>
+        <Meta
+          title={title}
+          description={description}
+          image={`https://www.sammeechward.com/_next/image?url=${encodeURIComponent(image.url)}&w=1200&q=75`}
+          imageWidth={image.width}
+          imageHeight={image.height}
+          url={`https://sammeechward.com/${slug}`}
+        />
+      </Head>
+
+      <SideBar navigation={children.map(child => ({ name: child.title, href: `/${child.slug}?playlist=${slug}`, icon: PlayIcon, current: false }))}>
+        {PageContent()}
+      </SideBar>
+
+    </>
+  )
 }
 
 export async function getStaticPaths() {
@@ -189,7 +204,8 @@ export async function getStaticProps(context) {
       props: {
         ...post,
         mdxSource,
-        children: children.filter(a => a)
+        children,
+        params: context.params,
       }
     }
   } catch (error) {
