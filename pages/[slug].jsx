@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Meta from '../components/Meta'
 import { getPost as getPostMarkdown } from '../server/markdownFiles'
-import { getPost as getPostFromDynamo, getPosts as getPostsFromDynamo } from '../server/dynamo/queries'
+import { getPost as getPostFromDynamo, getPosts as getPostsFromDynamo, getPostPlaylists } from '../server/dynamo/queries'
 
 import mapComment from '../helpers/mapComment'
 import serializeMDX from '../helpers/serializeMDX'
@@ -30,13 +30,14 @@ import { useRouter } from 'next/router'
 import {
   PlayIcon,
 } from '@heroicons/react/24/outline'
+import Cards from '../components/Cards'
 
 
 function getPostBySlug(slug) {
   return axios.get("/api/entities/" + slug).then(res => res.data.post)
 }
 
-export default function Post({ dirUrl, commentCount, likeCount, slug, title, image, editUrl, mdxSource, description, type, videoId, nextPostSlug, previousPostSlug }) {
+export default function Post({ dirUrl, commentCount, likeCount, slug, title, image, editUrl, mdxSource, description, type, videoId, nextPostSlug, previousPostSlug, playlists }) {
   const [comments, setComments] = useState([])
   const [totalComments, setTotalComments] = useState(commentCount)
   const [totalLikes, setTotalLikes] = useState(likeCount)
@@ -128,6 +129,14 @@ export default function Post({ dirUrl, commentCount, likeCount, slug, title, ima
 
   const Contents = () => (
     <div className={`${contentMaxWidth} mx-auto px-4 pt-4 pb-6 sm:pt-8 sm:pb-10 sm:px-6 lg:px-8 lg:pt-12 lg:pb-14`}>
+      {playlists && !router.query?.playlist && (
+        <>
+          <hr />
+          <p className='mt-4'>This video is part of the following playlists:</p>
+          <Cards className={"mt-3 mb-8"} posts={playlists.map(p => ({ ...p, href: `/${slug}?playlist=${p.slug}`, image: null }))} />
+          <hr />
+        </>
+      )}
       <Article mdxSource={mdxSource} dirUrl={dirUrl} getPostBySlug={getPostBySlug} />
     </div>
   )
@@ -137,8 +146,8 @@ export default function Post({ dirUrl, commentCount, likeCount, slug, title, ima
         <>
           <div className="sm:px-6 lg:px-8 sm:pt-6 lg:pt-12">
             <YouTube className={"max-w-7xl mx-auto"} videoId={videoId} />
+            <h1 className='mx-2 sm:mx-6 xl:max-w-7xl xl:mx-auto text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl md:text-5xl'>{title}</h1>
           </div>
-          <h1 className='mx-2 sm:mx-6 xl:max-w-7xl xl:mx-auto text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl md:text-5xl'>{title}</h1>
           <Contents></Contents>
         </>
         :
@@ -225,18 +234,22 @@ export async function getStaticProps(context) {
 
   const slug = context.params.slug
   try {
+    const playlists = await getPostPlaylists({ slug })
     const dbPost = await getPostFromDynamo(slug)
     const post = await getPostMarkdown(dbPost)
     const mdxSource = await serializeMDX(post.markdown)
 
     // console.log({dbPost, post})
 
+    console.log({ playlists })
+
     console.log(context.params)
 
     return {
       props: {
         ...post,
-        mdxSource
+        mdxSource,
+        playlists
       }
     }
   } catch (error) {
