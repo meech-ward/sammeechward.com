@@ -1,16 +1,14 @@
 import Link from 'next/link'
 import Image from 'next/future/image'
 
-import { PlayIcon, DocumentTextIcon } from '@heroicons/react/24/outline'
+import { PlayIcon, DocumentTextIcon, QueueListIcon } from '@heroicons/react/24/outline'
 
 import limit from '../../helpers/limit'
 
-import normalizeImageSize from '../../helpers/normalizeImageSize'
+import TimeAgo from 'javascript-time-ago'
+const timeAgo = new TimeAgo('en-US')
 
-
-
-export default function Card({ post, ImageComponent = Image }) {
-  const imageSize = normalizeImageSize({ ...post.image, maxHeight: 192 * 2 })
+export default function Card({ post, ImageComponent = Image, imageSize }) {
 
   const Icon = (() => {
     switch (post.type) {
@@ -18,6 +16,8 @@ export default function Card({ post, ImageComponent = Image }) {
         return PlayIcon
       case 'article':
         return DocumentTextIcon
+      case 'playlist':
+        return QueueListIcon
       default:
         return null
     }
@@ -34,7 +34,7 @@ export default function Card({ post, ImageComponent = Image }) {
           className="flex-1 flex flex-col overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-all duration-200"
         >
           <div className="flex-shrink-0">
-            {post?.image?.url ?
+            {post?.image?.url &&
               <ImageComponent
                 className="h-48 w-full object-cover"
                 src={post.image.url}
@@ -43,8 +43,6 @@ export default function Card({ post, ImageComponent = Image }) {
                 layout="fill"
                 quality={100}
               />
-              :
-              <p>No Image</p>
             }
           </div>
           <div className="flex flex-1 flex-col justify-between bg-white p-6">
@@ -75,18 +73,21 @@ export default function Card({ post, ImageComponent = Image }) {
               />
             </a> */}
               </div>
-              {/* <div className="ml-3">
-            <p className="text-sm font-medium text-gray-900">
+              <div className="ml-3">
+                {/* <p className="text-sm font-medium text-gray-900">
               <a href={post.author?.href} className="hover:underline">
                 {post.author?.name}
               </a>
-            </p>
-            <div className="flex space-x-1 text-sm text-gray-500">
-              <time dateTime={post.datetime}>{post.date}</time>
-              <span aria-hidden="true">&middot;</span>
-              <span>{post.readingTime} read</span>
-            </div>
-          </div> */}
+            </p> */}
+                {post.date && <div className="flex space-x-1 text-sm text-gray-500">
+                  <time dateTime={post.date}>{timeAgo.format(new Date(post.date))}</time>
+                </div>
+                }
+                {post.extraData && <div className="text-sm font-medium text-gray-900">
+                  <p>{post.extraData}</p>
+                </div>
+                }
+              </div>
             </div>
           </div>
         </a>

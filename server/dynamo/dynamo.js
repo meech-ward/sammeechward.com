@@ -1,6 +1,6 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb"
 import { DynamoDBDocumentClient, DynamoDBDocument } from "@aws-sdk/lib-dynamodb";
-import { PutCommand, UpdateCommand, GetCommand, ScanCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
+import { PutCommand, UpdateCommand, GetCommand, ScanCommand, QueryCommand, BatchGetCommand } from "@aws-sdk/lib-dynamodb";
 
 
 export function makeTable(tableName, region, accessKeyId, secretAccessKey) {
@@ -86,6 +86,17 @@ export function makeTable(tableName, region, accessKeyId, secretAccessKey) {
   async function queryItem({ ExpressionAttributeValues, KeyConditionExpression, IndexName }) {
     const data = await queryItems({ ExpressionAttributeValues, KeyConditionExpression, IndexName })
     return { ...data, Item: data.Items[0] }
+  }
+
+  exports.batchGetItems = batchGetItems
+  async function batchGetItems({ RequestItems }) {
+    const params = {
+      RequestItems: {
+        [tableName]: RequestItems
+      }
+    }
+    const data = await dynamodbClient.send(new BatchGetCommand(params));
+    return data
   }
 
   exports.scan = scan

@@ -14,8 +14,6 @@ export default function Admin(props) {
 
   const { data, error } = useSWR('/api/admin/comments', commentFetcher)
 
-  console.log(data, error)
-
   return (
     <>
       <Head>

@@ -16,6 +16,8 @@ import Card from '../Card'
 
 import { Note, Warning, Instruction, Error } from '../ArticleComponents/Blocks'
 
+import normalizeImageSize from '../../helpers/normalizeImageSize'
+
 const h1 = (props) => <h1 {...props} className={props.className ?? "" + " sm:text-5xl text-4xl sm:mt-14 mt-10 sm:mb-10 mb-8 font-semibold"} />
 const h2 = (props) => <h2 {...props} className={props.className ?? "" + " sm:text-4xl text-3xl sm:mt-12 mt-8 sm:mb-8 mb-6 font-semibold"} />
 const h3 = (props) => <h3 {...props} className={props.className ?? "" + " sm:text-3xl text-lg  sm:mt-10 mt-6 sm:mb-6 mb-4 font-semibold"} />
@@ -50,7 +52,8 @@ export default function Page({ mdxSource, dirUrl, getPostBySlug, ImageComponent 
     }, [slug])
     if (!post) return null
     // return <Cards posts={[post]} />
-    return <div className='mb-10 max-w-sm mx-auto'><Card  ImageComponent={ImageComponent} post={post}></Card></div>
+    const imageSize = normalizeImageSize({ ...post.image, maxHeight: 192 * 2 })
+    return <div className='mb-10 max-w-sm mx-auto'><Card  ImageComponent={ImageComponent} post={post} imageSize={imageSize}></Card></div>
   }
 
   function Tabs({children}) {
@@ -63,7 +66,6 @@ export default function Page({ mdxSource, dirUrl, getPostBySlug, ImageComponent 
   }
 
   function Tab({children, name}) {
-    console.log("tab", children)
     return <div>Tab: name</div>
   }
 

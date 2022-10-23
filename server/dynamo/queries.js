@@ -6,60 +6,8 @@ import entityDetails from '../../helpers/entityDetails'
 
 import jwt from 'jsonwebtoken'
 
+import { sanitizeDynamoObject, mapComment, mapPost, mapFeatured, promisify } from './utils'
 
-function sanitizeDynamoObject(obj) {
-  obj = {...obj}
-
-  if (!obj.id) {
-    obj.id = obj.pk.split('#')[1]
-  }
-
-  delete obj.pk
-  delete obj.sk
-  delete obj.GSI1PK
-  delete obj.GSI1SK
-
-  return obj
-}
-
-function mapComment(comment) {
-  const obj = {
-    ...comment,
-    id: comment.sk.split("#")[1]
-  }
-
-  return sanitizeDynamoObject(obj)
-}
-
-function mapPost(post) {
-  const obj = {
-    ...post,
-    id: post.slug
-  }
-
-  return sanitizeDynamoObject(obj)
-}
-
-function mapFeatured(post) {
-  const obj = {
-    ...post,
-    id: post.sk.split("#")[1]
-  }
-
-  return sanitizeDynamoObject(obj)
-}
-
-function promisify(fn) {
-  return (...args) => new Promise((resolve, reject) => {
-    fn(...args, (err, data) => {
-      if (err) {
-        reject(err)
-      } else {
-        resolve(data)
-      }
-    })
-  })
-}
 
 /*
   User
@@ -84,7 +32,7 @@ async function updateUserCommentCount(user) {
   const sk = `USER#${user.id}`
   try {
     let setCountParams = {
-      Key: {pk, sk},
+      Key: { pk, sk },
       UpdateExpression: "SET commentCount = :val",
       ExpressionAttributeValues: {
         ":val": 1
@@ -94,13 +42,13 @@ async function updateUserCommentCount(user) {
 
     const data = await mainTable.updateItem(setCountParams)
   } catch (error) {
-    console.error({error})
+    console.error({ error })
     if (error.name !== "ConditionalCheckFailedException") {
       throw error
     }
 
     let updateParams = {
-      Key: {pk, sk},
+      Key: { pk, sk },
       UpdateExpression: "SET commentCount = commentCount+ :inc",
       ExpressionAttributeValues: {
         ":inc": 1
@@ -111,25 +59,25 @@ async function updateUserCommentCount(user) {
 }
 
 async function updatePostCommentCount(entitySlug) {
-  
-    let {Item} = await postsTable.queryItem({
-      KeyConditionExpression: "pk = :pk",
-      ExpressionAttributeValues: {
-        ":pk": `ENTITY#${entitySlug}`
-      }
-    })
-    let updateParams = {
-      Key: {
-        pk: Item.pk,
-        sk: Item.sk
-      },
-      UpdateExpression: "SET commentCount = commentCount+ :inc",
-      ExpressionAttributeValues: {
-        ":inc": 1
-      }
+
+  let { Item } = await postsTable.queryItem({
+    KeyConditionExpression: "pk = :pk",
+    ExpressionAttributeValues: {
+      ":pk": `ENTITY#${entitySlug}`
     }
-    
-    await postsTable.updateItem(updateParams)
+  })
+  let updateParams = {
+    Key: {
+      pk: Item.pk,
+      sk: Item.sk
+    },
+    UpdateExpression: "SET commentCount = commentCount+ :inc",
+    ExpressionAttributeValues: {
+      ":inc": 1
+    }
+  }
+
+  await postsTable.updateItem(updateParams)
 }
 
 export async function createComment({ entitySlug, text, user }) {
@@ -149,7 +97,7 @@ export async function createComment({ entitySlug, text, user }) {
 
   await updateUserCommentCount(user)
   await updatePostCommentCount(entitySlug)
-  
+
   return mapComment(Item)
 }
 
@@ -167,24 +115,47 @@ export async function getComments({ slug }) {
 }
 
 export async function getPost(slug) {
-
   const data = await postsTable.queryItem({
     KeyConditionExpression: "pk = :pk",
     ExpressionAttributeValues: {
       ":pk": `ENTITY#${slug}`
     }
   })
-
+  if (!data.Item) {
+    console.log("no post with slug", slug)
+    return null
+  }
   return mapPost(entityDetails(data.Item))
 }
 
-export async function getPosts({lastEvaluatedKey, limit = 30} = {}) {
+
+export async function getPlaylist({ slug }) {
+  const playlist = await getPost(slug)
+  const children = await getPlaylistChildren({ slug })
+  playlist.children = playlist.children.map(child => children.find(c => c.slug === child))
+  return playlist
+}
+
+export async function getPlaylistChildren({ slug }) {
+
+  const { Items } = await postsTable.queryItems({
+    KeyConditionExpression: "pk = :pk",
+    ExpressionAttributeValues: {
+      ":pk": "PLAYLIST#" + slug
+    },
+  })
+
+  return Items.map(entityDetails).map(mapPost)
+}
+
+
+async function getEntities({ type, lastEvaluatedKey, limit = 30 }) {
   const params = {
-    ProjectionExpression: "dirPath, imagesPath, indexPath, slug, tags, image, #tp, href, title, description, #dt",
+    ProjectionExpression: "dirPath, imagesPath, indexPath, slug, tags, image, #tp, href, title, description, #dt, children",
     ExpressionAttributeNames: { "#tp": "type", "#dt": "date" },
     KeyConditionExpression: "GSI1PK = :pk",
     ExpressionAttributeValues: {
-      ":pk": `ENTITY#POST`
+      ":pk": `ENTITY#${type}`
     },
     IndexName: "GSI1",
     Limit: limit,
@@ -200,11 +171,19 @@ export async function getPosts({lastEvaluatedKey, limit = 30} = {}) {
   }
   const { Items, ScannedCount, LastEvaluatedKey } = await postsTable.queryItems(params)
 
-  const nextKey = LastEvaluatedKey && jwt.sign(LastEvaluatedKey, process.env.REQUEST_SECRET)
+  const nextKey = LastEvaluatedKey ? jwt.sign(LastEvaluatedKey, process.env.REQUEST_SECRET) : null
   return { posts: Items.map(entityDetails).map(mapPost), count: ScannedCount, lastEvaluatedKey: nextKey }
 }
 
-export async function getAllPosts({ProjectionExpression, ExpressionAttributeNames}) {
+export async function getPosts({ lastEvaluatedKey, limit = 30 } = {}) {
+  return getEntities({ type: "POST", lastEvaluatedKey, limit })
+}
+
+export async function getPlaylists({ lastEvaluatedKey, limit = 30 } = {}) {
+  return getEntities({ type: "PLAYLIST", lastEvaluatedKey, limit })
+}
+
+export async function getAllPosts({ ProjectionExpression, ExpressionAttributeNames }) {
   const params = {
     ProjectionExpression,
     ExpressionAttributeNames,
@@ -218,6 +197,19 @@ export async function getAllPosts({ProjectionExpression, ExpressionAttributeName
 
   const { Items } = await postsTable.queryItems(params)
   return sanitizeDynamoObject(Items)
+}
+
+export async function getPostPlaylists({ slug }) {
+  const { Items } = await postsTable.queryItems({
+    ProjectionExpression: "playlist",
+    KeyConditionExpression: "sk = :pk AND begins_with(pk, :sk)",
+    ExpressionAttributeValues: {
+      ":pk": `ENTITY#${slug}`,
+      ":sk": "PLAYLIST"
+    },
+    IndexName: "INVERTED_INDEX",
+  })
+  return Items.map(i => ({...i.playlist, type: 'playlist'})).map(entityDetails)
 }
 
 export async function getFeaturedPosts() {

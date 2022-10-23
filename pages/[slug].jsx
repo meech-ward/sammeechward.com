@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Meta from '../components/Meta'
 import { getPost as getPostMarkdown } from '../server/markdownFiles'
-import { getPost as getPostFromDynamo, getPosts as getPostsFromDynamo } from '../server/dynamo/queries'
+import { getPost as getPostFromDynamo, getPosts as getPostsFromDynamo, getPostPlaylists } from '../server/dynamo/queries'
 
 import mapComment from '../helpers/mapComment'
 import serializeMDX from '../helpers/serializeMDX'
@@ -23,13 +23,22 @@ import normalizeImageSize from '../helpers/normalizeImageSize'
 import axios from 'axios'
 
 import { useEffect, useRef, useState } from 'react'
+import SideBar from '../components/Sidebar'
+
+import { useRouter } from 'next/router'
+
+import {
+  PlayIcon,
+  QueueListIcon
+} from '@heroicons/react/24/outline'
+import Cards from '../components/Cards'
 
 
 function getPostBySlug(slug) {
   return axios.get("/api/entities/" + slug).then(res => res.data.post)
 }
 
-export default function Post({ dirUrl, commentCount, likeCount, slug, title, image, editUrl, mdxSource, description, type, videoId, nextPostSlug, previousPostSlug }) {
+export default function Post({ dirUrl, commentCount, likeCount, slug, title, image, editUrl, mdxSource, description, type, videoId, nextPostSlug, previousPostSlug, playlists }) {
   const [comments, setComments] = useState([])
   const [totalComments, setTotalComments] = useState(commentCount)
   const [totalLikes, setTotalLikes] = useState(likeCount)
@@ -38,8 +47,11 @@ export default function Post({ dirUrl, commentCount, likeCount, slug, title, ima
   const [postedComment, setPostedComment] = useState(false)
   const [nextPost, setNextPost] = useState(null)
   const [previousPost, setPreviousPost] = useState(null)
+  const [playlist, setPlaylist] = useState(null)
 
   const commentsRef = useRef()
+
+  const router = useRouter()
 
   const imageSize = normalizeImageSize({ ...image, maxHeight: 336 * 2 })
 
@@ -60,7 +72,6 @@ export default function Post({ dirUrl, commentCount, likeCount, slug, title, ima
   }, [slug])
 
   useEffect(() => {
-    console.log({ nextPostSlug })
     if (!nextPostSlug) {
       setNextPost(null)
       return
@@ -72,7 +83,6 @@ export default function Post({ dirUrl, commentCount, likeCount, slug, title, ima
   }, [nextPostSlug])
 
   useEffect(() => {
-    console.log({ previousPostSlug })
     if (!previousPostSlug) {
       setPreviousPost(null)
       return
@@ -97,6 +107,17 @@ export default function Post({ dirUrl, commentCount, likeCount, slug, title, ima
     })()
   }, [videoId])
 
+  useEffect(() => {
+    const playlistSlug = router.query?.playlist
+    if (!playlistSlug || playlistSlug === playlist?.slug) {
+      return
+    }
+    ; (async () => {
+      const res = await axios.get(`/api/playlists/${playlistSlug}`)
+      setPlaylist(res.data.playlist)
+    })()
+  }, [router.query])
+
 
 
   const handlePostedComment = async (comment) => {
@@ -109,29 +130,25 @@ export default function Post({ dirUrl, commentCount, likeCount, slug, title, ima
 
   const Contents = () => (
     <div className={`${contentMaxWidth} mx-auto px-4 pt-4 pb-6 sm:pt-8 sm:pb-10 sm:px-6 lg:px-8 lg:pt-12 lg:pb-14`}>
+      {playlists?.length && !router.query?.playlist && (
+        <>
+          <hr />
+          <p className='mt-4'>This video is part of the following playlists:</p>
+          <Cards className={"mt-3 mb-8"} posts={playlists.map(p => ({ ...p, href: `/${slug}?playlist=${p.slug}`, image: null }))} />
+          <hr />
+        </>
+      )}
       <Article mdxSource={mdxSource} dirUrl={dirUrl} getPostBySlug={getPostBySlug} />
     </div>
   )
-  const isVideo = type === "video"
-  return (
+  const PageContent = () => (
     <>
-      <Head>
-        <title>{title}</title>
-        <Meta
-          title={title}
-          description={description}
-          image={`https://www.sammeechward.com/_next/image?url=${encodeURIComponent(image.url)}&w=1200&q=75`}
-          imageWidth={image.width}
-          imageHeight={image.height}
-          url={`https://sammeechward.com/${slug}`}
-        />
-      </Head>
       {isVideo ?
         <>
           <div className="sm:px-6 lg:px-8 sm:pt-6 lg:pt-12">
             <YouTube className={"max-w-7xl mx-auto"} videoId={videoId} />
+            <h1 className='mx-2 sm:mx-6 xl:max-w-7xl xl:mx-auto text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl md:text-5xl'>{title}</h1>
           </div>
-          <h1 className='mx-2 sm:mx-6 xl:max-w-7xl xl:mx-auto text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl md:text-5xl'>{title}</h1>
           <Contents></Contents>
         </>
         :
@@ -151,8 +168,8 @@ export default function Post({ dirUrl, commentCount, likeCount, slug, title, ima
       {/* Next Cards */}
 
       <div className={`${contentMaxWidth} px-4 sm:px-6 lg:px-8 mx-auto flex flex-col sm:flex-row justify-between`}>
-        {previousPost && <div className='flex-1 max-w-sm'><Card post={{...previousPost, description: null}}></Card></div>}
-        <div className='flex-1 max-w-sm'>{nextPost && <Card post={{...nextPost, description: null}}></Card>}</div>
+        {previousPost && <div className='flex-1 max-w-sm'><Card post={{ ...previousPost, description: null }} imageSize={normalizeImageSize({ ...previousPost.image, maxHeight: 192 * 2 })}></Card></div>}
+        <div className='flex-1 max-w-sm'>{nextPost && <Card post={{ ...nextPost, description: null }} imageSize={normalizeImageSize({ ...nextPost.image, maxHeight: 192 * 2 })}></Card>}</div>
       </div>
 
       {/* Comments */}
@@ -177,6 +194,38 @@ export default function Post({ dirUrl, commentCount, likeCount, slug, title, ima
       </div>
     </>
   )
+  const isVideo = type === "video"
+  return (
+    <>
+      <Head>
+        <title>{title}</title>
+        <Meta
+          title={title}
+          description={description}
+          image={`https://www.sammeechward.com/_next/image?url=${encodeURIComponent(image.url)}&w=1200&q=75`}
+          imageWidth={image.width}
+          imageHeight={image.height}
+          url={`https://sammeechward.com/${slug}`}
+        />
+      </Head>
+      {router.query?.playlist ? (() => {
+        let navigation = []
+        if (playlist) {
+          navigation = [
+            { name: playlist.title, href: `/playlists/${playlist.slug}`, icon: QueueListIcon, current: false },
+            ...playlist.children.map(child => ({ name: child.title, href: `/${child.slug}?playlist=${playlist.slug}`, icon: PlayIcon, current: child.slug === slug }))
+          ]
+        }
+        return (
+          <SideBar navigation={navigation}>
+            {PageContent()}
+          </SideBar>
+        )
+      })() : (
+        PageContent()
+      )}
+    </>
+  )
 }
 
 export async function getStaticPaths() {
@@ -195,16 +244,22 @@ export async function getStaticProps(context) {
 
   const slug = context.params.slug
   try {
+    const playlists = await getPostPlaylists({ slug })
     const dbPost = await getPostFromDynamo(slug)
     const post = await getPostMarkdown(dbPost)
     const mdxSource = await serializeMDX(post.markdown)
 
     // console.log({dbPost, post})
 
+    console.log({ playlists })
+
+    console.log(context.params)
+
     return {
       props: {
         ...post,
-        mdxSource
+        mdxSource,
+        playlists
       }
     }
   } catch (error) {
