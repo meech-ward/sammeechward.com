@@ -214,15 +214,17 @@ export default function SideBar({children, navigation = []}) {
               <Bars3Icon className="h-6 w-6" aria-hidden="true" />
             </button>
           </div>
-          <main className="flex-1">
+          <div className='flex-1'>
+          {/* <main className="flex-1">
             <div className="py-6">
-              <div className="mx-auto max-w-7xl px-4 sm:px-6 xl:px-8">
+              <div className="mx-auto max-w-7xl px-4 sm:px-6 xl:px-8"> */}
                 {/* Replace with your content */}
                 {children}
                 {/* /End replace */}
-              </div>
+              {/* </div>
             </div>
-          </main>
+          </main> */}
+          </div>
         </div>
       </div>
     </>

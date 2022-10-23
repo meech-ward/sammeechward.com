@@ -29,6 +29,7 @@ import { useRouter } from 'next/router'
 
 import {
   PlayIcon,
+  QueueListIcon
 } from '@heroicons/react/24/outline'
 import Cards from '../components/Cards'
 
@@ -129,7 +130,7 @@ export default function Post({ dirUrl, commentCount, likeCount, slug, title, ima
 
   const Contents = () => (
     <div className={`${contentMaxWidth} mx-auto px-4 pt-4 pb-6 sm:pt-8 sm:pb-10 sm:px-6 lg:px-8 lg:pt-12 lg:pb-14`}>
-      {playlists && !router.query?.playlist && (
+      {playlists?.length && !router.query?.playlist && (
         <>
           <hr />
           <p className='mt-4'>This video is part of the following playlists:</p>
@@ -207,11 +208,20 @@ export default function Post({ dirUrl, commentCount, likeCount, slug, title, ima
           url={`https://sammeechward.com/${slug}`}
         />
       </Head>
-      {router.query?.playlist ? (
-        <SideBar navigation={!playlist ? [] : playlist.children.map(child => ({ name: child.title, href: `/${child.slug}?playlist=${playlist.slug}`, icon: PlayIcon, current: child.slug === slug }))}>
-          {PageContent()}
-        </SideBar>
-      ) : (
+      {router.query?.playlist ? (() => {
+        let navigation = []
+        if (playlist) {
+          navigation = [
+            { name: playlist.title, href: `/playlists/${playlist.slug}`, icon: QueueListIcon, current: false },
+            ...playlist.children.map(child => ({ name: child.title, href: `/${child.slug}?playlist=${playlist.slug}`, icon: PlayIcon, current: child.slug === slug }))
+          ]
+        }
+        return (
+          <SideBar navigation={navigation}>
+            {PageContent()}
+          </SideBar>
+        )
+      })() : (
         PageContent()
       )}
     </>

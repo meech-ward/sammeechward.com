@@ -26,6 +26,7 @@ import SideBar from '../../components/Sidebar'
 
 import {
   PlayIcon,
+  QueueListIcon
 } from '@heroicons/react/24/outline'
 
 
@@ -115,13 +116,13 @@ export default function Post({ dirUrl, commentCount, likeCount, slug, title, ima
 
   const PageContent = () => (
     <>
-      <>
+ 
         <Hero title={title} subTitle={""} description={""} image={{ ...image, ...imageSize }}></Hero>
         <Contents />
         <div className="pt-8 pb-10 lg:pt-12 lg:pb-14 mx-auto max-w-7xl px-2">
-          <Cards posts={children} ImageComponent={ImageComponent} />
+          <Cards posts={children.map(c => ({...c, href: `${c.href}?playlist=${slug}`}))} ImageComponent={ImageComponent} />
         </div>
-      </>
+
 
 
 
@@ -130,13 +131,6 @@ export default function Post({ dirUrl, commentCount, likeCount, slug, title, ima
           <a target="_blank" rel="noreferrer" className='text-indigo-600 hover:text-indigo-500' href={editUrl}>Fix it on GitHub</a>
         </p>
       }
-
-      {/* Next Cards */}
-
-      <div className={`${contentMaxWidth} px-4 sm:px-6 lg:px-8 mx-auto flex flex-col sm:flex-row justify-between`}>
-        {previousPost && <div className='flex-1 max-w-sm'><Card post={{ ...previousPost, description: null }}></Card></div>}
-        <div className='flex-1 max-w-sm'>{nextPost && <Card post={{ ...nextPost, description: null }}></Card>}</div>
-      </div>
 
       {/* Comments */}
 
@@ -154,6 +148,11 @@ export default function Post({ dirUrl, commentCount, likeCount, slug, title, ima
     </>
   )
 
+  let navigation = [
+    { name: title, href: `/playlists/${slug}`, icon: QueueListIcon, current: true },
+    ...children.map(child => ({ name: child.title, href: `/${child.slug}?playlist=${slug}`, icon: PlayIcon, current: false }))
+  ]
+
   return (
     <>
       <Head>
@@ -168,7 +167,7 @@ export default function Post({ dirUrl, commentCount, likeCount, slug, title, ima
         />
       </Head>
 
-      <SideBar navigation={children.map(child => ({ name: child.title, href: `/${child.slug}?playlist=${slug}`, icon: PlayIcon, current: false }))}>
+      <SideBar navigation={navigation}>
         {PageContent()}
       </SideBar>
 
