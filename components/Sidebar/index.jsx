@@ -35,7 +35,7 @@ export default function SideBar({children, navigation = []}) {
         <Transition.Root show={sidebarOpen} as={Fragment}>
           <Dialog
             as="div"
-            className="relative z-40 lg:hidden"
+            className="relative z-40 xl:hidden"
             onClose={setSidebarOpen}
           >
             <Transition.Child
@@ -60,7 +60,7 @@ export default function SideBar({children, navigation = []}) {
                 leaveFrom="translate-x-0"
                 leaveTo="-translate-x-full"
               >
-                <Dialog.Panel className="relative flex w-full max-w-xs flex-1 flex-col bg-indigo-700">
+                <Dialog.Panel className="relative flex w-full max-w-xs flex-1 flex-col bg-gray-800">
                   <Transition.Child
                     as={Fragment}
                     enter="ease-in-out duration-300"
@@ -147,9 +147,9 @@ export default function SideBar({children, navigation = []}) {
         </Transition.Root>
 
         {/* Static sidebar for desktop */}
-        <div className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-80 lg:flex-col z-0">
+        <div className="hidden xl:fixed xl:inset-y-0 xl:flex xl:w-64 xl:flex-col z-0">
           {/* Sidebar component, swap this element with another sidebar if you like */}
-          <div className="flex min-h-0 flex-1 pt-16 flex-col bg-indigo-700">
+          <div className="flex min-h-0 flex-1 pt-16 flex-col bg-gray-800">
             <div className="flex flex-1 flex-col overflow-y-auto pt-5 pb-4">
               {/* <div className="flex flex-shrink-0 items-center px-4">
                 <img
@@ -203,8 +203,8 @@ export default function SideBar({children, navigation = []}) {
             </div> */}
           </div>
         </div>
-        <div className="flex flex-1 flex-col lg:pl-64">
-          <div className="sticky top-0 z-10 bg-gray-100 pl-1 pt-1 sm:pl-3 sm:pt-3 lg:hidden">
+        <div className="flex flex-1 flex-col xl:pl-64">
+          <div className="sticky top-0 z-10 bg-gray-100 pl-1 pt-1 sm:pl-3 sm:pt-3 xl:hidden">
             <button
               type="button"
               className="-ml-0.5 -mt-0.5 inline-flex h-12 w-12 items-center justify-center rounded-md text-gray-500 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
@@ -216,7 +216,7 @@ export default function SideBar({children, navigation = []}) {
           </div>
           <main className="flex-1">
             <div className="py-6">
-              <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+              <div className="mx-auto max-w-7xl px-4 sm:px-6 xl:px-8">
                 {/* Replace with your content */}
                 {children}
                 {/* /End replace */}

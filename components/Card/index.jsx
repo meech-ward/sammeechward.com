@@ -34,7 +34,7 @@ export default function Card({ post, ImageComponent = Image, imageSize }) {
           className="flex-1 flex flex-col overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-all duration-200"
         >
           <div className="flex-shrink-0">
-            {post?.image?.url ?
+            {post?.image?.url &&
               <ImageComponent
                 className="h-48 w-full object-cover"
                 src={post.image.url}
@@ -43,8 +43,6 @@ export default function Card({ post, ImageComponent = Image, imageSize }) {
                 layout="fill"
                 quality={100}
               />
-              :
-              <p>No Image</p>
             }
           </div>
           <div className="flex flex-1 flex-col justify-between bg-white p-6">
