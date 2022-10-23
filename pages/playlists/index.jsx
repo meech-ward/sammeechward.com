@@ -58,7 +58,6 @@ export default function Articles({ entities }) {
 export async function getStaticProps() {
 
   const { posts, count, lastEvaluatedKey } = await getPlaylists()
-  console.log({ posts })
   return {
     props: {
       entities: posts,

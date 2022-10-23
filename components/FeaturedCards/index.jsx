@@ -1,7 +1,8 @@
 import Card from '../Card'
 
+import normalizeImageSize from '../../helpers/normalizeImageSize'
 
-export default function Example({ posts, title, description }) {
+export default function FeaturedCards({ posts, title, description }) {
   return (
     <div className="relative bg-gray-50 px-4 pt-8 pb-10 sm:px-6 lg:px-8 lg:pt-12 lg:pb-14">
       <div className="absolute inset-0">
@@ -17,9 +18,12 @@ export default function Example({ posts, title, description }) {
           </p>
         </div>
         <div className="mx-auto mt-12 grid max-w-lg gap-5 lg:max-w-none lg:grid-cols-3">
-          {posts.map((post) => (
-            <Card post={post} key={post.id}></Card>
-          ))}
+          {posts.map((post) => {
+            const imageSize = normalizeImageSize({ ...post.image, maxHeight: 192 * 2 })
+
+            return <Card post={post} key={post.id} imageSize={imageSize}></Card>
+          }
+          )}
         </div>
       </div>
     </div>

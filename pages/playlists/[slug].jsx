@@ -77,7 +77,6 @@ export default function Post({ dirUrl, commentCount, likeCount, slug, title, ima
   }, [slug])
 
   useEffect(() => {
-    console.log({ nextPostSlug })
     if (!nextPostSlug) {
       setNextPost(null)
       return
@@ -89,7 +88,6 @@ export default function Post({ dirUrl, commentCount, likeCount, slug, title, ima
   }, [nextPostSlug])
 
   useEffect(() => {
-    console.log({ previousPostSlug })
     if (!previousPostSlug) {
       setPreviousPost(null)
       return

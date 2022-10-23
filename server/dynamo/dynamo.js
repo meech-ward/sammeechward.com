@@ -1,6 +1,6 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb"
 import { DynamoDBDocumentClient, DynamoDBDocument } from "@aws-sdk/lib-dynamodb";
-import { PutCommand, UpdateCommand, GetCommand, ScanCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
+import { PutCommand, UpdateCommand, GetCommand, ScanCommand, QueryCommand, BatchGetCommand } from "@aws-sdk/lib-dynamodb";
 
 
 export function makeTable(tableName, region, accessKeyId, secretAccessKey) {

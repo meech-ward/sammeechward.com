@@ -31,7 +31,7 @@ export default function SideBar({children, navigation = []}) {
         <body class="h-full">
         ```
       */}
-      <div class="flex">
+      <div>
         <Transition.Root show={sidebarOpen} as={Fragment}>
           <Dialog
             as="div"
@@ -147,9 +147,9 @@ export default function SideBar({children, navigation = []}) {
         </Transition.Root>
 
         {/* Static sidebar for desktop */}
-        <div className="hidden lg:flex lg:w-80 lg:flex-col">
+        <div className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-80 lg:flex-col z-0">
           {/* Sidebar component, swap this element with another sidebar if you like */}
-          <div className="flex min-h-0 flex-1 flex-col bg-indigo-700">
+          <div className="flex min-h-0 flex-1 pt-16 flex-col bg-indigo-700">
             <div className="flex flex-1 flex-col overflow-y-auto pt-5 pb-4">
               {/* <div className="flex flex-shrink-0 items-center px-4">
                 <img
@@ -203,7 +203,7 @@ export default function SideBar({children, navigation = []}) {
             </div> */}
           </div>
         </div>
-        <div className="flex flex-1 flex-col">
+        <div className="flex flex-1 flex-col lg:pl-64">
           <div className="sticky top-0 z-10 bg-gray-100 pl-1 pt-1 sm:pl-3 sm:pt-3 lg:hidden">
             <button
               type="button"

@@ -185,7 +185,6 @@ export async function getPlaylist({slug}) {
   const playlist = await getPost(slug)
   const children = await getPlaylistChildren({slug})
   playlist.children = playlist.children.map(child => children.find(c => c.slug === child))
-  console.log(playlist.children)
   return playlist
 }
 

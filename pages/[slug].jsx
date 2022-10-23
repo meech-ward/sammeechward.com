@@ -51,8 +51,6 @@ export default function Post({ dirUrl, commentCount, likeCount, slug, title, ima
 
   const router = useRouter()
 
-  console.log(router)
-
   const imageSize = normalizeImageSize({ ...image, maxHeight: 336 * 2 })
 
   useEffect(() => {
@@ -72,7 +70,6 @@ export default function Post({ dirUrl, commentCount, likeCount, slug, title, ima
   }, [slug])
 
   useEffect(() => {
-    console.log({ nextPostSlug })
     if (!nextPostSlug) {
       setNextPost(null)
       return
@@ -84,7 +81,6 @@ export default function Post({ dirUrl, commentCount, likeCount, slug, title, ima
   }, [nextPostSlug])
 
   useEffect(() => {
-    console.log({ previousPostSlug })
     if (!previousPostSlug) {
       setPreviousPost(null)
       return
@@ -162,8 +158,8 @@ export default function Post({ dirUrl, commentCount, likeCount, slug, title, ima
       {/* Next Cards */}
 
       <div className={`${contentMaxWidth} px-4 sm:px-6 lg:px-8 mx-auto flex flex-col sm:flex-row justify-between`}>
-        {previousPost && <div className='flex-1 max-w-sm'><Card post={{ ...previousPost, description: null }}></Card></div>}
-        <div className='flex-1 max-w-sm'>{nextPost && <Card post={{ ...nextPost, description: null }}></Card>}</div>
+        {previousPost && <div className='flex-1 max-w-sm'><Card post={{ ...previousPost, description: null }} imageSize={normalizeImageSize({ ...previousPost.image, maxHeight: 192 * 2 })}></Card></div>}
+        <div className='flex-1 max-w-sm'>{nextPost && <Card post={{ ...nextPost, description: null }} imageSize={normalizeImageSize({ ...nextPost.image, maxHeight: 192 * 2 })}></Card>}</div>
       </div>
 
       {/* Comments */}
