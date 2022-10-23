@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/future/image'
 
-import { PlayIcon, DocumentTextIcon } from '@heroicons/react/24/outline'
+import { PlayIcon, DocumentTextIcon, QueueListIcon } from '@heroicons/react/24/outline'
 
 import limit from '../../helpers/limit'
 
@@ -16,6 +16,8 @@ export default function Card({ post, ImageComponent = Image, imageSize }) {
         return PlayIcon
       case 'article':
         return DocumentTextIcon
+      case 'playlist':
+        return QueueListIcon
       default:
         return null
     }

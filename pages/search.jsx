@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import Cards from '../components/Cards'
+import CardsLarge from '../components/CardsLarge'
 import { algoliasearch } from 'algoliasearch';
 import entityDetails from '../helpers/entityDetails'
 
@@ -10,6 +11,7 @@ import { useRouter } from 'next/router'
 export default function Articles() {
 
   const [entities, setEntities] = useState([])
+  const [playlists, setPlaylists] = useState([])
   const [term, setTerm] = useState("")
   const { query } = useRouter()
 
@@ -19,7 +21,8 @@ export default function Articles() {
       setTerm(term)
         ; (async () => {
           const entities = await getSearchResults(term)
-          setEntities(entities)
+          setEntities(entities.filter(entity => entity.type !== 'playlist'))
+          setPlaylists(entities.filter(entity => entity.type === 'playlist'))
         })()
     }
   }, [query])
@@ -31,6 +34,7 @@ export default function Articles() {
       </Head>
       <div className="pt-8 pb-10 lg:pt-12 lg:pb-14 mx-auto max-w-7xl px-2">
         <h1 className='text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl md:text-6xl'>{term}</h1>
+        <CardsLarge posts={playlists} />
         <Cards posts={entities} />
       </div>
     </>
