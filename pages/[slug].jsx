@@ -138,7 +138,14 @@ export default function Post({ dirUrl, commentCount, likeCount, slug, title, ima
           <hr />
         </>
       )}
-      <Article mdxSource={mdxSource} dirUrl={dirUrl} getPostBySlug={getPostBySlug} />
+      <Article 
+      mdxSource={mdxSource}
+      dirUrl={dirUrl}
+      getPostBySlug={getPostBySlug}
+      title={title}
+      url={`https://www.sammeechward.com/${slug}` + (router.query?.playlist ? `?playlist=${playlist.slug}` : '')}
+      urlShort={`https://smw.wtf/${slug}` + (router.query?.playlist ? `?playlist=${playlist.slug}` : '')}
+      />
     </div>
   )
   const PageContent = () => (

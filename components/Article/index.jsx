@@ -10,6 +10,7 @@ import YouTube from '../YouTube'
 import InteractiveParallelism from '../ArticleComponents/InteractiveParallelism'
 import SQLJoinsEditor from '../ArticleComponents/SQLJoinsEditor'
 import TabsWithSections from '../TabsWithSections'
+import ShareButtons from '../ShareButtons'
 
 import Cards from '../Cards'
 import Card from '../Card'
@@ -42,7 +43,7 @@ function urlForLocalFile({path, dirUrl}) {
 
 
 
-export default function Page({ mdxSource, dirUrl, getPostBySlug, ImageComponent = NextImage, ...props }) {
+export default function Page({ mdxSource, dirUrl, getPostBySlug, ImageComponent = NextImage, url, title, urlShort, ...props }) {
 
   function PostCard({slug}) {
     const [post, setPost] = useState(null)
@@ -97,9 +98,17 @@ export default function Page({ mdxSource, dirUrl, getPostBySlug, ImageComponent 
 
   return (
     <div className="break-words">
+      <ShareButtons 
+      className='float-right mb-2'
+      url={url}
+      title={title}
+      urlShort={urlShort}
+      />
+      <div className='clear-both'>
       {mdxSource &&
         <MDXRemote {...mdxSource} components={components} />
       }
+      </div>
     </div>
   )
 }
