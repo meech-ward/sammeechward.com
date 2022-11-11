@@ -143,8 +143,8 @@ export default function Post({ dirUrl, commentCount, likeCount, slug, title, ima
       dirUrl={dirUrl}
       getPostBySlug={getPostBySlug}
       title={title}
-      url={`https://www.sammeechward.com/${slug}` + (router.query?.playlist ? `?playlist=${playlist.slug}` : '')}
-      urlShort={`https://smw.wtf/${slug}` + (router.query?.playlist ? `?playlist=${playlist.slug}` : '')}
+      url={`https://www.sammeechward.com/${slug}` + (playlist ? `?playlist=${playlist.slug}` : '')}
+      urlShort={`https://smw.wtf/${slug}` + (playlist ? `?playlist=${playlist.slug}` : '')}
       />
     </div>
   )
