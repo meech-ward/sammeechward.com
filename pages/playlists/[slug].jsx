@@ -11,7 +11,6 @@ import Article from '../../components/Article'
 
 import Image from 'next/future/image'
 
-import Card from '../../components/Card'
 import Cards from '../../components/Cards'
 
 import EntityCommentForm from '../../components/EntityCommentForm'
@@ -25,9 +24,10 @@ import { useEffect, useRef, useState } from 'react'
 import SideBar from '../../components/Sidebar'
 
 import {
-  PlayIcon,
-  QueueListIcon
+  QueueListIcon,
 } from '@heroicons/react/24/outline'
+
+import mapPlaylistChildData from '../../helpers/mapPlaylistChildData'
 
 
 function getPostBySlug(slug) {
@@ -106,29 +106,48 @@ export default function Post({ dirUrl, commentCount, likeCount, slug, title, ima
     setPostedComment(true)
   }
 
+
+  console.log({slug})
+  const playlistSlug = slug
+  children = children.map(child => mapPlaylistChildData({child, slug, playlistSlug}))
+
   const contentMaxWidth = "max-w-5xl"
 
   const Contents = () => (
     <div className={`${contentMaxWidth} mx-auto px-4 pt-4 pb-6 sm:pt-8 sm:pb-10 sm:px-6 lg:px-8 lg:pt-12 lg:pb-14`}>
-      <Article 
-      mdxSource={mdxSource}
-      dirUrl={dirUrl}
-      getPostBySlug={getPostBySlug}
-      title={title}
-      url={`https://www.sammeechward.com/${slug}`}
-      urlShort={`https://smw.wtf/${slug}`}
+      <Article
+        mdxSource={mdxSource}
+        dirUrl={dirUrl}
+        getPostBySlug={getPostBySlug}
+        title={title}
+        url={`https://www.sammeechward.com/playlists/${slug}`}
+        urlShort={`https://smw.wtf/playlists/${slug}`}
       />
     </div>
   )
 
+  const ChildCards = (children, className) => {
+    if (children?.[0].type == 'section') {
+      return children.map(section => {
+        return (
+          <div key={section.name} className="mb-32">
+            <h2 id={section.slug} className="text-4xl font-bold mb-4 mt-2">{section.name}</h2>
+            {ChildCards(section.children, 'mb-32')}
+          </div>
+        )
+      })
+    }
+    return <Cards className={className} posts={children.map(c => ({ ...c, href: `${c.href}?playlist=${slug}` }))} ImageComponent={ImageComponent} />
+  }
+
   const PageContent = () => (
     <>
- 
-        <Hero title={title} subTitle={""} description={""} image={{ ...image, ...imageSize }}></Hero>
-        <Contents />
-        <div className="pt-8 pb-10 lg:pt-12 lg:pb-14 mx-auto max-w-7xl px-2">
-          <Cards posts={children.map(c => ({...c, href: `${c.href}?playlist=${slug}`}))} ImageComponent={ImageComponent} />
-        </div>
+
+      <Hero title={title} subTitle={""} description={""} image={{ ...image, ...imageSize }}></Hero>
+      <Contents />
+      <div className="pt-8 pb-10 lg:pt-6 lg:pb-14 mx-auto max-w-7xl px-2">
+        {ChildCards(children)}
+      </div>
 
 
 
@@ -156,8 +175,13 @@ export default function Post({ dirUrl, commentCount, likeCount, slug, title, ima
   )
 
   let navigation = [
-    { name: title, href: `/playlists/${slug}`, icon: QueueListIcon, current: true },
-    ...children.map(child => ({ name: child.title, href: `/${child.slug}?playlist=${slug}`, icon: PlayIcon, current: false }))
+    {
+      name: title,
+      href: `/playlists/${slug}`,
+      icon: QueueListIcon,
+      current: true
+    },
+    ...children
   ]
 
   return (
@@ -197,12 +221,23 @@ export async function getStaticPaths() {
 export async function getStaticProps(context) {
 
   const slug = context.params.slug
+  console.log({slug})
   try {
     const dbPost = await getPostFromDynamo(slug)
     const post = await getPostMarkdown(dbPost)
     const mdxSource = await serializeMDX(post.markdown)
 
-    const children = await Promise.all(post.children.map(slug => getPostFromDynamo(slug)))
+    let children = post.children
+    if (typeof post.children?.[0] === 'string') {
+      children = await Promise.all(children.map(slug => getPostFromDynamo(slug)))
+    } else {
+      children = await Promise.all(children.map(async section => {
+        return {
+          ...section,
+          children: await Promise.all(section.children.map(slug => getPostFromDynamo(slug)))
+        }
+      }))
+    }
 
     return {
       props: {

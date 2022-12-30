@@ -3,12 +3,14 @@ import Image from 'next/future/image'
 
 import { PlayIcon, DocumentTextIcon, QueueListIcon } from '@heroicons/react/24/outline'
 
+import { twMerge } from 'tailwind-merge'
+
 import limit from '../../helpers/limit'
 
 import TimeAgo from 'javascript-time-ago'
 const timeAgo = new TimeAgo('en-US')
 
-export default function Card({ post, ImageComponent = Image, imageSize }) {
+export default function Card({ post, ImageComponent = Image, imageSize, className }) {
 
   const Icon = (() => {
     switch (post.type) {
@@ -24,7 +26,7 @@ export default function Card({ post, ImageComponent = Image, imageSize }) {
   })()
 
   return (
-    <div className='flex flex-col relative top-1 hover:top-0 transition-all duration-200'>
+    <div className={twMerge('flex flex-col relative top-1 hover:top-0 transition-all duration-200', className)}>
 
 
       <Link

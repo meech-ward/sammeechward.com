@@ -59,7 +59,6 @@ export default function Page({ mdxSource, dirUrl, getPostBySlug, ImageComponent 
 
   function Tabs({children}) {
     const tabs = Children.map(children, (child) => ({...child.props}))
-    console.log("tabs children", tabs)
     tabs[0].current = true
     return (
       <TabsWithSections tabs={tabs} />
