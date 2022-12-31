@@ -34,8 +34,16 @@ export default function Articles() {
       </Head>
       <div className="pt-8 pb-10 lg:pt-12 lg:pb-14 mx-auto max-w-7xl px-2">
         <h1 className='text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl md:text-6xl'>{term}</h1>
-        <CardsLarge posts={playlists} />
-        <Cards posts={entities} />
+        {playlists && <>
+          <h2 className='mt-16 text-3xl tracking-tight text-gray-900 sm:text-4xl md:text-5xl'>Playlists</h2>
+          <CardsLarge className={'mt-4'} posts={playlists} />
+        </>
+        }
+        {entities && <>
+          <h2 className='mt-16 text-3xl tracking-tight text-gray-900 sm:text-4xl md:text-5xl'>Videos & Articles</h2>
+          <Cards className={'mt-4'} posts={entities} />
+        </>
+        }
       </div>
     </>
   )

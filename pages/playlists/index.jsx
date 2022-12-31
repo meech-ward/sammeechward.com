@@ -38,6 +38,7 @@ export default function Articles({ entities }) {
         />
       </Head>
       <div className="pt-8 pb-10 lg:pt-12 lg:pb-14 mx-auto max-w-7xl px-2">
+        <h1 className='text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl md:text-6xl'>Playlists</h1>
         <CardsLarge posts={entities} ImageComponent={ImageComponent} />
       </div>
     </>
