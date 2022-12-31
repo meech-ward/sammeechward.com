@@ -10,8 +10,8 @@ export default function Cards({ posts, ImageComponent }) {
           const imageSize = normalizeImageSize({ ...post.image, maxWidth: 1000 })
           const _post = { ...post }
           delete _post.date
-          _post.extraData = `${_post.children.length} videos`
-          return <Card ImageComponent={ImageComponent} post={_post} key={_post.id} imageSize={imageSize}></Card>
+          _post.extraData = `${_post.children.length} articles/videos`
+          return <Card className='my-10' ImageComponent={ImageComponent} post={_post} key={_post.id} imageSize={imageSize}></Card>
         })}
     </div>
   )

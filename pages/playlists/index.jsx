@@ -46,7 +46,16 @@ export default function Articles({ entities }) {
 
 export async function getStaticProps() {
 
-  const { posts, count, lastEvaluatedKey } = await getPlaylists()
+  let { posts, count, lastEvaluatedKey } = await getPlaylists()
+  posts = posts.map(p => {
+    const post = {
+      ...p
+    }
+    if (typeof post.children?.[0] !== 'string') {
+      post.children = post.children.flatMap(c => c.children)
+    }
+    return post
+  })
   return {
     props: {
       entities: posts,

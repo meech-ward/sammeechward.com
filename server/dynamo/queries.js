@@ -132,7 +132,16 @@ export async function getPost(slug) {
 export async function getPlaylist({ slug }) {
   const playlist = await getPost(slug)
   const children = await getPlaylistChildren({ slug })
-  playlist.children = playlist.children.map(child => children.find(c => c.slug === child))
+  const mapChild = child => {
+    if (child.section) {
+      return {
+        ...child, 
+        children: child.children.map(mapChild)
+      }
+    }
+    return children.find(c => c.slug === child)
+  }
+  playlist.children = playlist.children.map(mapChild)
   return playlist
 }
 

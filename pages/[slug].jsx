@@ -28,10 +28,11 @@ import SideBar from '../components/Sidebar'
 import { useRouter } from 'next/router'
 
 import {
-  PlayIcon,
   QueueListIcon
 } from '@heroicons/react/24/outline'
 import Cards from '../components/Cards'
+
+import mapPlaylistChildData from '../helpers/mapPlaylistChildData'
 
 
 function getPostBySlug(slug) {
@@ -138,13 +139,13 @@ export default function Post({ dirUrl, commentCount, likeCount, slug, title, ima
           <hr />
         </>
       )}
-      <Article 
-      mdxSource={mdxSource}
-      dirUrl={dirUrl}
-      getPostBySlug={getPostBySlug}
-      title={title}
-      url={`https://www.sammeechward.com/${slug}` + (playlist ? `?playlist=${playlist.slug}` : '')}
-      urlShort={`https://smw.wtf/${slug}` + (playlist ? `?playlist=${playlist.slug}` : '')}
+      <Article
+        mdxSource={mdxSource}
+        dirUrl={dirUrl}
+        getPostBySlug={getPostBySlug}
+        title={title}
+        url={`https://www.sammeechward.com/${slug}` + (playlist ? `?playlist=${playlist.slug}` : '')}
+        urlShort={`https://smw.wtf/${slug}` + (playlist ? `?playlist=${playlist.slug}` : '')}
       />
     </div>
   )
@@ -213,15 +214,20 @@ export default function Post({ dirUrl, commentCount, likeCount, slug, title, ima
           imageWidth={image.width}
           imageHeight={image.height}
           url={`https://sammeechward.com/${slug}`}
+          urlShort={`https://smw.wtf/${slug}`}
         />
       </Head>
       {router.query?.playlist ? (() => {
         let navigation = []
+        const playlistSlug = router.query.playlist
         if (playlist) {
+          console.log(playlist.children)
+
           navigation = [
             { name: playlist.title, href: `/playlists/${playlist.slug}`, icon: QueueListIcon, current: false },
-            ...playlist.children.map(child => ({ name: child.title, href: `/${child.slug}?playlist=${playlist.slug}`, icon: PlayIcon, current: child.slug === slug }))
+            ...playlist.children.map(child => mapPlaylistChildData({child, slug, playlistSlug}))
           ]
+
         }
         return (
           <SideBar navigation={navigation}>
@@ -255,12 +261,6 @@ export async function getStaticProps(context) {
     const dbPost = await getPostFromDynamo(slug)
     const post = await getPostMarkdown(dbPost)
     const mdxSource = await serializeMDX(post.markdown)
-
-    // console.log({dbPost, post})
-
-    console.log({ playlists })
-
-    console.log(context.params)
 
     return {
       props: {
