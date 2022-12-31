@@ -175,10 +175,12 @@ export default function Post({ dirUrl, commentCount, likeCount, slug, title, ima
 
       {/* Next Cards */}
 
-      <div className={`${contentMaxWidth} px-4 sm:px-6 lg:px-8 mx-auto flex flex-col sm:flex-row justify-between`}>
-        {previousPost && <div className='flex-1 max-w-sm'><Card post={{ ...previousPost, description: null }} imageSize={normalizeImageSize({ ...previousPost.image, maxHeight: 192 * 2 })}></Card></div>}
-        <div className='flex-1 max-w-sm'>{nextPost && <Card post={{ ...nextPost, description: null }} imageSize={normalizeImageSize({ ...nextPost.image, maxHeight: 192 * 2 })}></Card>}</div>
-      </div>
+      {!!router.query?.playlist &&
+        <div className={`${contentMaxWidth} px-4 sm:px-6 lg:px-8 mx-auto flex flex-col sm:flex-row justify-between`}>
+          {previousPost && <div className='flex-1 max-w-sm'><Card post={{ ...previousPost, description: null }} imageSize={normalizeImageSize({ ...previousPost.image, maxHeight: 192 * 2 })}></Card></div>}
+          <div className='flex-1 max-w-sm'>{nextPost && <Card post={{ ...nextPost, description: null }} imageSize={normalizeImageSize({ ...nextPost.image, maxHeight: 192 * 2 })}></Card>}</div>
+        </div>
+      }
 
       {/* Comments */}
 
@@ -225,7 +227,7 @@ export default function Post({ dirUrl, commentCount, likeCount, slug, title, ima
 
           navigation = [
             { name: playlist.title, href: `/playlists/${playlist.slug}`, icon: QueueListIcon, current: false },
-            ...playlist.children.map(child => mapPlaylistChildData({child, slug, playlistSlug}))
+            ...playlist.children.map(child => mapPlaylistChildData({ child, slug, playlistSlug }))
           ]
 
         }
