@@ -5,6 +5,7 @@ import langNginx from 'highlight.js/lib/languages/nginx'
 import langVim from 'highlight.js/lib/languages/vim'
 import langGit from 'highlight.js/lib/languages/shell'
 import langGraphQL from 'highlight.js/lib/languages/graphql'
+import sql from 'highlight.js/lib/languages/sql'
 
 import remarkGfm from 'remark-gfm'
 
@@ -13,6 +14,8 @@ const languages = {
   nginx: langNginx,
   vim: langVim,
   git: langGit,
+  mysql: sql,
+  sql: sql,
   graphql: langGraphQL,
   prisma: langGraphQL,
   env: langGraphQL,
