@@ -87,6 +87,8 @@ export async function createComment({ entitySlug, text, user }) {
     sk,
     GSI1PK: "USER#" + user.email,
     GSI1SK: sk,
+    GSI2PK: "COMMENT",
+    GSI2SK: sk,
     name: user.name,
     email: user.email,
     image: user.image,
