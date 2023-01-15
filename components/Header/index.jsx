@@ -10,7 +10,7 @@ function classNames(...classes) {
 }
 
 export default function Header(props) {
-  const { links, user, signIn, signOut } = props
+  const { links, user, signIn, signOut, onProfile } = props
 
   const onSearch = (e) => {
     e.preventDefault()
@@ -158,6 +158,20 @@ export default function Header(props) {
                               {({ active }) => (
                                 <a
                                   href="#"
+                                  onClick={onProfile}
+                                  className={classNames(
+                                    active ? 'bg-gray-100' : '',
+                                    'block px-4 py-2 text-sm text-gray-700'
+                                  )}
+                                >
+                                  Profile
+                                </a>
+                              )}
+                            </Menu.Item>
+                            <Menu.Item>
+                              {({ active }) => (
+                                <a
+                                  href="#"
                                   onClick={signOut}
                                   className={classNames(
                                     active ? 'bg-gray-100' : '',
@@ -253,6 +267,14 @@ export default function Header(props) {
                         Settings
                       </Disclosure.Button>
                     </Link> */}
+                    <Disclosure.Button
+                      as="a"
+                      href="#"
+                      onClick={onProfile}
+                      className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
+                    >
+                      Profile
+                    </Disclosure.Button>
                     <Disclosure.Button
                       as="a"
                       href="#"

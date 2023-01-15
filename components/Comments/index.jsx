@@ -9,7 +9,7 @@ import Link from 'next/link'
 // Create formatter (English).
 const timeAgo = new TimeAgo('en-US')
 
-function Comment({ comment, onReply, ImageComponent }) {
+function Comment({ comment, onReply, ImageComponent, showResponseCount = false }) {
   return (
     <div className="flex space-x-3">
       <div className="flex-shrink-0">
@@ -41,23 +41,28 @@ function Comment({ comment, onReply, ImageComponent }) {
             Reply
           </button>
         }
+        {showResponseCount && comment.responseCount > 0 && (
+          <p className="text-sm text-gray-500">
+            {comment.responseCount} {comment.responseCount === 1 ? 'response' : 'responses'}
+          </p>
+        )}
       </div>
     </div>
   )
 }
 
-export default forwardRef(function Comments({ ImageComponent = Image, comments, onReply }, ref) {
+export default forwardRef(function Comments({ ImageComponent = Image, comments, onReply, showResponseCount }, ref) {
   return (
     <div ref={ref}>
       <ul role="list" className="divide-y divide-gray-200">
         {comments.map(comment => (
           <li key={comment.id} className="py-4">
-            <Comment comment={comment} onReply={onReply} ImageComponent={ImageComponent} />
+            <Comment showResponseCount={showResponseCount} comment={comment} onReply={onReply} ImageComponent={ImageComponent} />
             {comment.replies && (
               <ul role="list" className="ml-12 divide-y divide-gray-200">
                 {comment.replies.map(reply => (
                   <li key={reply.id} className="py-4">
-                    <Comment comment={reply} onReply={onReply} ImageComponent={ImageComponent} />
+                    <Comment showResponseCount={showResponseCount} comment={reply} onReply={onReply} ImageComponent={ImageComponent} />
                   </li>
                 ))}
               </ul>

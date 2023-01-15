@@ -26,13 +26,21 @@ async function post(req, res) {
 
 async function get(req, res) {
   const { post } = req.query
-  if (!post) {  
+  if (post) {  
+    const comments = await getComments({slug: post})
+    res.status(200).json({ comments })
+    return
+  }  
+  
+  const {session, user} = await getSessionAndUser(req, res)
+  if (!session || !user) {
     res.status(404).json({ error: "No post id" })
+    // res.status(401).json({ error: "Unauthorized" })
     return
   }
 
-  const comments = await getComments({slug: post})
-
+  console.log("getting commentssss", post, user)
+  const comments = await getComments({user})
   res.status(200).json({ comments })
 }
 

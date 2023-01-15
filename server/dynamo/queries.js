@@ -100,22 +100,31 @@ export async function createComment({ entitySlug, text, user, respondingToCommen
   if (respondingToComment) {
     Item.respondingToComment = respondingToComment
 
-    // let UpdateRespondingTo = {
-    //   Key: {
-    //     pk,
-    //     sk: "COMMENT#" + respondingToComment.id
-    //   },
-    //   UpdateExpression: 'set #replies = list_append(if_not_exists(#replies, :empty_list), :reply)',
-    //   ExpressionAttributeNames: {
-    //     '#replies': 'replies'
-    //   },
-    //   ExpressionAttributeValues: {
-    //     ':reply': [Item],
-    //     ':empty_list': []
-    //   }
-    // }
+    let UpdateRespondingTo = {
+      Key: {
+        pk,
+        sk: "COMMENT#" + respondingToComment.id
+      },
+      // UpdateExpression: 'set #replies = list_append(if_not_exists(#replies, :empty_list), :reply)',
+      // ExpressionAttributeNames: {
+      //   '#replies': 'replies'
+      // },
+      // ExpressionAttributeValues: {
+      //   ':reply': [Item],
+      //   ':empty_list': []
+      // }
 
-    // const data = await mainTable.updateItem(UpdateRespondingTo)
+      UpdateExpression: "SET #responseCount = if_not_exists (#responseCount, :init) + :inc",
+      ExpressionAttributeNames: {
+        '#responseCount': 'responseCount'
+      },
+      ExpressionAttributeValues: {
+        ":init": 0,
+        ":inc": 1
+      }
+    }
+
+    const data = await mainTable.updateItem(UpdateRespondingTo)
 
   }
 
@@ -126,17 +135,34 @@ export async function createComment({ entitySlug, text, user, respondingToCommen
   return mapComment(Item)
 }
 
-export async function getComments({ slug }) {
-
-  const { Items } = await mainTable.queryItems({
-    KeyConditionExpression: "pk = :pk AND begins_with(sk, :comment)",
-    ExpressionAttributeValues: {
-      ":pk": "ENTITY#" + slug,
-      ":comment": `COMMENT`
-    },
-  })
-
-  return Items.map(mapComment)
+export async function getComments({ slug, user }) {
+  console.log("getting comments", slug, user)
+  if (slug) {
+    const { Items } = await mainTable.queryItems({
+      KeyConditionExpression: "pk = :pk AND begins_with(sk, :comment)",
+      ExpressionAttributeValues: {
+        ":pk": "ENTITY#" + slug,
+        ":comment": `COMMENT`
+      },
+    })
+    return Items.map(mapComment)
+  }
+  if (user) {
+    console.log("getting comments for user", user.email)
+    const { Items } = await mainTable.queryItems({
+      KeyConditionExpression: "GSI1PK = :pk AND begins_with(GSI1SK, :comment)",
+      ExpressionAttributeValues: {
+        ":pk": "USER#" + user.email,
+        ":comment": `COMMENT`
+      },
+      IndexName: "GSI1",
+      ScanIndexForward: false,
+    })
+    return Items.map(item => mapComment({
+      ...item,
+      post: item.pk.replace("ENTITY#", "")
+    }))
+  }
 }
 
 export async function getPost(slug) {

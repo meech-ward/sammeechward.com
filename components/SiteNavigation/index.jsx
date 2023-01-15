@@ -24,6 +24,6 @@ export default function SiteNavigation() {
   }
 
   return (
-    <Header links={links} onSearch={onSearch} user={session?.user} signIn={signIn} signOut={signOut}></Header>
+    <Header links={links} onSearch={onSearch} user={session?.user} signIn={signIn} signOut={signOut} onProfile={() => router.push("/profile")}></Header>
   )
 }
