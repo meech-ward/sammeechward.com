@@ -35,3 +35,19 @@ export default async function serializeMDX(source) {
   })
   return mdxSource
 }
+
+// Serialize but escape any jsx stuff, only treat it as markdown
+export async function serializeMD(source) {
+  const mdxSource = await serialize(source, {
+    parseFrontmatter: true,
+    mdxOptions: {
+      remarkPlugins: [[remarkGfm]], // makes strikethrough work
+      rehypePlugins: [[rehypeHighlight, {
+        languages
+      }
+      ]],
+      format: 'md'
+    },
+  })
+  return mdxSource
+}
