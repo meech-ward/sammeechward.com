@@ -7,7 +7,6 @@ import mapComment from '../../helpers/mapComment'
 import Head from 'next/head';
 import Comments from '../../components/Comments'
 
-import normalizeImageSize from '../../helpers/normalizeImageSize'
 
 import Hero from '../../components/ArticleHero'
 

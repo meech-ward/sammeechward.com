@@ -7,33 +7,40 @@ import mapComment from '../../helpers/mapComment'
 import Head from 'next/head';
 import Comments from '../../components/Comments'
 
-const fetcher = (url) => axios.get(url).then((res) => res.data);
+
+import Hero from '../../components/ArticleHero'
+
 const commentFetcher = (url) => axios.get(url).then((res) => Promise.all(res?.data?.comments?.map(mapComment)))
 
-export default function Admin(props) {
+export default function Admin({user}) {
 
   const { data, error } = useSWR('/api/admin/comments', commentFetcher)
+
+  const contentMaxWidth = "max-w-5xl"
+
+  const imageSize = {width: 336, height: 336}
+
+  console.log(data)
+  const Contents = () => (
+    <div className={`${contentMaxWidth} mx-auto px-4 pt-4 pb-6 sm:pt-8 sm:pb-10 sm:px-6 lg:px-8 lg:pt-12 lg:pb-14`}>
+      <h3 className='text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl md:text-4xl'>All Comments</h3>
+      {!data ? <div>loading...</div> :
+        <Comments comments={data} showResponseCount />
+      }
+    </div>
+  )
+
+  console.log(user.image)
 
   return (
     <>
       <Head>
-        <title>saM: Posts</title>
+        <title>Admin</title>
       </Head>
-      <div className="pt-8 pb-10 lg:pt-12 lg:pb-14 mx-auto max-w-7xl px-2">
-        <h1 className='text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl md:text-6xl'>Admin</h1>
-        <div className="mx-auto mt-12 grid max-w-lg gap-10 lg:max-w-none lg:grid-cols-3">
-          <div>
-            <h2 className='text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl md:text-4xl'>Comments</h2>
-            {!data ? <div>loading...</div> :
-              <Comments comments={data} />
-            }
-            {error && <div>failed to load</div>}
-          </div>
-          <div>
-          <h2 className='text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl md:text-4xl'>Likes?</h2>
-          </div>
-        </div>
-      </div>
+      <>
+          <Hero title={user.name} subTitle={""} description={""} image={{ url: user.image, ...imageSize }}></Hero>
+          <Contents />
+        </>
     </>
   )
 }
