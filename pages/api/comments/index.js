@@ -13,13 +13,13 @@ async function post(req, res) {
     return
   }
 
-  const { entitySlug, text } = req.body
+  const { entitySlug, text, respondingToComment } = req.body
   if (!entitySlug || !text) {  
     res.status(400).json({ error: "Bad Request" })
     return
   }
 
-  const comment = await createComment({entitySlug, text: _.escape(text), user})
+  const comment = await createComment({entitySlug, text: _.escape(text), user, respondingToComment})
 
   res.status(201).json({ comment })
 }

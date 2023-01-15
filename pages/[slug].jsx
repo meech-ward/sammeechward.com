@@ -34,6 +34,8 @@ import Cards from '../components/Cards'
 
 import mapPlaylistChildData from '../helpers/mapPlaylistChildData'
 
+import graphComments from '../helpers/graphComments'
+
 
 function getPostBySlug(slug) {
   return axios.get("/api/entities/" + slug).then(res => res.data.post)
@@ -43,6 +45,7 @@ export default function Post({ dirUrl, commentCount, likeCount, slug, title, ima
   const [comments, setComments] = useState([])
   const [totalComments, setTotalComments] = useState(commentCount)
   const [totalLikes, setTotalLikes] = useState(likeCount)
+  const [respondingToComment, setRespondingToComment] = useState(null)
   const [youtubeComments, setYoutubeComments] = useState([])
   const [totalYoutubeComments, setTotalYoutubeComments] = useState(0)
   const [postedComment, setPostedComment] = useState(false)
@@ -51,6 +54,7 @@ export default function Post({ dirUrl, commentCount, likeCount, slug, title, ima
   const [playlist, setPlaylist] = useState(null)
 
   const commentsRef = useRef()
+  const commentsFormRef = useRef()
 
   const router = useRouter()
 
@@ -67,7 +71,8 @@ export default function Post({ dirUrl, commentCount, likeCount, slug, title, ima
   useEffect(() => {
     ; (async () => {
       const res = await axios.get(`/api/comments?post=${slug}`)
-      const comments = await Promise.all(res.data.comments.map(mapComment))
+      let comments = await Promise.all(res.data.comments.map(mapComment))
+      comments = graphComments(comments)
       setComments(comments)
     })()
   }, [slug])
@@ -121,11 +126,31 @@ export default function Post({ dirUrl, commentCount, likeCount, slug, title, ima
 
 
 
-  const handlePostedComment = async (comment) => {
-    setComments([...comments, await mapComment(comment)])
+  const handlePostedComment = async (_comment) => {
+    const comment = await mapComment(_comment)
+    if (respondingToComment) {
+
+      // I got lazy
+      const res = await axios.get(`/api/comments?post=${slug}`)
+      let comments = await Promise.all(res.data.comments.map(mapComment))
+      comments = graphComments(comments)
+      setComments(comments)
+
+      setRespondingToComment(null)
+    } else {
+      setComments([...comments, comment])
+    }
+
+
     setTotalComments(totalComments + 1)
     setPostedComment(true)
   }
+  
+  const handleCommentReply = async (comment) => {
+    setRespondingToComment(comment)
+    commentsFormRef.current.scrollIntoView({ behavior: 'smooth' })
+  }
+
 
   const contentMaxWidth = "max-w-5xl"
 
@@ -189,10 +214,10 @@ export default function Post({ dirUrl, commentCount, likeCount, slug, title, ima
         {/* <h2 className="my-6">{totalComments} Comments</h2> */}
         {/* <h2 className="my-6">{totalLikes} Likes</h2> */}
         <div className="my-6">
-          <EntityCommentForm onPostedComment={handlePostedComment} entitySlug={slug} />
+          <EntityCommentForm ref={commentsFormRef} onPostedComment={handlePostedComment} entitySlug={slug} respondingToComment={respondingToComment} />
         </div>
 
-        <Comments ref={commentsRef} comments={comments} />
+        <Comments ref={commentsRef} comments={comments} onReply={handleCommentReply} />
         {isVideo && !!youtubeComments.length &&
           <>
             <hr />

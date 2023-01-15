@@ -9,7 +9,7 @@ import Link from 'next/link'
 // Create formatter (English).
 const timeAgo = new TimeAgo('en-US')
 
-function Comment({ comment, ImageComponent }) {
+function Comment({ comment, onReply, ImageComponent }) {
   return (
     <div className="flex space-x-3">
       <div className="flex-shrink-0">
@@ -36,23 +36,28 @@ function Comment({ comment, ImageComponent }) {
             <a className="text-sm text-gray-500 underline">{comment.post}</a>
           </Link>
         }
+        {onReply &&
+          <button onClick={() => onReply(comment)} className="text-sm text-gray-500 underline">
+            Reply
+          </button>
+        }
       </div>
     </div>
   )
 }
 
-export default forwardRef(function Comments({ ImageComponent = Image, comments }, ref) {
+export default forwardRef(function Comments({ ImageComponent = Image, comments, onReply }, ref) {
   return (
     <div ref={ref}>
       <ul role="list" className="divide-y divide-gray-200">
         {comments.map(comment => (
           <li key={comment.id} className="py-4">
-            <Comment comment={comment} ImageComponent={ImageComponent} />
+            <Comment comment={comment} onReply={onReply} ImageComponent={ImageComponent} />
             {comment.replies && (
               <ul role="list" className="ml-12 divide-y divide-gray-200">
                 {comment.replies.map(reply => (
                   <li key={reply.id} className="py-4">
-                    <Comment comment={reply} ImageComponent={ImageComponent} />
+                    <Comment comment={reply} onReply={onReply} ImageComponent={ImageComponent} />
                   </li>
                 ))}
               </ul>

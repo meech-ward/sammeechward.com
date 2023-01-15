@@ -9,6 +9,8 @@ export function sanitizeDynamoObject(obj) {
   delete obj.sk
   delete obj.GSI1PK
   delete obj.GSI1SK
+  delete obj.GSI2PK
+  delete obj.GSI2SK
 
   return obj
 }

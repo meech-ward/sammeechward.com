@@ -27,7 +27,6 @@ export async function getUser({ email }) {
 }
 
 async function updateUserCommentCount(user) {
-  // console.log({user})
   const pk = `USER#${user.id}`
   const sk = `USER#${user.id}`
   try {
@@ -42,8 +41,8 @@ async function updateUserCommentCount(user) {
 
     const data = await mainTable.updateItem(setCountParams)
   } catch (error) {
-    console.error({ error })
     if (error.name !== "ConditionalCheckFailedException") {
+      console.error({ error })
       throw error
     }
 
@@ -80,10 +79,12 @@ async function updatePostCommentCount(entitySlug) {
   await postsTable.updateItem(updateParams)
 }
 
-export async function createComment({ entitySlug, text, user }) {
+export async function createComment({ entitySlug, text, user, respondingToComment }) {
+
   const sk = "COMMENT#" + ulid()
+  const pk = "ENTITY#" + entitySlug
   const Item = {
-    pk: "ENTITY#" + entitySlug,
+    pk,
     sk,
     GSI1PK: "USER#" + user.email,
     GSI1SK: sk,
@@ -95,8 +96,30 @@ export async function createComment({ entitySlug, text, user }) {
     text,
     created: new Date().toISOString(),
   }
-  await mainTable.putItem(Item)
 
+  if (respondingToComment) {
+    Item.respondingToComment = respondingToComment
+
+    // let UpdateRespondingTo = {
+    //   Key: {
+    //     pk,
+    //     sk: "COMMENT#" + respondingToComment.id
+    //   },
+    //   UpdateExpression: 'set #replies = list_append(if_not_exists(#replies, :empty_list), :reply)',
+    //   ExpressionAttributeNames: {
+    //     '#replies': 'replies'
+    //   },
+    //   ExpressionAttributeValues: {
+    //     ':reply': [Item],
+    //     ':empty_list': []
+    //   }
+    // }
+
+    // const data = await mainTable.updateItem(UpdateRespondingTo)
+
+  }
+
+  await mainTable.putItem(Item)
   await updateUserCommentCount(user)
   await updatePostCommentCount(entitySlug)
 
@@ -124,7 +147,7 @@ export async function getPost(slug) {
     }
   })
   if (!data.Item) {
-    console.log("no post with slug", slug)
+
     return null
   }
   return mapPost(entityDetails(data.Item))
@@ -137,7 +160,7 @@ export async function getPlaylist({ slug }) {
   const mapChild = child => {
     if (child.section) {
       return {
-        ...child, 
+        ...child,
         children: child.children.map(mapChild)
       }
     }
@@ -220,7 +243,7 @@ export async function getPostPlaylists({ slug }) {
     },
     IndexName: "INVERTED_INDEX",
   })
-  return Items.map(i => ({...i.playlist, type: 'playlist'})).map(entityDetails)
+  return Items.map(i => ({ ...i.playlist, type: 'playlist' })).map(entityDetails)
 }
 
 export async function getFeaturedPosts() {
