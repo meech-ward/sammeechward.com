@@ -1,4 +1,4 @@
-import serializeMDX from './serializeMDX'
+import {serializeMD} from './serializeMDX'
 
 /*
  * use serializeMDX to convert the text and the replies' text to html
@@ -6,7 +6,7 @@ import serializeMDX from './serializeMDX'
 export default async function mapComment(comment) {
   let mdxSource = ""
   try {
-    mdxSource = await (serializeMDX(comment.text).catch(() => serializeMDX("```\n" + comment.text + "\n```")))
+    mdxSource = await (serializeMD(comment.text).catch(() => serializeMD("```md\n" + comment.text + "\n```")))
     if (comment.replies) {
       comment.replies = await Promise.all(comment.replies.map(mapComment))
     }
