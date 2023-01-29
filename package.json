@@ -33,7 +33,7 @@
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
     "next": "12.2.5",
-    "next-auth": "^4.12.0",
+    "next-auth": "^4.19.0",
     "next-mdx-enhanced": "^5.0.0",
     "next-mdx-remote": "^4.1.0",
     "nextjs-google-analytics": "^2.1.0",
