@@ -30,7 +30,8 @@ export default async function serializeMDX(source) {
         languages
       }
       ]],
-      format: 'mdx'
+      format: 'mdx',
+      development: process.env.NODE_ENV !== 'production',
     },
   })
   return mdxSource
@@ -46,7 +47,8 @@ export async function serializeMD(source) {
         languages
       }
       ]],
-      format: 'md'
+      format: 'md',
+      development: process.env.NODE_ENV !== 'production',
     },
   })
   return mdxSource

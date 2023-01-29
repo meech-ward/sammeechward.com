@@ -5,7 +5,6 @@ const nextConfig = {
   images: {
     domains: ["127.0.0.1", "localhost", "yt3.ggpht.com", "github.com", 'avatars.githubusercontent.com', 'raw.githubusercontent.com', "www.sammeechward.com"],
   },
-  experimental: { images: { allowFutureImage: true } },
   // output: 'standalone',
   webpack: (config) => {
     config.resolve.fallback = {

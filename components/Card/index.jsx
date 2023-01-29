@@ -40,7 +40,6 @@ export default function Card({ post, ImageComponent = Image, imageSize, classNam
                 src={post.image.url}
                 alt={post.title}
                 {...imageSize}
-                layout="fill"
                 quality={100}
               />
             }
