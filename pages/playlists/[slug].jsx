@@ -9,7 +9,7 @@ import serializeMDX from '../../helpers/serializeMDX'
 import Hero from '../../components/ArticleHero'
 import Article from '../../components/Article'
 
-import Image from 'next/future/image'
+import Image from 'next/image'
 
 import Cards from '../../components/Cards'
 

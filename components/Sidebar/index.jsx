@@ -1,21 +1,12 @@
 /* This example requires Tailwind CSS v2.0+ */
-import { Fragment, useState } from 'react'
-import { Dialog, Transition } from '@headlessui/react'
-import {
-  Bars3Icon,
-  CalendarIcon,
-  ChartBarIcon,
-  FolderIcon,
-  HomeIcon,
-  InboxIcon,
-  UsersIcon,
-  XMarkIcon,
-} from '@heroicons/react/24/outline'
+import { Fragment, useState } from "react"
+import { Dialog, Transition } from "@headlessui/react"
+import { Bars3Icon, CalendarIcon, ChartBarIcon, FolderIcon, HomeIcon, InboxIcon, UsersIcon, XMarkIcon } from "@heroicons/react/24/outline"
 
-import Link from 'next/link'
+import Link from "next/link"
 
 function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
+  return classes.filter(Boolean).join(" ")
 }
 
 export default function SideBar({ children, navigation = [] }) {
@@ -33,11 +24,7 @@ export default function SideBar({ children, navigation = [] }) {
       */}
       <div>
         <Transition.Root show={sidebarOpen} as={Fragment}>
-          <Dialog
-            as="div"
-            className="relative z-40 xl:hidden"
-            onClose={setSidebarOpen}
-          >
+          <Dialog as="div" className="relative z-40 xl:hidden" onClose={setSidebarOpen}>
             <Transition.Child
               as={Fragment}
               enter="transition-opacity ease-linear duration-300"
@@ -77,10 +64,7 @@ export default function SideBar({ children, navigation = [] }) {
                         onClick={() => setSidebarOpen(false)}
                       >
                         <span className="sr-only">Close sidebar</span>
-                        <XMarkIcon
-                          className="h-6 w-6 text-white"
-                          aria-hidden="true"
-                        />
+                        <XMarkIcon className="h-6 w-6 text-white" aria-hidden="true" />
                       </button>
                     </div>
                   </Transition.Child>
@@ -98,34 +82,26 @@ export default function SideBar({ children, navigation = [] }) {
                           <Link
                             href={item.href}
                             key={item.name}
+                            className={classNames(
+                              item.current ? "bg-indigo-800 text-white" : "text-white hover:bg-indigo-600 hover:bg-opacity-75",
+                              "group flex items-center px-2 py-2 text-base font-medium rounded-md",
+                              className
+                            )}
                           >
-                            <a
-                              className={classNames(
-                                item.current
-                                  ? 'bg-indigo-800 text-white'
-                                  : 'text-white hover:bg-indigo-600 hover:bg-opacity-75',
-                                'group flex items-center px-2 py-2 text-base font-medium rounded-md', className
-                              )}
-                            >
-                              <item.icon
-                                className="mr-4 h-6 w-6 flex-shrink-0 text-indigo-300"
-                                aria-hidden="true"
-                              />
-                              {item.name}
-                            </a>
+                            <item.icon className="mr-4 h-6 w-6 flex-shrink-0 text-indigo-300" aria-hidden="true" />
+                            {item.name}
                           </Link>
                         )
-                        if (item.type !== 'section') {
+                        if (item.type !== "section") {
                           return itemLink(item)
                         }
                         return (
                           <>
                             {itemLink(item)}
-                            {item.children.map(itemLink, 'pl-8')}
+                            {item.children.map(itemLink, "pl-8")}
                           </>
                         )
                       })}
-
                     </nav>
                   </div>
                   {/* <div className="flex flex-shrink-0 border-t border-indigo-800 p-4">
@@ -173,33 +149,25 @@ export default function SideBar({ children, navigation = [] }) {
               <nav className="mt-5 flex-1 space-y-1 px-2">
                 {navigation.map((item) => {
                   const itemLink = (item, className) => (
-                    <Link
-                      key={item.name}
-                      href={item.href}
-                    >
-                      <a
+                    <Link key={item.name} href={item.href}
+                    
                         className={classNames(
-                          item.current
-                            ? 'bg-indigo-800 text-white'
-                            : 'text-white hover:bg-indigo-600 hover:bg-opacity-75',
-                          'group flex items-center px-2 py-2 text-sm font-medium rounded-md', className
+                          item.current ? "bg-indigo-800 text-white" : "text-white hover:bg-indigo-600 hover:bg-opacity-75",
+                          "group flex items-center px-2 py-2 text-sm font-medium rounded-md",
+                          className
                         )}
                       >
-                        <item.icon
-                          className="mr-3 h-6 w-6 flex-shrink-0 text-indigo-300"
-                          aria-hidden="true"
-                        />
+                        <item.icon className="mr-3 h-6 w-6 flex-shrink-0 text-indigo-300" aria-hidden="true" />
                         {item.name}
-                      </a>
                     </Link>
                   )
-                  if (item.type !== 'section') {
+                  if (item.type !== "section") {
                     return itemLink(item)
                   }
                   return (
                     <>
                       {itemLink(item)}
-                      {item.children.map(item => itemLink(item, 'pl-8'))}
+                      {item.children.map((item) => itemLink(item, "pl-8"))}
                     </>
                   )
                 })}
@@ -237,7 +205,7 @@ export default function SideBar({ children, navigation = [] }) {
               <Bars3Icon className="h-6 w-6" aria-hidden="true" />
             </button>
           </div>
-          <div className='flex-1'>
+          <div className="flex-1">
             {/* <main className="flex-1">
             <div className="py-6">
               <div className="mx-auto max-w-7xl px-4 sm:px-6 xl:px-8"> */}

@@ -6,7 +6,7 @@ import Card from '../../components/Card'
 
 import toilet from '../../public/toilet.jpg'
 
-import Image from 'next/future/image'
+import Image from 'next/image'
 
 function makeImageComponent({ src, width, height, alt, loader }) {
   return function ImageComponent(props) {

@@ -1,4 +1,4 @@
-import Image from 'next/future/image'
+import Image from 'next/image'
 import CommentMarkdown from '../CommentMarkdown'
 
 import TimeAgo from 'javascript-time-ago'

@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import Image from 'next/future/image'
+import Image from 'next/image'
 
 import { PlayIcon, DocumentTextIcon, QueueListIcon } from '@heroicons/react/24/outline'
 
@@ -31,8 +31,6 @@ export default function Card({ post, ImageComponent = Image, imageSize, classNam
 
       <Link
         href={post.href}
-      >
-        <a
           className="flex-1 flex flex-col overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-all duration-200"
         >
           <div className="flex-shrink-0">
@@ -92,7 +90,6 @@ export default function Card({ post, ImageComponent = Image, imageSize, classNam
               </div>
             </div>
           </div>
-        </a>
       </Link>
     </div>
   )

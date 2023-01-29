@@ -1,4 +1,4 @@
-import NextImage from 'next/future/image'
+import NextImage from 'next/image'
 
 import { useEffect, useState, Children } from 'react'
 

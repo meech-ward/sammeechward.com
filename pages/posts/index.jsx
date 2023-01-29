@@ -7,7 +7,7 @@ import toilet from '../../public/toilet.jpg'
 
 import { useState } from 'react'
 
-import Image from 'next/future/image'
+import Image from 'next/image'
 import axios from 'axios'
 
 function makeImageComponent({ src, width, height, alt, loader }) {

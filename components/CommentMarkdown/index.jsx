@@ -2,7 +2,7 @@ import { MDXRemote } from 'next-mdx-remote'
 
 import 'highlight.js/styles/stackoverflow-dark.css'
 
-// import NextImage from 'next/future/image'
+// import NextImage from 'next/image'
 
 const h1 = (props) => <h1 {...props} className={props.className ?? "" + " text-2xl mt-4 mb-4 font-semibold"} />
 const h2 = (props) => <h2 {...props} className={props.className ?? "" + " text-xl mt-2 mb-2 font-semibold"} />
