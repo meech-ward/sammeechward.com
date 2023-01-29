@@ -9,7 +9,7 @@ import serializeMDX from "../helpers/serializeMDX"
 import Hero from "../components/ArticleHero"
 import Article from "../components/Article"
 
-import Image from "next/future/image"
+import Image from "next/image"
 
 import Card from "../components/Card"
 
@@ -262,7 +262,7 @@ export default function Post({ dirUrl, commentCount, likeCount, slug, title, ima
 export async function getStaticPaths() {
   const { posts } = await getPostsFromDynamo({ limit: 100 })
   return {
-    paths: posts.map(({ slug }) => ({
+    paths: posts.filter(post => !post.redirectTo).map(({ slug }) => ({
       params: {
         slug,
       },

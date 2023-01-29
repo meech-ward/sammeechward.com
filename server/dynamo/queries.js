@@ -211,7 +211,7 @@ export async function getPlaylistChildren({ slug }) {
 
 async function getEntities({ type, lastEvaluatedKey, limit = 30 }) {
   const params = {
-    ProjectionExpression: "dirPath, imagesPath, indexPath, slug, tags, image, #tp, href, title, description, #dt, children",
+    ProjectionExpression: "dirPath, imagesPath, indexPath, slug, tags, image, #tp, href, title, description, #dt, children, redirectTo",
     ExpressionAttributeNames: { "#tp": "type", "#dt": "date" },
     KeyConditionExpression: "GSI1PK = :pk",
     ExpressionAttributeValues: {
