@@ -66,7 +66,7 @@ export default function Post({ dirUrl, commentCount, likeCount, slug, title, ima
       return
     }
     commentsRef.current.scrollIntoView({ behavior: 'smooth' })
-  }, [comments])
+  }, [postedComment])
 
 
   useEffect(() => {

@@ -21,7 +21,7 @@ export default forwardRef(function EntityCommentForm({onPostedComment, entitySlu
     }
     const text = window.localStorage.getItem(`post-${entitySlug}-comment`)
     setInitialCommentText(text || "")
-  }, [defaultText])
+  }, [defaultText, entitySlug])
 
   const handleCommentSubmission = async (text) => {
     if (!session) {
