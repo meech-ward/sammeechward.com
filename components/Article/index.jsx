@@ -1,6 +1,6 @@
 import NextImage from 'next/image'
 
-import { useEffect, useState, Children, cloneElement } from 'react'
+import React, { useEffect, useState, Children } from 'react'
 
 import { MDXRemote } from 'next-mdx-remote'
 
@@ -23,16 +23,26 @@ import { Note, Warning, Instruction, Error } from '../ArticleComponents/Blocks'
 import normalizeImageSize from '../../helpers/normalizeImageSize'
 import { twMerge } from 'tailwind-merge'
 
-const h1 = (props) => <h1 {...props} className={props.className ?? "" + (props.gpt ? "" : " sm:text-5xl text-4xl sm:mt-14 mt-10 sm:mb-10 mb-8 font-semibold")} />
-const h2 = (props) => <h2 {...props} className={props.className ?? "" + (props.gpt ? "" : " sm:text-4xl text-3xl sm:mt-12 mt-8 sm:mb-8 mb-6 font-semibold")} />
-const h3 = (props) => <h3 {...props} className={props.className ?? "" + (props.gpt ? "" : " sm:text-3xl text-lg  sm:mt-10 mt-6 sm:mb-6 mb-4 font-semibold")} />
-const p = (props) => <p {...props} className={props.className ?? "" + (props.gpt ? "" : " sm:text-lg text-base sm:my-8 my-4 font-light")} />
-const ul = (props) => <ul {...props} className={props.className ?? "" + (props.gpt ? " list-disc" : " sm:text-lg text-base sm:m-8  m-4 list-disc font-light")} />
-const ol = (props) => <ol {...props} className={props.className ?? "" + (props.gpt ? " list-decimal" : " sm:text-lg text-base sm:m-8  m-4 list-decimal font-light")} />
-const li = (props) => <li {...props} className={props.className ?? "" + (props.gpt ? "" : " sm:mb-4 mb-2")} />
-const a = (props) => <a {...props} className={props.className ?? "" + (props.gpt ? "" : " text-indigo-600 hover:text-indigo-500 font-light")} />
-const pre = (props) => <pre {...props} className={twMerge(props.className ?? "w-full" )}>{Children.map(props.children, (child) => cloneElement(child, { codeBlock: true }))}</pre>
-const code = (props) => <code {...props} className={twMerge(props.className, (props.codeBlock ? "" : " inline"), (props.gpt ? "gpt" : ""))  }/>
+function addPropToChildren(children, propName, propValue) {
+  return React.Children.map(children, child => {
+    if (!React.isValidElement(child)) {
+      return child;
+    }
+
+    return React.cloneElement(child, { [propName]: propValue });
+  });
+}
+
+const h1 = (props) => <h1 {...props} gpt={undefined} className={props.className ?? "" + (props.gpt ? "" : " sm:text-5xl text-4xl sm:mt-14 mt-10 sm:mb-10 mb-8 font-semibold")} />
+const h2 = (props) => <h2 {...props} gpt={undefined} className={props.className ?? "" + (props.gpt ? "" : " sm:text-4xl text-3xl sm:mt-12 mt-8 sm:mb-8 mb-6 font-semibold")} />
+const h3 = (props) => <h3 {...props} gpt={undefined} className={props.className ?? "" + (props.gpt ? "" : " sm:text-3xl text-lg  sm:mt-10 mt-6 sm:mb-6 mb-4 font-semibold")} />
+const p = (props) => <p {...props} gpt={undefined} className={twMerge(props.className, (props.gpt ? "" : " sm:text-lg text-base sm:my-8 my-4 font-light"), (props.inline ? "inline" : ""))} />
+const ul = (props) => <ul {...props} gpt={undefined} className={props.className ?? "" + (props.gpt ? " list-disc" : " sm:text-lg text-base sm:m-8  m-4 list-disc font-light")} />
+const ol = (props) => <ol {...props} gpt={undefined} className={props.className ?? "" + (props.gpt ? " list-decimal" : " sm:text-lg text-base sm:m-8  m-4 list-decimal font-light")} />
+const li = (props) => <li {...props} gpt={undefined} className={twMerge(props.className, "list-inside", (!props.gpt && "sm:mb-4 mb-2"))}>{addPropToChildren(props.children, 'inline', 'true')}</li>
+const a = (props) => <a {...props} gpt={undefined} className={props.className ?? "" + (props.gpt ? "" : " text-indigo-600 hover:text-indigo-500 font-light")} />
+const pre = (props) => <pre {...props} gpt={undefined} className={twMerge(props.className ?? "w-full" )}>{addPropToChildren(props.children, 'codeBlock', 'true')}</pre>
+const code = (props) => <code {...props} gpt={undefined} className={twMerge(props.className, (props.codeBlock ? "" : " inline"), (props.gpt ? "gpt" : ""))  }/>
 
 function urlForLocalFile({path, dirUrl}) {
   if (path.startsWith('/images')) {
