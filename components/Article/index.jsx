@@ -1,6 +1,6 @@
 import NextImage from 'next/image'
 
-import { useEffect, useState, Children } from 'react'
+import { useEffect, useState, Children, cloneElement } from 'react'
 
 import { MDXRemote } from 'next-mdx-remote'
 
@@ -15,18 +15,24 @@ import ShareButtons from '../ShareButtons'
 import Cards from '../Cards'
 import Card from '../Card'
 
+import GPTChat from '../ArticleComponents/ChatGPT/GPTChat'
+import GPTChatSection from '../ArticleComponents/ChatGPT/GPTChatSection'
+
 import { Note, Warning, Instruction, Error } from '../ArticleComponents/Blocks'
 
 import normalizeImageSize from '../../helpers/normalizeImageSize'
+import { twMerge } from 'tailwind-merge'
 
-const h1 = (props) => <h1 {...props} className={props.className ?? "" + " sm:text-5xl text-4xl sm:mt-14 mt-10 sm:mb-10 mb-8 font-semibold"} />
-const h2 = (props) => <h2 {...props} className={props.className ?? "" + " sm:text-4xl text-3xl sm:mt-12 mt-8 sm:mb-8 mb-6 font-semibold"} />
-const h3 = (props) => <h3 {...props} className={props.className ?? "" + " sm:text-3xl text-lg  sm:mt-10 mt-6 sm:mb-6 mb-4 font-semibold"} />
-const p = (props) => <p {...props} className={props.className ?? "" +   " sm:text-lg text-base sm:my-8 my-4 font-light"} />
-const ul = (props) => <ul {...props} className={props.className ?? "" + " sm:text-lg text-base sm:m-8  m-4 list-disc font-light"} />
-const ol = (props) => <ol {...props} className={props.className ?? "" + " sm:text-lg text-base sm:m-8  m-4 list-decimal font-light"} />
-const li = (props) => <li {...props} className={props.className ?? "" + " sm:mb-4 mb-2"} />
-const a = (props) => <a {...props} className={props.className ?? "" + " text-indigo-600 hover:text-indigo-500 font-light"} />
+const h1 = (props) => <h1 {...props} className={props.className ?? "" + (props.gpt ? "" : " sm:text-5xl text-4xl sm:mt-14 mt-10 sm:mb-10 mb-8 font-semibold")} />
+const h2 = (props) => <h2 {...props} className={props.className ?? "" + (props.gpt ? "" : " sm:text-4xl text-3xl sm:mt-12 mt-8 sm:mb-8 mb-6 font-semibold")} />
+const h3 = (props) => <h3 {...props} className={props.className ?? "" + (props.gpt ? "" : " sm:text-3xl text-lg  sm:mt-10 mt-6 sm:mb-6 mb-4 font-semibold")} />
+const p = (props) => <p {...props} className={props.className ?? "" + (props.gpt ? "" : " sm:text-lg text-base sm:my-8 my-4 font-light")} />
+const ul = (props) => <ul {...props} className={props.className ?? "" + (props.gpt ? " list-disc" : " sm:text-lg text-base sm:m-8  m-4 list-disc font-light")} />
+const ol = (props) => <ol {...props} className={props.className ?? "" + (props.gpt ? " list-decimal" : " sm:text-lg text-base sm:m-8  m-4 list-decimal font-light")} />
+const li = (props) => <li {...props} className={props.className ?? "" + (props.gpt ? "" : " sm:mb-4 mb-2")} />
+const a = (props) => <a {...props} className={props.className ?? "" + (props.gpt ? "" : " text-indigo-600 hover:text-indigo-500 font-light")} />
+const pre = (props) => <pre {...props} className={twMerge(props.className ?? "w-full" )}>{Children.map(props.children, (child) => cloneElement(child, { codeBlock: true }))}</pre>
+const code = (props) => <code {...props} className={twMerge(props.className, (props.codeBlock ? "" : " inline"), (props.gpt ? "gpt" : ""))  }/>
 
 function urlForLocalFile({path, dirUrl}) {
   if (path.startsWith('/images')) {
@@ -87,12 +93,13 @@ export default function Page({ mdxSource, dirUrl, getPostBySlug, ImageComponent 
   }
 
   const components = { 
-    h1, h2, h3, p, ul, ol, li, a, img, 
+    h1, h2, h3, p, ul, ol, li, a, img, pre, code,
     Image, Note, Warning, Instruction, Error,
     Tabs, Tab,
     PostCard, 
     YouTube, File, AutoPlayVideo,
-    InteractiveParallelism, SQLJoinsEditor 
+    InteractiveParallelism, SQLJoinsEditor,
+    GPTChat, GPTChatSection
   }
 
   return (

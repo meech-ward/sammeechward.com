@@ -1,29 +1,4 @@
-/* html,
-body {
-  padding: 0;
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-}
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
-  body {
-    color: white;
-    background: black;
-  }
-} */
 
 body {
   line-height: 1.65;
@@ -32,24 +7,31 @@ body {
   font-weight: 400;
 }
 
-code:not([class])::before {
+code.inline::before {
   content: "`";
 }
 
-code:not([class])::after {
+code.inline::after {
   content: "`";
 }
 
-code:not([class]) {
+code.inline {
   color: #c400ec;
   font-size: .9em;
   white-space: pre-wrap;
+}
+
+code.inline.gpt {
+  color: #ffffff;
 }
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+pre {
+  scrollbar-color: dark;
+}
 
 
 
