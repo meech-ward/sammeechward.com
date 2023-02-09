@@ -55,11 +55,9 @@ export function Instruction({children}) {
 
   // length of children
   const blockTags = ["p", "ul", "ol", "li", "h1", "h2", "h3"]
-  
-  // const totalBlocks = Children.filter(children, (child) => blockTags.includes(child.type.name))
   const totalBlocks = Children.toArray(children).filter((child) => blockTags.includes(child.type?.name))
-
   const len = Children.count(totalBlocks)
+  
   let _children 
   if (len > 1) {
     _children = mapChildren({children})
