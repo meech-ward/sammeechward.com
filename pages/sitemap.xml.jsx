@@ -8,7 +8,7 @@ function generateSiteMap(posts) {
    <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
       <loc>https://sammeechward.com</loc>
-      <lastmod>2022-10-01</lastmod>
+      <lastmod>2023-02-22</lastmod>
       <changefreq>weekly</changefreq>
     </url>
      ${posts
