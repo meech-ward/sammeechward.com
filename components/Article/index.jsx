@@ -43,7 +43,7 @@ const h1 = (props) => <h1 {...{ ...props, gpt: undefined }} className={props.cla
 const h2 = (props) => {
   const fragment = urlEncodeFragment(props.children.toString())
   return (
-    <a href={`#${fragment}`}>
+    <a aria-label={props.children.toString()} href={`#${fragment}`}>
       <h2 id={fragment} {...{ ...props, gpt: undefined }} className={props.className ?? "" + (props.gpt ? "" : " sm:text-4xl text-3xl sm:mt-12 mt-8 sm:mb-8 mb-6 font-semibold")} />
     </a>
   )
@@ -109,7 +109,7 @@ export default function Page({ mdxSource, dirUrl, getPostBySlug, ImageComponent 
     return src.startsWith("/images") || src.startsWith("/assets") ? <NextImage {...props} src={urlForLocalFile({ path: src, dirUrl })} /> : <img {...props} src={src} />
   }
   const File = ({ path, children }) => (
-    <a className="text-indigo-600 hover:text-indigo-500" href={urlForLocalFile({ path, dirUrl })}>
+    <a aria-label={`Download ${children.toString()}`} className="text-indigo-600 hover:text-indigo-500" href={urlForLocalFile({ path, dirUrl })}>
       {children}
     </a>
   )

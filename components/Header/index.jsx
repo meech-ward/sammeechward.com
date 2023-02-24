@@ -25,10 +25,10 @@ export default function Header(props) {
             <div className="relative flex h-16 items-center justify-between">
               <div className="flex items-center px-2 lg:px-0">
                 <div className="flex-shrink-0">
-                  <Link href="/">
+                  <Link aria-label="Home Page" href="/">
                     <h1 className="block h-8 w-auto lg:hidden text-white text-2xl">saM</h1>
                   </Link>
-                  <Link href="/">
+                  <Link aria-label="Home Page" href="/">
                     <h1 className="hidden h-8 w-auto lg:block text-white text-2xl">saM</h1>
                   </Link>
                 </div>
@@ -149,14 +149,14 @@ export default function Header(props) {
                             </Menu.Item> */}
                             <Menu.Item>
                               {({ active }) => (
-                                <a href="#" onClick={onProfile} className={classNames(active ? "bg-gray-100" : "", "block px-4 py-2 text-sm text-gray-700")}>
+                                <a aria-lable="Profile" href="#" onClick={onProfile} className={classNames(active ? "bg-gray-100" : "", "block px-4 py-2 text-sm text-gray-700")}>
                                   Profile
                                 </a>
                               )}
                             </Menu.Item>
                             <Menu.Item>
                               {({ active }) => (
-                                <a href="#" onClick={signOut} className={classNames(active ? "bg-gray-100" : "", "block px-4 py-2 text-sm text-gray-700")}>
+                                <a aria-lable="Sign Out" href="#" onClick={signOut} className={classNames(active ? "bg-gray-100" : "", "block px-4 py-2 text-sm text-gray-700")}>
                                   Sign out
                                 </a>
                               )}
