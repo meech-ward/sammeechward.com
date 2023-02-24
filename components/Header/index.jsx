@@ -149,14 +149,14 @@ export default function Header(props) {
                             </Menu.Item> */}
                             <Menu.Item>
                               {({ active }) => (
-                                <a aria-lable="Profile" href="#" onClick={onProfile} className={classNames(active ? "bg-gray-100" : "", "block px-4 py-2 text-sm text-gray-700")}>
+                                <a aria-label="Profile" href="#" onClick={onProfile} className={classNames(active ? "bg-gray-100" : "", "block px-4 py-2 text-sm text-gray-700")}>
                                   Profile
                                 </a>
                               )}
                             </Menu.Item>
                             <Menu.Item>
                               {({ active }) => (
-                                <a aria-lable="Sign Out" href="#" onClick={signOut} className={classNames(active ? "bg-gray-100" : "", "block px-4 py-2 text-sm text-gray-700")}>
+                                <a aria-label="Sign Out" href="#" onClick={signOut} className={classNames(active ? "bg-gray-100" : "", "block px-4 py-2 text-sm text-gray-700")}>
                                   Sign out
                                 </a>
                               )}
