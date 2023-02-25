@@ -35,9 +35,9 @@ export default function Hero({ title, image }) {
           </div>
         </div>
       </div>
-      <div className="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
+      <div className="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2 md:block hidden">
         <Image
-          className="h-56 w-full object-cover sm:h-72 md:h-96 lg:h-full lg:w-full md:block hidden"
+          className="h-56 w-full object-cover sm:h-72 md:h-96 lg:h-full lg:w-full"
           src={image.url}
           {...imageDimensions}
           // height={500}
@@ -45,13 +45,13 @@ export default function Hero({ title, image }) {
           alt={title}
           priority
         />
+      </div>
+      <div className="lg:inset-y-0 lg:right-0 lg:w-1/2 block md:hidden">
         <Image
-          className="h-56 w-full object-cover sm:h-72 md:h-96 lg:h-full lg:w-full block md:hidden"
+          className="h-56 w-full object-cover sm:h-72 md:h-96 lg:h-full lg:w-full"
           src={image.url}
           width={imageDimensions.width/2}
           height={imageDimensions.height/2}
-          // height={500}
-          // width={500}
           alt={title}
           priority
         />
