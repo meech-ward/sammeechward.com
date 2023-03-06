@@ -17,7 +17,7 @@ export default function Header(props) {
     props.onSearch(e.target.search.value)
   }
   return (
-    <Disclosure as="nav" className="bg-gray-800 relative z-50">
+    <Disclosure as="nav" className=" bg-gray-800 relative z-50 border-b-2 border-gray-600">
       {/* <h1>{props.selected}</h1> */}
       {({ open }) => (
         <>

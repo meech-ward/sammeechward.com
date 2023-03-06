@@ -3,6 +3,8 @@ import Hero from '../components/Hero'
 import FeaturedCards from '../components/FeaturedCards'
 import FeaturedVideo from '../components/FeaturedVideo'
 
+import Link from 'next/link'
+
 import { getFeaturedPosts, getMostRecentVideo } from '../server/dynamo/queries'
 
 import Meta from '../components/Meta'
@@ -24,7 +26,7 @@ export default function Home({ featuredEntities, featuredVideo }) {
     <>
       <Head>
         <title>saM</title>
-        <Meta 
+        <Meta
           title="saM"
           description={description}
           // image={`https://www.sammeechward.com/_next/image?url=${encodeURIComponent(`https://www.sammeechward.com${toilet.src}`)}&w=700&q=75`}
@@ -53,6 +55,7 @@ export default function Home({ featuredEntities, featuredVideo }) {
       /> */}
 
       <TechStack />
+    
 
       <FeaturedVideo title={"Latest Upload"} description={featuredVideo.title + " " + featuredVideo.description} videoId={featuredVideo.videoId} />
 
