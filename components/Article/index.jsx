@@ -125,6 +125,16 @@ export default function Page({ mdxSource, dirUrl, getPostBySlug, ImageComponent 
     )
   }
 
+  const Video = ({ path, children }) => {
+    return (
+      <div className="relative w-full h-0" style={{ paddingBottom: "56.25%" }}>
+        <video {...children} className="absolute top-0 left-0 w-full h-full" muted loop playsInline controls>
+          <source src={urlForLocalFile({ path, dirUrl })} type="video/mp4" />
+        </video>
+      </div>
+    )
+  }
+
   const components = {
     h1,
     h2,
@@ -148,6 +158,7 @@ export default function Page({ mdxSource, dirUrl, getPostBySlug, ImageComponent 
     YouTube,
     File,
     AutoPlayVideo,
+    Video,
     InteractiveParallelism,
     SQLJoinsEditor,
     GPTChat,
