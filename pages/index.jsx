@@ -8,6 +8,7 @@ import { getFeaturedPosts, getMostRecentVideo } from '../server/dynamo/queries'
 import Meta from '../components/Meta'
 
 import toilet from '../public/toilet.jpg'
+import TechStack from '../components/TechStack'
 
 const description = `
 If you're in a position
@@ -34,7 +35,7 @@ export default function Home({ featuredEntities, featuredVideo }) {
         />
       </Head>
 
-      <Hero
+      {/* <Hero
         title={"Sam Meech-Ward"}
         description={description}
         imageUrl={toilet}
@@ -49,7 +50,9 @@ export default function Home({ featuredEntities, featuredVideo }) {
           { title: "Videos and Articles", href: "/posts" },
           // { title: "Contact", href: "/contact" },
         ]}
-      />
+      /> */}
+
+      <TechStack />
 
       <FeaturedVideo title={"Latest Upload"} description={featuredVideo.title + " " + featuredVideo.description} videoId={featuredVideo.videoId} />
 
