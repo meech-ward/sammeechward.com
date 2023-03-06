@@ -76,7 +76,7 @@ function Card({ image, ImageComponent = Image, className }) {
             quality={100}
           />
           <div className="opacity-0 group-hover:opacity-100 absolute inset-0 z-10 flex justify-center items-center">
-            <div className="bg-gray-900 bg-opacity-80 text-white text-center p-2 rounded-lg w-full h-full flex justify-center items-center text-xl">{ image.alt }</div>
+            <div className="bg-gray-900 bg-opacity-80 text-white text-center p-2 rounded-lg w-full h-full flex justify-center items-center text-sm md:text-lg lg:text-xl">{ image.alt }</div>
           </div>
 
         </div>
