@@ -40,7 +40,7 @@ export default function TechStack({ posts, title, description }) {
             Some of the main topics I like to write and make videos about.
           </p>
         </div>
-        <div className="mx-auto mt-12 grid max-w-lg gap-4 md:gap-10 lg:gap-16 lg:max-w-none grid-cols-4">
+        <div className="mx-auto mt-12 grid max-w-lg gap-4 md:gap-12 lg:gap-x-28 lg:max-w-none grid-cols-4">
           {techStack.map((image, index) => {
             // const imageSize = normalizeImageSize({ ...post.image, maxHeight: 192 * 2 })
 
