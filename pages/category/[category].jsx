@@ -71,5 +71,5 @@ async function getSearchResults(term) {
   // })
   console.log(res)
 
-  return newRes.map(entityDetails)
+  return res.map(entityDetails)
 }
