@@ -63,12 +63,13 @@ async function getSearchResults(term) {
     },
   ]);
 
-  const newRes = results[0].hits.sort((a, b) =>  {
-    const commentSort = -a.commentCount + b.commentCount
-    if (commentSort !== 0) return commentSort
-    return new Date(b.date) - new Date(a.date)
-  })
-  console.log(newRes)
+  let res = results[0].hits
+  // res = res.sort((a, b) =>  {
+  //   const commentSort = -a.commentCount + b.commentCount
+  //   if (commentSort !== 0) return commentSort
+  //   return new Date(b.date) - new Date(a.date)
+  // })
+  console.log(res)
 
   return newRes.map(entityDetails)
 }
