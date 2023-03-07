@@ -158,7 +158,7 @@ export default function Post({ dirUrl, commentCount, likeCount, slug, title, ima
         getPostBySlug={getPostBySlug}
         title={title}
         url={`https://www.sammeechward.com/${slug}` + (playlist ? `?playlist=${playlist.slug}` : "")}
-        urlShort={`https://smw.wtf/${slug}` + (playlist ? `?playlist=${playlist.slug}` : "")}
+        urlShort={`smw.wtf/${slug}` + (playlist ? `?playlist=${playlist.slug}` : "")}
       />
     </div>
   )
@@ -235,7 +235,7 @@ export default function Post({ dirUrl, commentCount, likeCount, slug, title, ima
           imageWidth={image.width}
           imageHeight={image.height}
           url={`https://sammeechward.com/${slug}`}
-          urlShort={`https://smw.wtf/${slug}`}
+          urlShort={`smw.wtf/${slug}`}
         />
       </Head>
       {router.query?.playlist
