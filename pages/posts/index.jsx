@@ -52,6 +52,7 @@ export default function Articles(props) {
           imageWidth={toilet.width}
           imageHeight={toilet.height}
           url="https://sammeechward.com/posts"
+          urlShort={`smw.wtf/posts`}
         />
       </Head>
       <div className="pt-8 pb-10 lg:pt-12 lg:pb-14 mx-auto max-w-7xl px-2">

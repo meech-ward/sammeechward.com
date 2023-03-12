@@ -7,7 +7,7 @@ export default function ShareActions({ className, url, title, urlShort }) {
       <div className="flex w-full justify-between">
         <a
           aria-label="Share on Twitter"
-          href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`}
+          href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(urlShort || url)}`}
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center justify-center h-8 w-8 rounded-full  text-gray-400 hover:text-gray-500 mx-2"
@@ -19,7 +19,7 @@ export default function ShareActions({ className, url, title, urlShort }) {
         </a>
         <a
           aria-label="Share on Facebook"
-          href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`}
+          href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(urlShort || url)}`}
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center justify-center h-8 w-8 rounded-full  text-gray-400 hover:text-gray-500 mx-2"
@@ -31,7 +31,7 @@ export default function ShareActions({ className, url, title, urlShort }) {
         </a>
         <a
           aria-label="Share on LinkedIn"
-          href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}`}
+          href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(urlShort || url)}&title=${encodeURIComponent(title)}`}
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center justify-center h-8 w-8 rounded-full text-gray-400 hover:text-gray-500 mx-2"

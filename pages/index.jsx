@@ -34,6 +34,7 @@ export default function Home({ featuredEntities, featuredVideo }) {
           imageWidth={toilet.width}
           imageHeight={toilet.height}
           url='https://sammeechward.com'
+          urlShort={`smw.wtf`}
         />
       </Head>
 
