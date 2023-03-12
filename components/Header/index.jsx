@@ -4,6 +4,7 @@ import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline"
 import { Fragment } from "react"
 import Link from "next/link"
 import { useEffect } from "react"
+import SocialButtons from "../SocialButtons"
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ")
@@ -48,6 +49,8 @@ export default function Header(props) {
                         {link.title}
                       </Link>
                     ))}
+
+<SocialButtons className="" />
                   </div>
                 </div>
               </div>

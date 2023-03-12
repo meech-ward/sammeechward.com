@@ -14,6 +14,7 @@ import react from '../../public/tech/react.svg'
 import normalizeImageSize from '../../helpers/normalizeImageSize'
 
 import { twMerge } from "tailwind-merge"
+import SocialButtons from '../SocialButtons'
 
 const techStack = [
   { src: javascript, alt: "JavaScript", href: "/category/javascript" },
