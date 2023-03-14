@@ -65,11 +65,11 @@ export function Instruction({children}) {
     _children = _children = Children.map(children, (child) => {
       if (typeof child === "string") {
         // return child
-        return <p className={"inline sm:text-lg text-base sm:py-4 py-2 font-light"}>{child}</p>
+        return <span className={"inline sm:text-lg text-base sm:py-4 py-2 font-light"}>{child}</span>
       }
       const {type, props} = child
       if (type.name === "p") {
-        return <p {...props} className={"inline sm:text-lg text-base sm:py-4 py-2 font-light"} />
+        return <span {...props} className={"inline sm:text-lg text-base sm:py-4 py-2 font-light"} />
       }
       return child
     })
