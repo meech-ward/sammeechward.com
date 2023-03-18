@@ -49,7 +49,10 @@ const h2 = (props) => {
   )
 }
 const h3 = (props) => <h3 {...{ ...props, gpt: undefined }} className={props.className ?? "" + (props.gpt ? "" : " sm:text-3xl text-lg  sm:mt-10 mt-6 sm:mb-6 mb-4 font-semibold")} />
-const p = (props) => <p {...{ ...props, gpt: undefined }} className={twMerge(props.className, props.gpt ? "" : " sm:text-lg text-base sm:my-8 my-4 font-light", props.inline ? "inline" : "")} />
+const p = (props) => props.instruction ?
+  <span {...props} className={"inline sm:text-lg text-base sm:py-4 py-2 font-light"} />
+ :
+ <p {...{ ...props, gpt: undefined }} className={twMerge(props.className, props.gpt ? "" : " sm:text-lg text-base sm:my-8 my-4 font-light", props.inline ? "inline" : "")} />
 const ul = (props) => <ul {...{ ...props, gpt: undefined }} className={props.className ?? "" + (props.gpt ? " list-disc" : " sm:text-lg text-base sm:m-8  m-4 list-disc font-light")} />
 const ol = (props) => <ol {...{ ...props, gpt: undefined }} className={props.className ?? "" + (props.gpt ? " list-decimal" : " sm:text-lg text-base sm:m-8  m-4 list-decimal font-light")} />
 const li = (props) => (

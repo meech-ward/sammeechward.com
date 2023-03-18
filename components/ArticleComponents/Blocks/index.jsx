@@ -51,6 +51,22 @@ export function Error({children}) {
   )
 }
 
+function addPropToChildren(children, propName, propValue) {
+  return React.Children.map(children, child => {
+    if (!React.isValidElement(child)) {
+      return child;
+    }
+
+    if (child.props.children) {
+      child = React.cloneElement(child, {
+        children: addPropToChildren(child.props.children, propName, propValue)
+      });
+    }
+
+    return React.cloneElement(child, { [propName]: propValue });
+  });
+}
+
 export function Instruction({children}) {
 
   // length of children
@@ -60,7 +76,8 @@ export function Instruction({children}) {
   
   let _children 
   if (len > 1) {
-    _children = mapChildren({children})
+    _children = addPropToChildren(children, 'instruction', "true")
+    _children = mapChildren({_children})
   } else {
     _children = _children = Children.map(children, (child) => {
       if (typeof child === "string") {
