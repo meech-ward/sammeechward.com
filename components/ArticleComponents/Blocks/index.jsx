@@ -79,7 +79,7 @@ export function Instruction({children}) {
     _children = addPropToChildren(children, 'instruction', "true")
     _children = mapChildren({_children})
   } else {
-    _children = _children = Children.map(children, (child) => {
+    _children = Children.map(children, (child) => {
       if (typeof child === "string") {
         // return child
         return <span className={"inline sm:text-lg text-base sm:py-4 py-2 font-light"}>{child}</span>
@@ -88,13 +88,15 @@ export function Instruction({children}) {
       if (type.name === "p") {
         return <span {...props} className={"inline sm:text-lg text-base sm:py-4 py-2 font-light"} />
       }
-      return child
+      return "I'm note sure"
     })
   }
   return (
     <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 sm:my-8 my-4">
       <span className="m-0 p-0 pr-5">👩🏻‍💻</span>
+      {children}
       {_children}
+      <p>Total children: {len}</p>
     </div>
   )
 }
