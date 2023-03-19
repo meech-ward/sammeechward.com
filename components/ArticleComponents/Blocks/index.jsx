@@ -11,20 +11,6 @@ const a = (props) => <a {...props} className={props.className ?? "" + " text-ind
 
 const comps = {h1, h2, h3, p, ul, ol, li, a}
 
-function mapChildren({children}, _comps = comps) {
-  return Children.map(children, (child) => {
-    if (typeof child === "string") {
-      return child
-    }
-    const {type, props} = child
-    const Comp = _comps[type.name]
-    if (Comp) {
-      return <Comp {...props}>{mapChildren(props)}</Comp>
-    }
-    return child
-  })
-}
-
 export function Note({children}) {
   return (
     <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 sm:my-8 my-4">
@@ -76,27 +62,24 @@ export function Instruction({children}) {
   
   let _children 
   if (len > 1) {
-    _children = addPropToChildren(children, 'instruction', "true")
-    _children = mapChildren({_children})
+    _children = mapChildren({children})
   } else {
     _children = Children.map(children, (child) => {
       if (typeof child === "string") {
         // return child
         return <span className={"inline sm:text-lg text-base sm:py-4 py-2 font-light"}>{child}</span>
       }
-      const {type, props} = child
-      if (type.name === "p") {
-        return <span {...props} className={"inline sm:text-lg text-base sm:py-4 py-2 font-light"} />
-      }
+      // const {type, props} = child
+      // if (type.name === "p") {
+      //   return <span {...props} className={"inline sm:text-lg text-base sm:py-4 py-2 font-light"} />
+      // }
       return <span {...props} className={"inline sm:text-lg text-base sm:py-4 py-2 font-light"} />
     })
   }
   return (
     <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 sm:my-8 my-4">
       <span className="m-0 p-0 pr-5">👩🏻‍💻</span>
-      {children}
       {_children}
-      <p>Total children: {len}</p>
     </div>
   )
 }
