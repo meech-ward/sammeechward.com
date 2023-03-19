@@ -88,7 +88,7 @@ export function Instruction({children}) {
       if (type.name === "p") {
         return <span {...props} className={"inline sm:text-lg text-base sm:py-4 py-2 font-light"} />
       }
-      return "I'm note sure"
+      return <span {...props} className={"inline sm:text-lg text-base sm:py-4 py-2 font-light"} />
     })
   }
   return (
