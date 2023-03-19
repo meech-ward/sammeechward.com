@@ -11,6 +11,20 @@ const a = (props) => <a {...props} className={props.className ?? "" + " text-ind
 
 const comps = {h1, h2, h3, p, ul, ol, li, a}
 
+function mapChildren({children}, _comps = comps) {
+  return Children.map(children, (child) => {
+    if (typeof child === "string") {
+      return child
+    }
+    const {type, props} = child
+    const Comp = _comps[type.name]
+    if (Comp) {
+      return <Comp {...props}>{mapChildren(props)}</Comp>
+    }
+    return child
+  })
+}
+
 export function Note({children}) {
   return (
     <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 sm:my-8 my-4">
@@ -37,22 +51,6 @@ export function Error({children}) {
   )
 }
 
-function addPropToChildren(children, propName, propValue) {
-  return React.Children.map(children, child => {
-    if (!React.isValidElement(child)) {
-      return child;
-    }
-
-    if (child.props.children) {
-      child = React.cloneElement(child, {
-        children: addPropToChildren(child.props.children, propName, propValue)
-      });
-    }
-
-    return React.cloneElement(child, { [propName]: propValue });
-  });
-}
-
 export function Instruction({children}) {
 
   // length of children
@@ -70,9 +68,9 @@ export function Instruction({children}) {
         return <span className={"inline sm:text-lg text-base sm:py-4 py-2 font-light"}>{child}</span>
       }
       const {type, props} = child
-      // if (type.name === "p") {
-      //   return <span {...props} className={"inline sm:text-lg text-base sm:py-4 py-2 font-light"} />
-      // }
+      if (type.name === "p") {
+        return <span {...props} className={"inline sm:text-lg text-base sm:py-4 py-2 font-light"} />
+      }
       return <span {...props} className={"inline sm:text-lg text-base sm:py-4 py-2 font-light"} />
     })
   }

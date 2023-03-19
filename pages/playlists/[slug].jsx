@@ -127,6 +127,9 @@ export default function Post({ dirUrl, commentCount, likeCount, slug, title, ima
   )
 
   const ChildCards = (children, className) => {
+    if (!children) {
+      return null
+    }
     if (children?.[0].type == 'section') {
       return children.map(section => {
         return (
@@ -137,7 +140,7 @@ export default function Post({ dirUrl, commentCount, likeCount, slug, title, ima
         )
       })
     }
-    return <Cards className={className} posts={children.map(c => ({ ...c, href: `${c.href}?playlist=${slug}` }))} ImageComponent={ImageComponent} />
+    return <Cards className={className} posts={children?.map(c => ({ ...c, href: `${c.href}?playlist=${slug}` }))} ImageComponent={ImageComponent} />
   }
 
   const PageContent = () => (
@@ -227,7 +230,7 @@ export async function getStaticProps(context) {
     const post = await getPostMarkdown(dbPost)
     const mdxSource = await serializeMDX(post.markdown)
 
-    let children = post.children
+    let children = post.children ?? []
     if (typeof post.children?.[0] === 'string') {
       children = await Promise.all(children.map(slug => getPostFromDynamo(slug)))
     } else {
