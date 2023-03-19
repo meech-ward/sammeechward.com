@@ -130,7 +130,7 @@ export default function Post({ dirUrl, commentCount, likeCount, slug, title, ima
     if (!children) {
       return null
     }
-    if (children?.[0].type == 'section') {
+    if (children?.[0]?.type == 'section') {
       return children.map(section => {
         return (
           <div key={section.name} className="mb-32">
