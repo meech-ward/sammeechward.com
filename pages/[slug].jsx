@@ -147,7 +147,7 @@ export default function Post({ dirUrl, commentCount, likeCount, slug, title, ima
       {!!playlists?.length && !router.query?.playlist && (
         <>
           <hr />
-          <p className="mt-4">This video is part of the following playlists:</p>
+          <p className="mt-4">This {isVideo? "video" : "article"} is part of the following playlists:</p>
           <Cards className={"mt-3 mb-8"} posts={playlists.map((p) => ({ ...p, href: `/${slug}?playlist=${p.slug}`, image: null }))} />
           <hr />
         </>
