@@ -69,7 +69,7 @@ export function Instruction({children}) {
         // return child
         return <span className={"inline sm:text-lg text-base sm:py-4 py-2 font-light"}>{child}</span>
       }
-      // const {type, props} = child
+      const {type, props} = child
       // if (type.name === "p") {
       //   return <span {...props} className={"inline sm:text-lg text-base sm:py-4 py-2 font-light"} />
       // }
