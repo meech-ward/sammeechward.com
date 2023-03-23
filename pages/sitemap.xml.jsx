@@ -30,7 +30,7 @@ function SiteMap() {
 
 export async function getServerSideProps({ res }) {
   const posts = await getAllPosts({
-    ProjectionExpression: "slug, modified",
+    ProjectionExpression: "slug, modified, pk",
     // ExpressionAttributeNames: { "#h": "hash" },
   })
 

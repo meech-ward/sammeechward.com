@@ -256,7 +256,9 @@ export async function getAllPosts({ ProjectionExpression, ExpressionAttributeNam
   }
 
   const { Items } = await postsTable.queryItems(params)
-  return sanitizeDynamoObject(Items)
+
+  console.log("get all posts")
+  return Items.map(sanitizeDynamoObject)
 }
 
 export async function getPostPlaylists({ slug }) {
