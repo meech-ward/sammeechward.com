@@ -168,7 +168,7 @@ export default function Page({ mdxSource, dirUrl, getPostBySlug, ImageComponent 
   return (
     <div className="break-words">
       <ShareButtons className="float-right mb-2" url={url} title={title} urlShort={urlShort} />
-      <div className="clear-both">{mdxSource && <MDXRemote {...mdxSource} components={components} />}</div>
+      <main className="clear-both">{mdxSource && <MDXRemote {...mdxSource} components={components} />}</main>
     </div>
   )
 }
