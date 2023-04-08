@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Meta from '../../components/Meta'
 import { getPosts } from '../../server/dynamo/queries'
-import Cards from '../../components/Cards'
+import Cards from '../../components/Cards/WithAds'
 
 import toilet from '../../public/toilet.jpg'
 
@@ -75,7 +75,7 @@ export default function Articles(props) {
 
 export async function getStaticProps() {
 
-  const { posts, count, lastEvaluatedKey } = await getPosts()
+  const { posts, count, lastEvaluatedKey } = await getPosts({limit: 50})
   return {
     props: {
       entities: posts,

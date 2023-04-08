@@ -22,6 +22,7 @@ function MyApp({ Component, pageProps }) {
       crossorigin="anonymous"></Script>
       <SiteNavigation />
       <Component {...pageProps} />
+      <Script id="adsbygoogle-script">(adsbygoogle = window.adsbygoogle || []).push({});</Script>
     </SessionProvider>
   )
 }
