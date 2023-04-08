@@ -37,7 +37,7 @@ export function InFeed() {
   // if (!loaded) {
   //   return <></>
   // }
-  return process.env.NODE_ENV === "production" ? (
+  return process.env.NODE_ENV !== "production" ? (
     <h1>Ad</h1>
   ) : (
     <>
