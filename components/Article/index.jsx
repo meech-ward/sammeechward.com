@@ -18,6 +18,8 @@ import Card from "../Card"
 import GPTChat from "../ArticleComponents/ChatGPT/GPTChat"
 import GPTChatSection from "../ArticleComponents/ChatGPT/GPTChatSection"
 
+import Advertisement from "../ArticleComponents/Advertisement"
+
 import { Note, Warning, Instruction, Error } from "../ArticleComponents/Blocks"
 
 import normalizeImageSize from "../../helpers/normalizeImageSize"
@@ -163,6 +165,7 @@ export default function Page({ mdxSource, dirUrl, getPostBySlug, ImageComponent 
     SQLJoinsEditor,
     GPTChat,
     GPTChatSection,
+    Advertisement
   }
 
   return (
