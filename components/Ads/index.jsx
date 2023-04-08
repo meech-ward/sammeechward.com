@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react"
 
 export function InArticle() {
-  // const [loaded, setLoaded] = useState(false)
+  const [loaded, setLoaded] = useState(false)
 
-  // useEffect(() => {
-  //   setLoaded(true)
-  // }, [])
+  useEffect(() => {
+    setLoaded(true)
+  }, [])
 
-  // if (!loaded) {
-  //   return <></>
-  // }
+  if (!loaded) {
+    return <></>
+  }
   return process.env.NODE_ENV !== "production" ? (
     <h1>Ad</h1>
   ) : (
@@ -28,15 +28,15 @@ export function InArticle() {
 }
 
 export function InFeed() {
-  // const [loaded, setLoaded] = useState(false)
+  const [loaded, setLoaded] = useState(false)
 
-  // useEffect(() => {
-  //   setLoaded(true)
-  // }, [])
+  useEffect(() => {
+    setLoaded(true)
+  }, [])
 
-  // if (!loaded) {
-  //   return <></>
-  // }
+  if (!loaded) {
+    return <></>
+  }
   return process.env.NODE_ENV !== "production" ? (
     <h1>Ad</h1>
   ) : (
