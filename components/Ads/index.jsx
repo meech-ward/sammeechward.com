@@ -38,9 +38,7 @@ export function InDisplay() {
   if (!loaded) {
     return <></>
   }
-  return process.env.NODE_ENV == "production" ? (
-    <h1>Ad</h1>
-  ) : (
+  return (
     <>
       <ins
         className="adsbygoogle"
@@ -50,7 +48,7 @@ export function InDisplay() {
         data-ad-client="ca-pub-7566221825946498"
         data-ad-slot="2975875836"
         data-full-width-responsive="true"
-        data-adtest={true}
+        data-adtest={process.env.NODE_ENV !== "production"}
       ></ins>
       <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </>
