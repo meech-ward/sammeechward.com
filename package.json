@@ -17,6 +17,7 @@
     "@algolia/autocomplete-plugin-query-suggestions": "^1.7.1",
     "@aws-sdk/client-dynamodb": "^3.181.0",
     "@aws-sdk/lib-dynamodb": "^3.181.0",
+    "@ctrl/react-adsense": "^1.6.1",
     "@headlessui/react": "^1.7.3",
     "@heroicons/react": "^2.0.10",
     "@mdx-js/loader": "^2.2.1",
