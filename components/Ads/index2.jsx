@@ -17,7 +17,7 @@ export function InArticle() {
     <Adsense adTest={true} className="adsbygoogle" style={{ display: "block", textAlign: "center" }} layout="in-article" format="fluid" client="ca-pub-7566221825946498" slot="4599631467" />
   )
 }
-
+ 
 export function InFeed() {
   const [loaded, setLoaded] = useState(false)
 

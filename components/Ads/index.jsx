@@ -10,9 +10,7 @@ export function InArticle() {
   if (!loaded) {
     return <></>
   }
-  return process.env.NODE_ENV == "production" ? (
-    <h1>Ad</h1>
-  ) : (
+  return (
     <>
       <ins
         className="adsbygoogle"
@@ -21,7 +19,7 @@ export function InArticle() {
         data-ad-format="fluid"
         data-ad-client="ca-pub-7566221825946498"
         data-ad-slot="4599631467"
-        data-adtest={true}
+        data-adtest={process.env.NODE_ENV !== "production"}
       ></ins>
       <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </>
