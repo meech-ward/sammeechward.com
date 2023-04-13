@@ -18,7 +18,7 @@ export function sanitizeDynamoObject(obj) {
 export function mapComment(comment) {
   const obj = {
     ...comment,
-    id: comment.sk.split("#")[1]
+    id: comment.sk?.split("#")[1]
   }
 
   return sanitizeDynamoObject(obj)
