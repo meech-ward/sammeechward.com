@@ -1,5 +1,6 @@
 import Head from 'next/head'
-import Cards from '../components/Cards'
+// import Cards from '../components/Cards'
+import Cards from '../components/Cards/WithAds'
 import CardsLarge from '../components/CardsLarge'
 import { algoliasearch } from 'algoliasearch';
 import entityDetails from '../helpers/entityDetails'
@@ -41,7 +42,7 @@ export default function Articles() {
         }
         {entities.length && <>
           <h2 className='mt-16 text-3xl tracking-tight text-gray-900 sm:text-4xl md:text-5xl'>Videos & Articles</h2>
-          <Cards className={'mt-4'} posts={entities} />
+          <Cards className={'mt-4'} posts={entities} showAds={props.adsEnabled ? {every: 20, at: 4} : null} />
         </>
         }
       </div>
