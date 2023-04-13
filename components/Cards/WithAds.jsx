@@ -24,7 +24,7 @@ export default function Cards({ posts, ImageComponent, className, showAds }) {
         if (post.type === "ad") {
           
           return (
-            <div className='flex flex-col relative top-1 hover:top-0 transition-all duration-200'><InFeed key={post.id} /></div>
+            <div key={post.id} className='flex flex-col relative top-1 hover:top-0 transition-all duration-200'><InFeed /></div>
           )
         }
         const imageSize = normalizeImageSize({ ...post.image, maxHeight: 192 * 2 })
