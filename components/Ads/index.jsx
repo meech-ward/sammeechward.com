@@ -47,7 +47,7 @@ function Ad(props) {
       ;(window.adsbygoogle = window.adsbygoogle || []).push({})
       setNotPushed(false)
     }
-  }, [isVisible, pushed])
+  }, [isVisible, notPushed])
 
   if (!loaded) {
     return <></>
@@ -91,7 +91,6 @@ export function InDisplay() {
 export function InFeed() {
   return (
     <Ad
-      ref={elementRef}
       data-adtest={process.env.NODE_ENV !== "production"}
       className="adsbygoogle"
       style={{ display: "block" }}
