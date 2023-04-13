@@ -9,7 +9,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 
 
-export default function Articles() {
+export default function Articles(props) {
 
   const [entities, setEntities] = useState([])
   const [playlists, setPlaylists] = useState([])
