@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from "react"
+import { twMerge } from "tailwind-merge"
 
 function Ad(props) {
   const [loaded, setLoaded] = useState(false)
@@ -54,14 +55,15 @@ function Ad(props) {
   }
   return (
     <>
-      <ins ref={elementRef} {...props} className="adsbygoogle"></ins>
+      <ins ref={elementRef} {...props} className={twMerge("adsbygoogle", props.className)}></ins>
     </>
   )
 }
 
-export function InArticle() {
+export function InArticle({ className }) {
   return (
     <Ad
+      className={className}
       style={{ display: "block", textAlign: "center" }}
       data-ad-layout="in-article"
       data-ad-format="fluid"
@@ -72,9 +74,10 @@ export function InArticle() {
   )
 }
 
-export function InDisplay() {
+export function InDisplay({ className }) {
   return (
     <Ad
+      className={className}
       style={{ display: "block" }}
       data-ad-layout="in-article"
       data-ad-format="auto"
@@ -86,9 +89,10 @@ export function InDisplay() {
   )
 }
 
-export function InFeed() {
+export function InFeed({ className }) {
   return (
     <Ad
+      className={className}
       data-adtest={process.env.NODE_ENV !== "production"}
       style={{ display: "block" }}
       data-ad-format="fluid"
