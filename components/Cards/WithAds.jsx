@@ -22,7 +22,10 @@ export default function Cards({ posts, ImageComponent, className, showAds }) {
     <div className={twMerge("mx-auto mt-12 grid max-w-lg gap-10 lg:max-w-none lg:grid-cols-3", className)}>
       {posts.map((post) => {
         if (post.type === "ad") {
-          return <InFeed key={post.id} />
+          
+          return (
+            <div className='flex flex-col relative top-1 hover:top-0 transition-all duration-200'><InFeed key={post.id} /></div>
+          )
         }
         const imageSize = normalizeImageSize({ ...post.image, maxHeight: 192 * 2 })
         return <Card ImageComponent={ImageComponent} post={post} key={post.id} imageSize={imageSize}></Card>

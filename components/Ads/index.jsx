@@ -62,7 +62,7 @@ function Ad(props) {
 export function InArticle() {
   return (
     <Ad
-      className="adsbygoogle"
+      className="adsbygoogle m-auto"
       style={{ display: "block", textAlign: "center" }}
       data-ad-layout="in-article"
       data-ad-format="fluid"
@@ -76,7 +76,7 @@ export function InArticle() {
 export function InDisplay() {
   return (
     <Ad
-      className="adsbygoogle"
+      className="adsbygoogle m-auto"
       style={{ display: "block" }}
       data-ad-layout="in-article"
       data-ad-format="auto"
@@ -92,7 +92,7 @@ export function InFeed() {
   return (
     <Ad
       data-adtest={process.env.NODE_ENV !== "production"}
-      className="adsbygoogle"
+      className="adsbygoogle m-auto"
       style={{ display: "block" }}
       data-ad-format="fluid"
       data-ad-layout-key="-5j+c6-1t-7m+w8"
