@@ -2,6 +2,7 @@ import { serialize } from 'next-mdx-remote/serialize'
 import rehypeHighlight from 'rehype-highlight'
 import langHttp from 'highlight.js/lib/languages/http'
 import langNginx from 'highlight.js/lib/languages/nginx'
+import langTf from './highlight-terraform'
 import langVim from 'highlight.js/lib/languages/vim'
 import langGit from 'highlight.js/lib/languages/shell'
 import langGraphQL from 'highlight.js/lib/languages/graphql'
@@ -10,6 +11,8 @@ import sql from 'highlight.js/lib/languages/sql'
 import remarkGfm from 'remark-gfm'
 
 const languages = {
+  tf: langTf,
+  terraform: langTf,
   http: langHttp,
   nginx: langNginx,
   vim: langVim,
