@@ -8,8 +8,9 @@ const ul = (props) => <ul {...props} className={props.className ?? "" + " sm:tex
 const ol = (props) => <ol {...props} className={props.className ?? "" + " sm:text-lg text-base sm:p-4  p-2 list-decimal font-light"} />
 const li = (props) => <li {...props} className={props.className ?? "" + " sm:pb-2 pb-1"} />
 const a = (props) => <a {...props} className={props.className ?? "" + " text-indigo-600 hover:text-indigo-500 font-light"} />
+const table = (props) => <table {...props} className={props.className ?? "" + " border"} />
 
-const comps = {h1, h2, h3, p, ul, ol, li, a}
+const comps = {h1, h2, h3, p, ul, ol, li, a, table}
 
 function mapChildren({children}, _comps = comps) {
   return Children.map(children, (child) => {

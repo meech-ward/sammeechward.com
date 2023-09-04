@@ -67,6 +67,11 @@ const pre = (props) => (
 )
 const code = (props) => <code {...{ ...props, gpt: undefined }} className={twMerge(props.className, props.codeBlock ? "" : " inline", props.gpt ? "gpt" : "")} />
 
+const table = (props) => <table {...{ ...props, gpt: undefined }} className={twMerge(props.className, "border")} />
+const th = (props) => <th {...{ ...props, gpt: undefined }} className={twMerge(props.className, "border px-4 py-3")} />
+const td = (props) => <td {...{ ...props, gpt: undefined }} className={twMerge(props.className, "border px-4 py-3")} />
+
+
 function urlForLocalFile({ path, dirUrl }) {
   if (path.startsWith("/images")) {
     return new URL(path.replace("/images/", "images/"), dirUrl + "/").href
@@ -149,6 +154,9 @@ export default function Page({ mdxSource, dirUrl, getPostBySlug, ImageComponent 
     img,
     pre,
     code,
+    table,
+    th,
+    td,
     Image,
     Note,
     Warning,
