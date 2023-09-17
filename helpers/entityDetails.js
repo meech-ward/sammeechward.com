@@ -1,3 +1,5 @@
+import path from 'path'
+
 function entityUrlPath(entity) {
   if (entity.type === 'playlist') {
     return '/playlists/'
@@ -9,18 +11,20 @@ const entityDetails = function (entity) {
   if (!entity) {
     throw "entityDetails: entity is undefined"
   }
+  // console.log(entity.image.url, process.env.NEXT_PUBLIC_MDX_ROOT_URL)
+  const imageUrl = entity.image.url ? new URL(path.join(process.env.NEXT_PUBLIC_MDX_ROOT_URL, entity.image.url)).href : null
   return {
     id: entity.slug,
     ...entity,
     href: entityUrlPath(entity)+entity.slug,
     image: {
       ...entity.image,
-      url: entity.image.url ? new URL(entity.image.url, process.env.NEXT_PUBLIC_MDX_ROOT_URL).href : null,
+      url: imageUrl 
     },
-    editUrl: new URL(entity.indexPath, process.env.NEXT_PUBLIC_MDX_REPO_URL).href,
-    rootImagesUrl: new URL(entity.imagesPath, process.env.NEXT_PUBLIC_MDX_ROOT_URL).href,
-    indexUrl: new URL(entity.indexPath, process.env.NEXT_PUBLIC_MDX_ROOT_URL).href,
-    dirUrl: new URL(entity.dirPath, process.env.NEXT_PUBLIC_MDX_ROOT_URL).href,
+    editUrl: entity.indexPath && new URL(path.join(process.env.NEXT_PUBLIC_MDX_ROOT_URL, entity.indexPath)).href,
+    rootImagesUrl: entity.imagesPath && new URL(path.join(process.env.NEXT_PUBLIC_MDX_ROOT_URL, entity.imagesPath)).href,
+    indexUrl: entity.indexPath && new URL(path.join(process.env.NEXT_PUBLIC_MDX_ROOT_URL, entity.indexPath)).href,
+    dirUrl: entity.dirPath && new URL(path.join(process.env.NEXT_PUBLIC_MDX_ROOT_URL, entity.dirPath)).href,
     rootUrl: process.env.NEXT_PUBLIC_MDX_ROOT_URL,
   }
 }
