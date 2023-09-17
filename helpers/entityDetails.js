@@ -21,10 +21,10 @@ const entityDetails = function (entity) {
       ...entity.image,
       url: imageUrl 
     },
-    editUrl: entity.indexPath && new URL(path.join(process.env.NEXT_PUBLIC_MDX_ROOT_URL, entity.indexPath)).href,
-    rootImagesUrl: entity.imagesPath && new URL(path.join(process.env.NEXT_PUBLIC_MDX_ROOT_URL, entity.imagesPath)).href,
-    indexUrl: entity.indexPath && new URL(path.join(process.env.NEXT_PUBLIC_MDX_ROOT_URL, entity.indexPath)).href,
-    dirUrl: entity.dirPath && new URL(path.join(process.env.NEXT_PUBLIC_MDX_ROOT_URL, entity.dirPath)).href,
+    editUrl: entity.indexPath ? new URL(path.join(process.env.NEXT_PUBLIC_MDX_ROOT_URL, entity.indexPath)).href: null,
+    rootImagesUrl: entity.imagesPath ? new URL(path.join(process.env.NEXT_PUBLIC_MDX_ROOT_URL, entity.imagesPath)).href: null,
+    indexUrl: entity.indexPath ? new URL(path.join(process.env.NEXT_PUBLIC_MDX_ROOT_URL, entity.indexPath)).href: null,
+    dirUrl: entity.dirPath ? new URL(path.join(process.env.NEXT_PUBLIC_MDX_ROOT_URL, entity.dirPath)).href: null,
     rootUrl: process.env.NEXT_PUBLIC_MDX_ROOT_URL,
   }
 }
