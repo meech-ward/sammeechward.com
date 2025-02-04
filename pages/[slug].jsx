@@ -32,6 +32,8 @@ import mapPlaylistChildData from "../helpers/mapPlaylistChildData"
 
 import graphComments from "../helpers/graphComments"
 
+import MailingListForm from "./mailing-list"
+
 function getPostBySlug(slug) {
   return axios.get("/api/entities/" + slug).then((res) => res.data.post)
 }
@@ -147,7 +149,7 @@ export default function Post({ dirUrl, commentCount, likeCount, slug, title, ima
       {!!playlists?.length && !router.query?.playlist && (
         <>
           <hr />
-          <p className="mt-4">This {isVideo? "video" : "article"} is part of the following playlists:</p>
+          <p className="mt-4">This {isVideo ? "video" : "article"} is part of the following playlists:</p>
           <Cards className={"mt-3 mb-8"} posts={playlists.map((p) => ({ ...p, href: `/${slug}?playlist=${p.slug}`, image: null }))} />
           <hr />
         </>
@@ -158,7 +160,7 @@ export default function Post({ dirUrl, commentCount, likeCount, slug, title, ima
         getPostBySlug={getPostBySlug}
         title={title}
         url={`https://www.sammeechward.com/${slug}` + (playlist ? `?playlist=${playlist.slug}` : "")}
-        urlShort={`smw.wtf/${slug}` + (playlist ? `?playlist=${playlist.slug}` : "")}
+        urlShort={`https://smw.wtf/${slug}` + (playlist ? `?playlist=${playlist.slug}` : "")}
       />
     </div>
   )
@@ -170,11 +172,13 @@ export default function Post({ dirUrl, commentCount, likeCount, slug, title, ima
             <YouTube className={"max-w-7xl mx-auto"} videoId={videoId} />
             <h1 className="mx-2 sm:mx-6 xl:max-w-7xl xl:mx-auto text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl md:text-5xl">{title}</h1>
           </div>
+
           <Contents></Contents>
         </>
       ) : (
         <>
           <Hero title={title} subTitle={""} description={""} image={{ ...image, ...imageSize }}></Hero>
+
           <Contents />
         </>
       )}
@@ -235,7 +239,7 @@ export default function Post({ dirUrl, commentCount, likeCount, slug, title, ima
           imageWidth={image.width}
           imageHeight={image.height}
           url={`https://sammeechward.com/${slug}`}
-          urlShort={`smw.wtf/${slug}`}
+          urlShort={`https://smw.wtf/${slug}`}
         />
       </Head>
       {router.query?.playlist
@@ -260,11 +264,13 @@ export default function Post({ dirUrl, commentCount, likeCount, slug, title, ima
 export async function getStaticPaths() {
   const { posts } = await getPostsFromDynamo({ limit: 100 })
   return {
-    paths: posts.filter(post => !post.redirectTo).map(({ slug }) => ({
-      params: {
-        slug,
-      },
-    })),
+    paths: posts
+      .filter((post) => !post.redirectTo)
+      .map(({ slug }) => ({
+        params: {
+          slug,
+        },
+      })),
     fallback: "blocking",
   }
 }

@@ -1,16 +1,17 @@
-import Head from 'next/head'
-import Hero from '../components/Hero'
-import FeaturedCards from '../components/FeaturedCards'
-import FeaturedVideo from '../components/FeaturedVideo'
+import Head from "next/head"
+import Hero from "../components/Hero"
+import FeaturedCards from "../components/FeaturedCards"
+import FeaturedVideo from "../components/FeaturedVideo"
 
-import Link from 'next/link'
+import Link from "next/link"
 
-import { getFeaturedPosts, getMostRecentVideo } from '../server/dynamo/queries'
+import { getFeaturedPosts, getMostRecentVideo } from "../server/dynamo/queries"
 
-import Meta from '../components/Meta'
+import Meta from "../components/Meta"
 
-import toilet from '../public/toilet.jpg'
-import TechStack from '../components/TechStack'
+import toilet from "../public/toilet.jpg"
+import TechStack from "../components/TechStack"
+import MailingListForm from "./mailing-list"
 
 const description = `
 If you're in a position
@@ -19,7 +20,6 @@ And one of the operand's ToPrimitive is string
 Then concatenation 
 Is Javascript's mission
 A language that understands how to vindictively sting`
-
 
 export default function Home({ featuredEntities, featuredVideo }) {
   return (
@@ -33,8 +33,8 @@ export default function Home({ featuredEntities, featuredVideo }) {
           image={`https://www.sammeechward.com${toilet.src}`}
           imageWidth={toilet.width}
           imageHeight={toilet.height}
-          url='https://sammeechward.com'
-          urlShort={`smw.wtf`}
+          url="https://sammeechward.com"
+          urlShort={`https://smw.wtf`}
         />
       </Head>
 
@@ -54,27 +54,31 @@ export default function Home({ featuredEntities, featuredVideo }) {
           // { title: "Contact", href: "/contact" },
         ]}
       /> */}
+      <div className="bg-gray-900 px-4 pt-8 pb-10 sm:px-6 lg:px-8 lg:pt-12 lg:pb-14">
+        <div className="mx-auto max-w-7xl px-2">
+          <div className="text-center">
+            <MailingListForm />
+          </div>
+        </div>
+      </div>
 
-      <TechStack />
-    
+      {/* <TechStack /> */}
 
       <FeaturedVideo title={"Latest Upload"} description={featuredVideo.title + " " + featuredVideo.description} videoId={featuredVideo.videoId} />
 
       <FeaturedCards title={"Most Popular"} description={"Take a look at what other people like"} posts={featuredEntities} />
-
     </>
   )
 }
 
 export async function getStaticProps() {
-
   const featuredEntities = await getFeaturedPosts()
   const featuredVideo = await getMostRecentVideo()
 
   return {
     props: {
       featuredVideo: featuredVideo,
-      featuredEntities
-    }
+      featuredEntities,
+    },
   }
 }

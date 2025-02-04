@@ -121,7 +121,7 @@ export default function Post({ dirUrl, commentCount, likeCount, slug, title, ima
         getPostBySlug={getPostBySlug}
         title={title}
         url={`https://www.sammeechward.com/playlists/${slug}`}
-        urlShort={`smw.wtf/playlists/${slug}`}
+        urlShort={`https://smw.wtf/playlists/${slug}`}
       />
     </div>
   )

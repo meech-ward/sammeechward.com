@@ -25,6 +25,8 @@ import { Note, Warning, Instruction, Error } from "../ArticleComponents/Blocks"
 import normalizeImageSize from "../../helpers/normalizeImageSize"
 import { twMerge } from "tailwind-merge"
 
+import MailingListForm from "../../pages/mailing-list"
+
 function addPropToChildren(children, propName, propValue) {
   return React.Children.map(children, (child) => {
     if (!React.isValidElement(child)) {
@@ -179,6 +181,7 @@ export default function Page({ mdxSource, dirUrl, getPostBySlug, ImageComponent 
   return (
     <div className="break-words">
       <ShareButtons className="float-right mb-2" url={url} title={title} urlShort={urlShort} />
+      <MailingListForm />
       <main className="clear-both">{mdxSource && <MDXRemote {...mdxSource} components={components} />}</main>
     </div>
   )

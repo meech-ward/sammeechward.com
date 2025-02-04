@@ -35,7 +35,7 @@ export default function Articles({ entities }) {
           imageWidth={toilet.width}
           imageHeight={toilet.height}
           url="https://sammeechward.com/playlists"
-          urlShort={`smw.wtf/playlists`}
+          urlShort={`https://smw.wtf/playlists`}
         />
       </Head>
       <div className="pt-8 pb-10 lg:pt-12 lg:pb-14 mx-auto max-w-7xl px-2">
