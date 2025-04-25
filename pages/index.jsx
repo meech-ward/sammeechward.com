@@ -2,6 +2,7 @@ import Head from "next/head"
 import Hero from "../components/Hero"
 import FeaturedCards from "../components/FeaturedCards"
 import FeaturedVideo from "../components/FeaturedVideo"
+import { Cloud } from "lucide-react"
 
 import Link from "next/link"
 
@@ -54,12 +55,18 @@ export default function Home({ featuredEntities, featuredVideo }) {
           // { title: "Contact", href: "/contact" },
         ]}
       /> */}
-      <div className="bg-gray-900 px-4 pt-8 pb-10 sm:px-6 lg:px-8 lg:pt-12 lg:pb-14">
+      {/* <div className="bg-gray-900 px-4 pt-8 pb-10 sm:px-6 lg:px-8 lg:pt-12 lg:pb-14">
         <div className="mx-auto max-w-7xl px-2">
           <div className="text-center">
             <MailingListForm />
           </div>
         </div>
+      </div> */}
+
+      <div className="py-8">
+        <a href="https://cloudcourse.dev" className="max-w-7xl mx-auto rounded-3xl overflow-hidden block" target="_blank" rel="noopener noreferrer">
+          <OgCard variant="og" />
+        </a>
       </div>
 
       {/* <TechStack /> */}
@@ -81,4 +88,32 @@ export async function getStaticProps() {
       featuredEntities,
     },
   }
+}
+
+import React from "react"
+
+export function OgCard({ variant }) {
+  const isOg = variant === "og"
+
+  return (
+    <div className="bg-gradient-to-r from-teal-500 via-emerald-400 to-teal-600  relative overflow-hidden">
+      {/* Content */}
+      <div className={`relative h-full my-20 px-2 flex ${isOg ? "flex-col items-center justify-center" : "items-center justify-center"}`}>
+        {/* Logo/Icon */}
+        <div className={`${isOg ? "mb-12" : ""} flex items-center justify-center`}>
+          <div className={`${isOg ? "w-40 h-40" : "w-20 h-20"} rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center shadow-lg border-2 border-white/20`}>
+            <Cloud className={`${isOg ? "w-24 h-24" : "w-10 h-10"} text-white`} />
+          </div>
+        </div>
+
+        {/* Text Content - Only for OG variant */}
+        {isOg && (
+          <div className="text-center">
+            <h1 className="text-6xl font-bold text-white mb-6">Cloud Course</h1>
+            <p className="text-2xl text-white/90 max-w-2xl mx-auto">Master cloud computing with hands-on, practical learning</p>
+          </div>
+        )}
+      </div>
+    </div>
+  )
 }
